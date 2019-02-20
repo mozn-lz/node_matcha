@@ -1,0 +1,62 @@
+<p>Hello! Welcome to the {{title}} page</p>
+
+<form action="" method="post">
+	<div class="row">
+		<div class="form-group col-sm-6">
+			<label for="Username">Username</label> <br>
+			<div><input class="form-control" type="text" name="username" id="Username" placeholder="Username" value="{{username}}"
+				 required></div>
+		</div>
+		<div class="form-group col-sm-6">
+			<label for="email address">Email</label> <br>
+			<input class="form-control" type="email" name="email" id="email" placeholder="Email" value="{{email}}" required>
+		</div>
+	</div>
+	<div class="row">
+		<div class="form-group col-sm-6">
+			<label for="First name">First name</label> <br>
+			<div><input class="form-control" type="text" name="fname" id="fname" placeholder="First Name" value="{{fname}}"
+				 required></div>
+		</div>
+		<div class="form-group col-sm-6">
+			<label for="Last name">Last name</label> <br>
+			<div><input class="form-control" type="text" name="lname" id="lname" placeholder="Surname" value="{{lanme}}"
+				 required></div>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="form-group col-sm-5">
+			<label for="gender">Your gender</label> <br>
+			<select class="form-control" name="gender" id="gender" required>
+				<option value="">Choose</option>
+				<option value="male">Male</option>
+				<option value="female">Female</option>
+			</select>
+		</div>
+		<div class="form-group col-sm-2">
+			<label for="Age">Age</label> <br>
+			<input class="form-control" type="number" max="150" min="16" name="age" id="age" placeholder="Age" value="{{age}}"
+			 required>
+		</div>
+		<div class="form-group col-sm-5">
+			<label for="Sexual Orientation">Sexual Orientation</label> <br>
+			<select class="form-control" name="orientation" id="orientation">
+				<option value="">Choose or leave blank</option>
+				<option value="male">Hetrosexual(opposite)</option>
+				<option value="female">Homosexual(same)</option>
+				<option value="bisexual">Bisexual(we are all humman)</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="">Describe yourself</label>
+		<div><textarea class="form-control" name="bio" id="bio" cols="30" rows="10" placeholder="About me" minlength="10"
+			 maxlength="150" required>{{bio}}</textarea></div>
+	</div>
+	<div class="form-group">
+		<label for="">Hash_me</label>
+		<div>[food, music, movies, books,lifestyle, hobbies]</div>
+	</div>
+	<button class="btn btn-success" type="submit">Save</button>
+</form>

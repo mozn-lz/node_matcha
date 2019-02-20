@@ -1,0 +1,22 @@
+profile.hbs view_profile.hbs messages.hbs view_messages.hbs register.hbs login.hbs forgot_password.hbs reset_password.hbs take_picture.hbs verify.hbs
+
+profile.js view_profile.js messages.js view_messages.js register.js login.js forgot_password.js reset_password.js take_picture.js verify.js
+
+
+profile
+view_profile
+messages
+view_messages
+register
+login
+forgot_password
+reset_password
+take_picture
+verify
+
+username
+email
+name
+surname
+psswd
+psswd1

@@ -1,0 +1,33 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+/* a {
+  color: #00B7FF;
+  color: black;
+} */
+
+menu a {
+	color: aliceblue;
+	font-weight: bold;
+	width: 80px;
+}
+/* menu a:hover{
+	width: 80px;
+	font-weight: bold;
+	color: black;
+	background-color: aliceblue;
+	border-radius: 20px;
+} */
+a button:hover{
+	background: rgba(255, 0, 0, 0.8);
+	color: black;
+	background-color: white;
+}
+
+.border {
+	border-style: solid;
+	border-color: black;
+	
+}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>{{title}}</title>
+		<script src="/javascripts/jquery/jquery.min.js"></script>
+		<script src="/javascripts/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"crossorigin="anonymous">
+		<link rel='stylesheet' href='/stylesheets/style.css' />
+	</head>
+
+	<body>
+		<menu>
+			<nav class="navbar fixed-top navbar-expand-lg navbar-danger bg-danger">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01"
+				aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"><img src="/images/ionicons.designerpack/md-menu.svg" width="40" alt=""></span>
+					{{!-- <span class="navbar-toggler-icon"><img src="./res/ionicons.designerpack/md-heart-empty.svg" width="40" alt=""></span> --}}
+				</button>
+				<div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+					<a class="navbar-brand" href="./">Matcha</a>
+					<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+						<li class="nav-item active">
+							<a class="nav-link" href="./">Home <span class="sr-only">(current)</span></a>
+						</li>
+						<li class="nav-item"><a class="nav-link" href="./profile">Profile</a></li>
+						<li class="nav-item"><a class="nav-link" href="./messages">Messages</a></li>
+						<li class="nav-item"><a class="nav-link" href="./notifications">Notifications</a></li>
+					</ul>
+					<form class="form-inline my-2 my-lg-0">
+						<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+						<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+					</form>
+				</div>
+			</nav>
+		</menu>
+		<div>
+			<div class="d-inline-block"><a href="./profile"><button type="button" class="btn btn-primary text-white">profile</button></a></div>
+			<div class="d-inline-block"><a href="./view_profile"><button type="button" class="btn btn-primary text-white">view_profile</button></a></div>
+			<div class="d-inline-block"><a href="./messages"><button type="button" class="btn btn-primary text-white">messages</button></a></div>
+			<div class="d-inline-block"><a href="./view_messages"><button type="button" class="btn btn-primary text-white">view_messages</button></a></div>
+			<div class="d-inline-block"><a href="./register"><button type="button" class="btn btn-primary text-white">register</button></a></div>
+			<div class="d-inline-block"><a href="./login"><button type="button" class="btn btn-primary text-white">login</button></a></div>
+			<div class="d-inline-block"><a href="./forgot_password"><button type="button" class="btn btn-primary text-white">forgot_password</button></a></div>
+			<div class="d-inline-block"><a href="./reset_password"><button type="button" class="btn btn-primary text-white">reset_password</button></a></div>
+			<div class="d-inline-block"><a href="./take_picture"><button type="button" class="btn btn-primary text-white">take_picture</button></a></div>
+			<div class="d-inline-block"><a href="./verify"><button type="button" class="btn btn-primary text-white">verify</button></a></div>
+		</div>
+		{{{body}}}
+	</body>
+
+</html>
