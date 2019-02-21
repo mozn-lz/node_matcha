@@ -58,6 +58,7 @@ router.post('/', function(req, res, next) {
 			assert.equal(null, err);
 			console.log("Documents added to database: " + dbName);
 			client.close();
+			 res.redirect('/login/' + user);
 		});
 	});
 	// mongo.connect(url, function(err, db) {
