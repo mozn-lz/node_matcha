@@ -1,0 +1,30 @@
+Join server to database
+    Register:
+        be able to Register
+        handle form validation on the server
+            regular expression (passwords, name, last_name, email, passwords)
+
+    Validation:
+        be able to validate user email
+        send email to user_email
+
+    Login:
+        refuse user access if user has not validated their email
+        be able to login if all conditions are met (EMAIL, USER_NAME and PASSWORD)
+
+    Take pictures
+        Take or upload pictures
+        (Option) after taking picture, set image as Profile picture
+
+    Profile page:
+        Change: user_name, name, last name, email, (status)
+        Profile Picture: change/select profile picture,
+
+    Home page:
+        view compatible people, with click to access 'View others Profile' page
+
+    View others Profile
+        Same as profile page but not editable
+
+    Make SEARCH button work on the MENU tag -> layout.js
+    
