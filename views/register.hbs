@@ -1,29 +1,43 @@
+<div class="errors">
+	{{!-- <p>{{error_list}}</p> --}}
+	{{!-- <ul>
+		{{#each error_list}}
+			<li  class="alert alert-danger" role="alert">{{this}}</li>
+		{{/each}}
+	</ul> --}}
+
+	<div class="row">
+		{{#each error_list}}
+			<div class="alert alert-danger border border-danger text-center col-sm-3" role="alert">{{this}}</div>
+		{{/each}}
+	</div>
+</div>	
 <form action="/register" method="post">
 	<div class="row">
 		<div class="col-md-6">
 			<div class="form-group">
 				<label for="username">Username</label>
-				<input class="form-control" type="text" name="username" id="reg_username" placeholder="Username" required>
+				<input class="form-control" type="text" name="username" id="reg_username" placeholder="Username"  >
 			</div>
 			<div class="form-group">
 				<label for="email">Email</label>
-				<input class="form-control" type="text" name="email" id="reg_email" placeholder="Email" required>
+				<input class="form-control" type="text" name="email" id="reg_email" placeholder="Email"  >
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group">
 				<label for="name">Name</label>
-				<input class="form-control" type="text" name="name" id="reg_name" placeholder="Name" required>
+				<input class="form-control" type="text" name="name" id="reg_name" placeholder="Name"  >
 			</div>
 			<div class="form-group">
 				<label for="surname">Surname</label>
-				<input class="form-control" type="text" name="surname" id="reg_surname" placeholder="Surname" required>
+				<input class="form-control" type="text" name="surname" id="reg_surname" placeholder="Surname"  >
 			</div>
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="password">Password</label>
-		<input class="form-control" type="password" name="psswd" id="reg_password" placeholder="Password" required>
+		<input class="form-control" type="password" name="psswd" id="reg_password" placeholder="Password"  >
 	</div>
 	<div class="form-group">
 		<label for="confirm_password">Confirm Password</label>

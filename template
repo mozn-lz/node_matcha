@@ -20,3 +20,84 @@ name
 surname
 psswd
 psswd1
+
+function check_username (chk_username){
+	if (!is_empty(chk_username)){
+		var username = req.body.username;
+		console.log('username stored as [username]');
+		return (true);
+	}
+	else {
+		error_log.push('username is invalid');
+		console.log(error_log);
+		return (false);
+	}
+}
+
+function check_email (chk_email){
+	if (!is_empty(chk_email)){
+		var email = req.body.email;
+		console.log('email stored as [email]');
+		return (true);
+	}
+	else {
+		error_log.push('email is invalid');
+		console.log(error_log);
+		return (false);
+	}
+}
+
+function check_name (chk_name){
+	if (!is_empty(chk_name)){
+		var name = req.body.name;
+		console.log('name stored as [name]');
+		return (true);
+	}
+	else {
+		error_log.push('name is invalid');
+		console.log(error_log);
+		return (false);
+	}
+}
+
+function check_surname (chk_surname){
+	if (!is_empty(chk_surname)){
+		var surname = req.body.surname;
+		console.log('surname stored as [surname]');
+		return (true);
+	}
+	else {
+		error_log.push('surname is invalid');
+		console.log(error_log);
+		return (false);
+	}
+}
+
+function check_psswd (chk_psswd){
+	if (!is_empty(chk_psswd)){
+		var psswd = req.body.psswd;
+		console.log('psswd stored as [psswd]');
+		return (true);
+	}
+	else {
+		error_log.push('psswd is invalid');
+		console.log(error_log);
+		return (false);
+	}
+}
+
+function check_psswd1 (chk_psswd1){
+	if (!is_empty(chk_psswd1)){
+		var psswd1 = req.body.psswd1;
+		console.log('psswd1 stored as [psswd1]');
+		return (true);
+	}
+	else {
+		error_log.push('psswd1 is invalid');
+		console.log(error_log);
+		return (false);
+	}
+}
+
+
+if (check_username (req.body.username) && check_email (req.body.email) && check_name (req.body.name) && check_surname (req.body.surname) && check_psswd (req.body.psswd) && check_psswd1 (req.body.psswd1))
