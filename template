@@ -101,3 +101,8 @@ function check_psswd1 (chk_psswd1){
 
 
 if (check_username (req.body.username) && check_email (req.body.email) && check_name (req.body.name) && check_surname (req.body.surname) && check_psswd (req.body.psswd) && check_psswd1 (req.body.psswd1))
+
+
+
+
+

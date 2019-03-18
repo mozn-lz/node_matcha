@@ -3,29 +3,31 @@ var router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 
-const url = 'mongodb://localhost:27017';
-// Database Name
-const dbName = 'matcha';
+const url = 'mongodb://localhost:27017';	// Database(mongo) url
+
+const dbName = 'matcha';		// Database Name
+const page_name = 'login';		// page name
 
 /* GET login listing. */
 router.get('/', function (req, res, next) {
-	//   res.send('respond with a resource');
 	res.render('login', {
 		page: 'Login'
 	});
 });
 
+// handling Error or success messages. 
 router.get('/:user', function (req, res, next) {
-	(req.params.user.search('pass_err') == 0) ? res.render('login', {
+	(req.params.user.search('pass_err') == 0) ? res.render(page_name, {
 		error_list: (req.params.user).slice(8)
 	}): 0;
-	(req.params.user.search('pass_suc') == 0) ? res.render('login', {
+	(req.params.user.search('pass_suc') == 0) ? res.render(page_name, {
 		username: (req.params.user).slice(8)
 	}): 0;
-	res.render('login', {
+	res.render(page_name, {
 		username: req.params.user
 	});
 });
+
 router.post('/', function (req, res, next) {
 	var email = req.body.email;
 	var psswd = req.body.password;
