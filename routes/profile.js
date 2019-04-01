@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
-var helper = require('./helper_functions'); // Helper functions Mk
+// var helper = require('./helper_functions'); // Helper functions Mk
 
 const url = 'mongodb://localhost:27017';
 
@@ -11,11 +11,16 @@ const dbName = 'matcha';
 
 var page_name = 'Profile';
 
+function is_empty(str) {
+	ret = str.trim();
+	if (ret.length == 0) {
+		return (true);
+	}
+	return (false);
+}
 
-/* GET profile listing. */
-router.get('/', function (req, res, next) {
-	//   res.send('respond with a resource');
-
+function fn_render_profile(req, res, next, msg) {
+	console.log('\n\n\nfn_render_profile\n');
 	if (req.session.email) {
 		console.log('req.session.email: ' + req.session.email);
 
@@ -30,6 +35,12 @@ router.get('/', function (req, res, next) {
 				'usr_email': req.session.email
 			};
 
+			var msg_arr = [];
+			(msg.search('pass_err') == 0) ? pass_er = "danger" : pass_er = '';
+			(msg.search('pass_suc') == 0) ? pass_suc = "success" : pass_suc = '';
+			msg_arr = msg.slice(8).split(",");
+			console.log('msg_arr: ' + msg_arr);
+
 			collection.find(usr_data).forEach(function (doc, err) {
 				assert.equal(null, err);
 				res_arr.push(doc);
@@ -39,6 +50,9 @@ router.get('/', function (req, res, next) {
 					// if user is found get their details from database
 					res.render('profile', {
 						title: 'Profile',
+						er: pass_er,
+						suc: pass_suc,
+						msg_arr,
 						username: res_arr[0].usr_user,
 						email: res_arr[0].usr_email,
 						fname: res_arr[0].usr_name,
@@ -56,119 +70,124 @@ router.get('/', function (req, res, next) {
 						liked: res_arr[0].liked
 					});
 				} else if (res_arr.length < 1) {
-					res.redirect('/login/' + 'pass_errInvaild email or password');
+					res.redirect('/profile/' + 'pass_errInvaild email or password');
 				} else {
-					res.redirect('/login/' + 'pass_errThere seams to be a dubious error that popped up, Please try again');
+					res.redirect('/profile/' + 'pass_errThere seams to be a dubious error that popped up, Please try again');
 				}
 			});
 		});
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
 	}
+}
+
+/* GET profile listing. */
+router.get('/', function (req, res, next) {
+	console.log('\n\n\n\n\n\n\t\t\tWELCOME TO THE PROFILE PAGE\n');
+	
+	fn_render_profile(req, res, next, '');
 });
 
-// // handling Error or success messages. 
-// router.get('/:user', function (req, res, next) {
-// 	(req.params.user.search('pass_err') == 0) ? res.render(page_name, {
-// 		error_list: (req.params.user).slice(8)
-// 	}): 0;
-// 	(req.params.user.search('pass_suc') == 0) ? res.render(page_name, {
-// 		username: (req.params.user).slice(8)
-// 	}): 0;
-// 	res.render('profile', {
-// 		username: req.params.user
-// 	});
-// });
+// handling Error or success messages. 
+// router.get('/:pass_message', function (req, res, next) {
+router.get('/:redirect_msg', function (req, res, next) {
+	console.log('\n\n\n\nwe got the message');
+	
+	(req.params.redirect_msg.search('pass_err') == 0) ? console.log('\tGot: Pass_err: \'' + req.params.redirect_msg.slice(8) + '\'') : 0;
+	(req.params.redirect_msg.search('pass_suc') == 0) ? console.log('\tGot: Pass_suc: \'' + req.params.redirect_msg.slice(8) + '\'') : 0;
+	fn_render_profile(req, res, next, req.params.redirect_msg);
+});
 
 router.post('/', function (req, res, next) {
-	var error_log = [];
-	var profile_username
-	var profile_email
-	var profile_name
-	var profile_surname
-	var profile_age
-	var profile_gender
-	var profile_oriantation
-	var profile_bio
-	var profile_gps
+	var redirect_msg = [];
+	var profile_username;
+	var profile_email;
+	var profile_name;
+	var profile_surname;
+	var profile_age;
+	var profile_gender;
+	var profile_oriantation;
+	var profile_bio;
+	var profile_gps;
 
 	function check_usr_user(chk_usr_user) {
-		if (!typeof helper.is_empty(chk_usr_user)) {
-			profile_username = req.body.usr_user;
-			return (true);
+		if (is_empty(chk_usr_user)) {
+			console.log('\tcheck_usr_user: Username is not valid');
+			redirect_msg.push('Username is not valid');
+			return (false);
 		} else {
-			error_log.push('usr_user is not valid');
-			return (false)
+			profile_username = chk_usr_user;
+			return (true);
 		}
 	}
 
 	function check_usr_email(chk_usr_email) {
-		if (!typeof helper.is_empty(chk_usr_email)) {
-			profile_email = req.body.usr_email;
-			return (true);
+		if (is_empty(chk_usr_email)) {
+			redirect_msg.push('Email is not valid');
+			return (false);
 		} else {
-			error_log.push('usr_email is not valid');
-			return (false)
+			profile_email = chk_usr_email;
+			return (true);
 		}
 	}
 
 	function check_usr_name(chk_usr_name) {
-		if (!typeof helper.is_empty(chk_usr_name)) {
-			profile_name = req.body.usr_name;
-			return (true);
+		if (is_empty(chk_usr_name)) {
+			redirect_msg.push('Name is not valid');
+			return (false);
 		} else {
-			error_log.push('usr_name is not valid');
-			return (false)
+			profile_name = chk_usr_name;
+			return (true);
 		}
 	}
 
 	function check_usr_surname(chk_usr_surname) {
-		if (!typeof helper.is_empty(chk_usr_surname)) {
-			profile_surname = req.body.usr_surname;
-			return (true);
+		if (is_empty(chk_usr_surname)) {
+			redirect_msg.push('Surname is not valid');
+			return (false);
 		} else {
-			error_log.push('usr_surname is not valid');
-			return (false)
+			profile_surname = chk_usr_surname;
+			return (true);
 		}
 	}
 
 	function check_age(chk_age) {
-		if (!typeof helper.is_empty(chk_age)) {
-			profile_age = req.body.age;
-			return (true);
+		if (is_empty(chk_age)) {
+			redirect_msg.push('Age is not valid');
+			return (false);
 		} else {
-			error_log.push('age is not valid');
-			return (false)
+			profile_age = chk_age;
+			return (true);
 		}
 	}
 
 	function check_gender(chk_gender) {
-		if (!typeof helper.is_empty(chk_gender)) {
-			profile_gender = req.body.gender;
-			return (true);
+		if (is_empty(chk_gender)) {
+			redirect_msg.push('Gender is not valid');
+			return (false);
 		} else {
-			error_log.push('gender is not valid');
-			return (false)
+			profile_gender = chk_gender;
+			return (true);
 		}
 	}
 
 	function check_oriantation(chk_oriantation) {
-		if (!typeof helper.is_empty(chk_oriantation)) {
-			profile_oriantation = req.body.oriantation;
-			return (true);
+		if (is_empty(chk_oriantation)) {
+			redirect_msg.push('Oriantation is not valid');
+			return (false);
 		} else {
-			error_log.push('oriantation is not valid');
-			return (false)
+			profile_oriantation = chk_oriantation;
+			return (true);
 		}
 	}
 
 	function check_bio(chk_bio) {
-		if (!typeof helper.is_empty(chk_bio)) {
-			profile_bio = req.body.bio;
-			return (true);
+		if (is_empty(chk_bio)) {
+			redirect_msg.push('Bio is not valid');
+			return (false);
 		} else {
-			error_log.push('bio is not valid');
-			return (false)
+			profile_bio = chk_bio;
+			return (true);
 		}
 	}
 
@@ -178,10 +197,11 @@ router.post('/', function (req, res, next) {
 		} else {
 			profile_gps = 0;
 		}
+		return (true);
 	}
 
-
-
+	/* because the if statement below will stop on the fist False 
+		this is to log all errors (if any)	*/
 	check_usr_user(req.body.username);
 	check_usr_email(req.body.email);
 	check_usr_name(req.body.fname);
@@ -192,12 +212,9 @@ router.post('/', function (req, res, next) {
 	check_bio(req.body.bio);
 	check_gps(req.body.gps);
 
-
-	/* checks if there are any errors in saving variables from the user and if passwords match	*/
-
-	// if (check_usr_user(req.body.usr_user) && check_usr_email(req.body.usr_email) && check_usr_name(req.body.usr_name) && check_usr_surname(req.body.usr_surname) && check_login_time(req.body.login_time) && check_pic(req.body.pic) && check_age(req.body.age) && check_gender(req.body.gender) && check_oriantation(req.body.oriantation) && check_bio(req.body.bio) && check_gps(req.body.gps)) {
 	if (check_usr_user(req.body.username) && check_usr_email(req.body.email) && check_usr_name(req.body.fname) && check_usr_surname(req.body.lname) && check_age(req.body.age) && check_gender(req.body.gender) && check_oriantation(req.body.orientation) && check_bio(req.body.bio) && check_gps(req.body.gps)) {
 		// store data to JSON array, to store in mongo
+		console.log('\tNo errors found');
 		var usr_data = {
 			usr_user: profile_username,
 			usr_email: profile_email,
@@ -213,26 +230,43 @@ router.post('/', function (req, res, next) {
 		// Connect and save data to mongodb
 		MongoClient.connect(url, function (err, client) {
 			assert.equal(null, err);
-			console.log("Connected to server and mongo connected Successfully");
+			console.log("\tConnected to server and mongo connected Successfully");
 			const db = client.db(dbName);
-
 			const collection = db.collection('users');
-
-			collection.insertOne(usr_data, function (err, result) {
+			// collection.insertOne(usr_data, function (err, result) {
+			// 	assert.equal(null, err);
+			// 	console.log("Documents added to database: " + dbName);
+			// 	client.close();
+			// 	res.redirect('/profile/' + user);
+			// });
+			// "_id" : ObjectId("5c7ca533b3991c4b3f0eae13")
+			collection.updateOne({ id_: "value" }, {
+				$set: {
+					usr_user: profile_username,
+					usr_email: profile_email,
+					usr_name: profile_name,
+					usr_surname: profile_surname,
+					age: profile_age,
+					gender: profile_gender,
+					oriantation: profile_oriantation,
+					bio: profile_bio,
+					gps: profile_gps,
+				}
+			}, function (err, resulr) {
 				assert.equal(null, err);
-				console.log("Documents added to database: " + dbName);
 				client.close();
-				res.redirect('/login/' + user);
+				console.log('\t\tend of poeting finction');
+				redirect_msg_type = 'pass_suc';
+				redirect_msg.push('Your information Changed');
+				res.redirect('/profile/' + redirect_msg_type + redirect_msg);
 			});
 		});
-		console.log('end of poeting finction');
 	} else {
-		console.log('Error coint' + error_log.length);
-		console.log('error_log = ' + error_log);
-		res.redirect('/register/' + error_log);
+		console.log('something is wrong\n\tError Count: ' + redirect_msg.length);
+		console.log('redirect_msg = ' + redirect_msg);
+		redirect_msg_type = 'pass_err';
+		res.redirect('/profile/' + redirect_msg_type + redirect_msg);
 	}
-
 });
-
 
 module.exports = router;
