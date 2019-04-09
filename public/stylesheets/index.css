@@ -1,0 +1,39 @@
+.users {
+	/* border-radius: 10%; */
+	box-shadow: 30px;
+	padding: 5px;
+	margin: 5px;
+	border-style: solid;
+	border-color: black;
+	border-width: thin;
+}
+
+.left {
+	border-style: solid;
+	border-color: blueviolet;
+	border-width: thin;
+}
+
+.left img {
+	border-radius: 100%;
+	/* min-width: 100%; */
+	width: 100%;
+	/* min-height: 40%; */
+	border-style: solid;
+	border-color: black;
+	border-width: thin;
+	background: greenyellow;
+}
+.center{
+	padding: 5px;
+	border-style: solid;
+	border-color: blue;
+	border-width: thin;
+}
+.right{
+	border-style: solid;
+	border-color: red;
+	border-width: thin;
+}
+.user_data {
+}
