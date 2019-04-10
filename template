@@ -1,8 +1,48 @@
-profile.hbs view_profile.hbs messages.hbs view_messages.hbs register.hbs login.hbs forgot_password.hbs reset_password.hbs take_picture.hbs verify.hbs
-
-profile.js view_profile.js messages.js view_messages.js register.js login.js forgot_password.js reset_password.js take_picture.js verify.js
-
-
+{
+	"_id": "5c7ca533b3991c4b3f0eae13",
+	"usr_user": "Mk",
+	"usr_email": "moeketsane.sefako@gmail.com",
+	"usr_name": "Moeketsane",
+	"usr_surname": "Sefako",
+	"usr_psswd": "123456",
+	"pic": [
+		{"profile": 1,"img" : "5c7ca533b3991c4b3f0eae135c7ca533b3991c4b3f0eae135c7ca533b3991c4b3f0eae135c7ca533b3991c4b3"},
+		{"profile": 0,"img" : "5c7ca533b3991c4b3f0eae135c7ca533b3991c4b3f0eae135c7ca533b3991c4b3f0eae135c7ca533b3991c4b3"},
+		{"profile": 0,"img" : "5c7ca533b3991c4b3f0eae135c7ca533b3991c4b3f0eae135c7ca533b3991c4b3f0eae135c7ca533b3991c4b3"}
+	],
+	"gender": "Male",
+	"oriantation": "hetro",
+	"rating": "3.5",
+	"bio": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate quidem blanditiis nobis voluptate suscipit et ducimus, voluptas consequatur autem reprehenderit ut expedita, cum dolore vitae fuga a fugiat eveniet eius!",
+	"intrests": ["sports", "video games", "anime", "coding"],
+	"login_time": "3 jUNE 2018",
+	"gps": "5753339914, -013575333991",
+	"viewd": ["mozn", "Lord Chaos"],
+	"liked": [],
+	"verified": 1,
+	"confirm_code": 0.0666066598915595,
+	"messages": {
+		"chaos": [
+			{"from": "chaos","time": "Tur,3 Mar 2019, 08:35","message": "This is my wORLD nOw"},
+			{"from": "mozn","time": "Tur,3 Mar 2019, 08:38","message": "Dont get too big for yourself"}
+		],
+		"mozn": [
+			{"from": "mk","time": "Wed, 2 Mar 2019, 00:19","message": "hay"},
+			{"from": "mozn","time": "Wed, 2 Mar 2019, 00:19","message": "whatsupp"},
+			{"from": "mk","time": "Wed, 2 Mar 2019, 00:19","message": "Awesome"},
+			{"from": "mozn","time": "Wed, 2 Mar 2019, 00:19","message": "alright"},
+			{"from": "mk","time": "Wed, 2 Mar 2019, 00:19","message": "Have something for you todo"},
+			{"from": "mozn","time": "Wed, 2 Mar 2019, 00:19","message": "what"},
+			{"from": "mk","time": "Wed, 2 Mar 2019, 00:19","message": "coding project, dating website"},
+			{"from": "mozn","time": "Wed, 2 Mar 2019, 00:19","message": "languages"},
+			{"from": "mk","time": "Wed, 2 Mar 2019, 00:19","message": "js(node, express) using bare minimum. No validators or anything you didnt build"},
+			{"from": "mozn","time": "Wed, 2 Mar 2019, 00:19","message": "sounda line a pain"},
+			{"from": "mk","time": "Wed, 2 Mar 2019, 00:19","message": "will you do it? Need it on 15.04.2019 "},
+			{"from": "mozn","time": "Wed, 2 Mar 2019, 00:19","message": "fuck, alright"}
+		]
+	}
+}
+//	COMPLETE JSON PROFILE IN DATABASE
 profile
 view_profile
 messages
@@ -21,88 +61,4 @@ surname
 psswd
 psswd1
 
-function check_username (chk_username){
-	if (!is_empty(chk_username)){
-		var username = req.body.username;
-		console.log('username stored as [username]');
-		return (true);
-	}
-	else {
-		error_log.push('username is invalid');
-		console.log(error_log);
-		return (false);
-	}
-}
-
-function check_email (chk_email){
-	if (!is_empty(chk_email)){
-		var email = req.body.email;
-		console.log('email stored as [email]');
-		return (true);
-	}
-	else {
-		error_log.push('email is invalid');
-		console.log(error_log);
-		return (false);
-	}
-}
-
-function check_name (chk_name){
-	if (!is_empty(chk_name)){
-		var name = req.body.name;
-		console.log('name stored as [name]');
-		return (true);
-	}
-	else {
-		error_log.push('name is invalid');
-		console.log(error_log);
-		return (false);
-	}
-}
-
-function check_surname (chk_surname){
-	if (!is_empty(chk_surname)){
-		var surname = req.body.surname;
-		console.log('surname stored as [surname]');
-		return (true);
-	}
-	else {
-		error_log.push('surname is invalid');
-		console.log(error_log);
-		return (false);
-	}
-}
-
-function check_psswd (chk_psswd){
-	if (!is_empty(chk_psswd)){
-		var psswd = req.body.psswd;
-		console.log('psswd stored as [psswd]');
-		return (true);
-	}
-	else {
-		error_log.push('psswd is invalid');
-		console.log(error_log);
-		return (false);
-	}
-}
-
-function check_psswd1 (chk_psswd1){
-	if (!is_empty(chk_psswd1)){
-		var psswd1 = req.body.psswd1;
-		console.log('psswd1 stored as [psswd1]');
-		return (true);
-	}
-	else {
-		error_log.push('psswd1 is invalid');
-		console.log(error_log);
-		return (false);
-	}
-}
-
-
-if (check_username (req.body.username) && check_email (req.body.email) && check_name (req.body.name) && check_surname (req.body.surname) && check_psswd (req.body.psswd) && check_psswd1 (req.body.psswd1))
-
-
-
-
-
+lore
