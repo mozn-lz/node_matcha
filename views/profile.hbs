@@ -1,18 +1,26 @@
-<div>
-	<div class="row">
-		{{#if suc}}
-			{{#each msg_arr}}
-				<div class="alert alert-success border border-success text-center col-xs-6" role="alert">{{this}}</div>
-			{{/each}}
-		{{/if}}
-		{{#if er}}
-			{{#each msg_arr}}
-				<div class="alert alert-danger border border-danger text-center col-xs-6" role="alert">{{this}}</div>
-			{{/each}}
-		{{/if}}
-	</div>
+<div class="row">
+	{{#if suc}}
+	{{#each msg_arr}}
+	<div class="alert alert-success border border-success text-center col-xs-6" role="alert">{{this}}</div>
+	{{/each}}
+	{{/if}}
+	{{#if er}}
+	{{#each msg_arr}}
+	<div class="alert alert-danger border border-danger text-center col-xs-6" role="alert">{{this}}</div>
+	{{/each}}
+	{{/if}}
 </div>
 <form action="/profile" method="post">
+	<div class="text-center">
+		<div class="d-inline">
+			<img src="/images/202579_med.jpg" alt="" width="300" class="rounded">
+		</div>
+		<div class="d-inline">
+			<a href="/take_picture">
+				<button type="button" class="btn btn-success text-white">Change Picture</button>
+			</a>
+		</div>
+	</div>
 	<div class="row">
 		<div class="form-group form-check">
 			<input type="checkbox" class="form-check-input" name="gps" id="gps_track">
@@ -23,31 +31,30 @@
 		<div class="form-group col-sm-6">
 			<label for="Username">Username</label> <br>
 			<div><input class="form-control" type="text" name="username" id="Username" placeholder="Username"
-					value="{{username}}"  ></div>
+					value="{{username}}" required></div>
 		</div>
 		<div class="form-group col-sm-6">
 			<label for="email address">Email</label> <br>
-			<input class="form-control" type="email" name="email" id="email" placeholder="Email" value="{{email}}"
-				 >
+			<input class="form-control" type="email" name="email" id="email" placeholder="Email" value="{{email}}">
 		</div>
 	</div>
 	<div class="row">
 		<div class="form-group col-sm-6">
 			<label for="First name">First name</label> <br>
 			<div><input class="form-control" type="text" name="fname" id="fname" placeholder="First Name"
-					value="{{fname}}"  ></div>
+					value="{{fname}}" required></div>
 		</div>
 		<div class="form-group col-sm-6">
 			<label for="Last name">Last name</label> <br>
 			<div><input class="form-control" type="text" name="lname" id="lname" placeholder="Surname"
-					value="{{surname}}"  ></div>
+					value="{{surname}}" required></div>
 		</div>
 	</div>
 	<br>
 	<div class="row">
 		<div class="form-group col-sm-5">
 			<label for="gender">Your gender</label> <br>
-			<select class="form-control" name="gender" id="gender"  >
+			<select class="form-control" name="gender" id="gender" required>
 				<option value="">Choose</option>
 				<option value="male">Male</option>
 				<option value="female">Female</option>
@@ -56,7 +63,7 @@
 		<div class="form-group col-sm-2">
 			<label for="Age">Age</label> <br>
 			<input class="form-control" type="number" max="150" min="16" name="age" id="age" placeholder="Age"
-				value="{{age}}"  >
+				value="{{age}}" required>
 		</div>
 		<div class="form-group col-sm-5">
 			<label for="Sexual Orientation">Sexual Orientation</label> <br>
@@ -71,7 +78,7 @@
 	<div class="form-group">
 		<label for="">Describe yourself</label>
 		<div><textarea class="form-control" name="bio" id="bio" cols="30" rows="10" placeholder="About me"
-				minlength="0" maxlength="250"  >{{bio}}</textarea></div>
+				minlength="10" maxlength="250" required>{{bio}}</textarea></div>
 	</div>
 	<div class="form-group">
 		<label for="">Hash_me</label>
