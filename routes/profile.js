@@ -4,10 +4,8 @@ const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 // var helper = require('./helper_functions'); // Helper functions Mk
 
-const url = 'mongodb://localhost:27017';
-
-// Database Name
-const dbName = 'matcha';
+const url = 'mongodb://localhost:27017';	// Database Address
+const dbName = 'matcha';					// Database Name
 
 var page_name = 'Profile';
 
@@ -36,8 +34,8 @@ function fn_render_profile(req, res, next, msg) {
 			};
 
 			var msg_arr = [];
-			(msg.search('pass_err') == 0) ? pass_er = "danger" : pass_er = '';
-			(msg.search('pass_suc') == 0) ? pass_suc = "success" : pass_suc = '';
+			(msg.search('pass_err') == 0) ? pass_er = "danger": pass_er = '';
+			(msg.search('pass_suc') == 0) ? pass_suc = "success": pass_suc = '';
 			msg_arr = msg.slice(8).split(",");
 			console.log('msg_arr: ' + msg_arr);
 
@@ -81,20 +79,14 @@ function fn_render_profile(req, res, next, msg) {
 	}
 }
 
-/* GET profile listing. */
 router.get('/', function (req, res, next) {
 	console.log('\n\n\n\n\n\n\t\t\tWELCOME TO THE PROFILE PAGE\n');
-	
+
 	fn_render_profile(req, res, next, '');
 });
 
-// handling Error or success messages. 
-// router.get('/:pass_message', function (req, res, next) {
+// HANDLE Error or success messages.
 router.get('/:redirect_msg', function (req, res, next) {
-	console.log('\n\n\n\nwe got the message');
-	
-	(req.params.redirect_msg.search('pass_err') == 0) ? console.log('\tGot: Pass_err: \'' + req.params.redirect_msg.slice(8) + '\'') : 0;
-	(req.params.redirect_msg.search('pass_suc') == 0) ? console.log('\tGot: Pass_suc: \'' + req.params.redirect_msg.slice(8) + '\'') : 0;
 	fn_render_profile(req, res, next, req.params.redirect_msg);
 });
 
@@ -240,7 +232,10 @@ router.post('/', function (req, res, next) {
 			// 	res.redirect('/profile/' + user);
 			// });
 			// "_id" : ObjectId("5c7ca533b3991c4b3f0eae13")
-			collection.updateOne({ id_: "value" }, {
+			collection.updateOne({
+				id_: "value"
+				// usr_email: req.session.email
+			}, {
 				$set: {
 					usr_user: profile_username,
 					usr_email: profile_email,
@@ -258,6 +253,7 @@ router.post('/', function (req, res, next) {
 				console.log('\t\tend of poeting finction');
 				redirect_msg_type = 'pass_suc';
 				redirect_msg.push('Your information Changed');
+				req.session.email = profile_email;
 				res.redirect('/profile/' + redirect_msg_type + redirect_msg);
 			});
 		});
