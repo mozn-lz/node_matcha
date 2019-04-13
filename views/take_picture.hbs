@@ -1,0 +1,49 @@
+<link rel='stylesheet' href='/stylesheets/take_picture.css' />
+
+<section class="shadow-lg p-3 mb-5 bg-white " id="main">
+	<h2>Take pic</h2>
+
+	<div class="top-container">
+		<div id="overlay-options">
+			<input type="radio" name="overlay" value="#" id="none" checked="checked"> Ugly face
+			<input type="radio" name="overlay" value="/images/img/mask1.png" id="crazy"> crazy
+			<input type="radio" name="overlay" value="/images/img/mask2.png" id="catface"> catface
+		</div>
+		<div>
+			<input type="checkbox" name="overlay2" value="/images/img/waterDrop.png" id="overlay2"> Rain
+		</div>
+		<div class="">
+			<div class="" id="vid_div">
+				<div>
+					<button id="photo-button" class="btn btn-success">Take Photo</button>
+					<input type="file" onchange="encodeImageFileAsURL(this)" />
+				</div>
+				<div id="imgVidDiv">
+					<img id="tmpImg" src=""  alt="">
+					<img id="tmpImg2" src=""  alt="">
+					<video id="video">Stream broken...</video>
+				</div>	
+			</div>
+			<div class="float-left padding-400">
+			</div>
+		</div>
+		<div id="photos">
+			<img id="selfie" src="" alt="" style="width:100%;max-width:300px">
+			
+			<!-- The Modal -->
+			<div id="myModal" class="modal">
+				<span class="close">&times;</span>
+				<img class="modal-content" name="user_pic" id="img01">
+				<div id="caption"></div>
+				<form action="" method="post">
+					<input class="hidden" type="text" id="thmb" name="thmb" value="#">
+					<button name="cancel" value="cancel" type="submit">Cancel</button>
+					<button name="submit" value="submit" type="submit">Save</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<canvas id="canvas"></canvas>
+</section>
+
+<script src="/javascripts/take_pic.js"></script>
