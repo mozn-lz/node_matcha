@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
+const objectId = require('mongodb').ObjectID;
 const assert = require('assert');
 // var helper = require('./helper_functions'); // Helper functions Mk
 
 const url = 'mongodb://localhost:27017';	// Database Address
 const dbName = 'matcha';					// Database Name
-
 var page_name = 'Profile';
 
 function is_empty(str) {
@@ -19,8 +19,8 @@ function is_empty(str) {
 
 function fn_render_profile(req, res, next, msg) {
 	console.log('\n\n\nfn_render_profile\n');
-	if (req.session.email) {
-		console.log('req.session.email: ' + req.session.email);
+	if (req.session.usrId) {
+		console.log('req.session.usrId: ' + req.session.usrId);
 
 		MongoClient.connect(url, function (err, client) {
 			assert.equal(null, err);
@@ -30,7 +30,7 @@ function fn_render_profile(req, res, next, msg) {
 			const collection = db.collection('users');
 
 			var usr_data = {
-				'usr_email': req.session.email
+				'_id': objectId(req.session.usrId)
 			};
 
 			var msg_arr = [];
@@ -46,6 +46,12 @@ function fn_render_profile(req, res, next, msg) {
 				client.close();
 				if (res_arr.length == 1) {
 					// if user is found get their details from database
+					res_arr[0].gender == 'male'? male = 'male' : male = ''; 
+					res_arr[0].gender == 'female'? female = 'female' : female = ''; 
+					res_arr[0].oriantation == 'hetrosexual'? hetrosexual = 'hetrosexual' : hetrosexual = ''; 
+					res_arr[0].oriantation == 'homosexual'? homosexual = 'homosexual' : homosexual = ''; 
+					res_arr[0].oriantation == 'bisexual'? bisexual = 'bisexual' : bisexual = ''; 					
+
 					res.render('profile', {
 						title: 'Profile',
 						er: pass_er,
@@ -60,6 +66,11 @@ function fn_render_profile(req, res, next, msg) {
 						age: res_arr[0].age,
 						gender: res_arr[0].gender,
 						oriantation: res_arr[0].oriantation,
+						male,
+						female,
+						hetrosexual,
+						homosexual,
+						bisexual,
 						rating: res_arr[0].rating,
 						bio: res_arr[0].bio,
 						intrests: res_arr[0].intrests,
@@ -194,6 +205,15 @@ router.post('/', function (req, res, next) {
 
 	/* because the if statement below will stop on the fist False 
 		this is to log all errors (if any)	*/
+	console.log('\t\t username: ' + req.body.username);
+	console.log('\t\t email: ' + req.body.email);
+	console.log('\t\t fname: ' + req.body.fname);
+	console.log('\t\t lname: ' + req.body.lname);
+	console.log('\t\t age: ' + req.body.age);
+	console.log('\t\t gender: ' + req.body.gender);
+	console.log('\t\t orientation: ' + req.body.orientation);
+	console.log('\t\t bio: ' + req.body.bio);
+	console.log('\t\t gps: ' + req.body.gps);
 	check_usr_user(req.body.username);
 	check_usr_email(req.body.email);
 	check_usr_name(req.body.fname);
@@ -225,17 +245,9 @@ router.post('/', function (req, res, next) {
 			console.log("\tConnected to server and mongo connected Successfully");
 			const db = client.db(dbName);
 			const collection = db.collection('users');
-			// collection.insertOne(usr_data, function (err, result) {
-			// 	assert.equal(null, err);
-			// 	console.log("Documents added to database: " + dbName);
-			// 	client.close();
-			// 	res.redirect('/profile/' + user);
-			// });
-			// "_id" : ObjectId("5c7ca533b3991c4b3f0eae13")
 			collection.updateOne({
-				id_: "value"
-				// usr_email: req.session.email
-			}, {
+				'_id': objectId(req.session.usrId)
+			}, {	
 				$set: {
 					usr_user: profile_username,
 					usr_email: profile_email,
