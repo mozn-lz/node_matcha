@@ -9,6 +9,23 @@ const url = 'mongodb://localhost:27017';
 // Database Name
 const dbName = 'matcha';
 
+function is_empty(str) {
+	var ret = str.trim();
+	
+	if (ret.length == 0) {
+		console.log('\t\tis_empty: Returning true for ' + str + ' of length ' + ret.length);
+		return (true);
+	}
+	console.log('\t\tis_empty: Returning false for ' + str + ' of length ' + ret.length);
+	return (false);
+}
+
+function is_match(str1, str2) {
+	if ((is_empty(str1) && is_empty(str2)) || (str1 !== str2)) {
+		return (false);
+	}
+	return (true);
+}
 
 /* GET register listing. */
 router.get('/', function (req, res, next) {
@@ -179,7 +196,7 @@ router.post('/', function (req, res, next) {
 				assert.equal(null, err);
 				console.log("Documents added to database: " + dbName);
 				client.close();
-				res.redirect('/login/' + user);
+				res.redirect('/login/' + 'pass_suc' + user + ' created successfully. Please check your emial to verity your account');
 			});
 		});
 		console.log('end of poeting finction');
