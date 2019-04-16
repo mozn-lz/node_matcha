@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
+const objectId = require('mongodb').ObjectID;
 const assert = require('assert');
 
 const url = 'mongodb://localhost:27017';	// Database(mongo) url
@@ -47,13 +48,17 @@ router.post('/', function (req, res, next) {
 		collection.find(usr_data).forEach(function (doc, err) {
 			assert.equal(null, err);
 			res_arr.push(doc);
+			console.log('\t\t' + res_arr);
 		}, function () {
 			client.close();
 			if (res_arr.length == 1) {
 				if (res_arr[0].verified == 0) {
 					res.redirect('/login/' + 'pass_errPlease check your email address to CONFIRM your account');
 				} else {
-					req.session.email = email;
+					req.session.usrId = res_arr[0]._id;
+					console.log('\t\t res_arr[0]._id: ' + res_arr[0]._id);
+					console.log('\t\t req.session.usrId: ' + req.session.usrId);
+					// req.session.email = res_arr[0].usr_email;
 					res.redirect('/');
 				}
 			} else if (res_arr.length < 1) {

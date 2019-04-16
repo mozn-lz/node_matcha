@@ -19,8 +19,9 @@ function is_empty(str) {
 
 function fn_render_index(req, res, next, msg) {
 	console.log('\n\n\nfn_render_index\n');
-	if (req.session.email) {
-		console.log('req.session.email: ' + req.session.email);
+	if (req.session.usrId) {
+		// console.log('req.session.email: ' + req.session.email);
+		console.log('req.session.usrId: ' + req.session.usrId);
 
 		MongoClient.connect(url, function (err, client) {
 			assert.equal(null, err);
