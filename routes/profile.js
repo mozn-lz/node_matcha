@@ -51,7 +51,8 @@ function fn_render_profile(req, res, next, msg) {
 					res_arr[0].oriantation == 'hetrosexual'? hetrosexual = 'hetrosexual' : hetrosexual = ''; 
 					res_arr[0].oriantation == 'homosexual'? homosexual = 'homosexual' : homosexual = ''; 
 					res_arr[0].oriantation == 'bisexual'? bisexual = 'bisexual' : bisexual = ''; 					
-
+					res_arr[0].gps == 'show' ? show_location = 'show' : show_location = '';
+					res_arr[0].gps == 'hide' ? hide_location = 'hide' : hide_location = '';
 					res.render('profile', {
 						title: 'Profile',
 						er: pass_er,
@@ -75,6 +76,8 @@ function fn_render_profile(req, res, next, msg) {
 						bio: res_arr[0].bio,
 						intrests: res_arr[0].intrests,
 						gps: res_arr[0].gps,
+						show_location,
+						hide_location,
 						viewd: res_arr[0].viewd,
 						liked: res_arr[0].liked
 					});
@@ -195,10 +198,10 @@ router.post('/', function (req, res, next) {
 	}
 
 	function check_gps(chk_gps) {
-		if (chk_gps == 'on') {
-			profile_gps = 1;
+		if (chk_gps == 'hide') {
+			profile_gps = 'hide';
 		} else {
-			profile_gps = 0;
+			profile_gps = 'show';
 		}
 		return (true);
 	}

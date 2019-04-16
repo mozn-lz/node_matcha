@@ -22,9 +22,13 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="form-group form-check">
-			<input type="checkbox" class="form-check-input" name="gps" id="gps_track">
-			<label class="form-check-label" for="gps tracking">Track Gps</label>
+		<div class="custom-control custom-radio custom-control-inline">
+		<input type="radio" id="hide_location" name="gps" value="hide" class="custom-control-input" {{#if hide_location}}checked{{/if}}>
+		<label class="custom-control-label" for="hide_location">Hide location</label>
+		</div>
+		<div class="custom-control custom-radio custom-control-inline">
+		<input type="radio" id="show_location" name="gps" value="show" class="custom-control-input" {{#if show_location}}checked{{/if}}>
+		<label class="custom-control-label" for="show_location">Show location</label>
 		</div>
 	</div>
 	<div class="row">
