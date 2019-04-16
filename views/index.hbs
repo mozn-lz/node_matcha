@@ -1,38 +1,7 @@
 <link rel='stylesheet' href='/stylesheets/index.css' />
-<h1>{{title}}</h1>
+{{!-- <h1>{{title}}</h1> --}}
 <p>Welcome to {{title}}!</p>
 <div class="users_list">
-	{{#each match_list}}
-	<div class="users row">
-		<div class="left col-3"><img src={{this.pic}} alt="Profile Picture"></div>
-		<div class="user_data col-8">
-			<div class="center">
-				<div class="details_header">
-					<div class="col-12"><h3>{{this.usr_user}}</h3></div>
-					<div>
-						{{this.usr_name}} &nbsp;
-						{{this.usr_surname}}
-					</div>
-				</div>
-				<div class="details_content col-12 text-center row">
-					<div class="col-6">Age: {{this.age}}</div>
-					<div class="col-6">Gender: {{this.gender}}</div>
-					<div class="col-6">Oriantation: {{this.oriantation}}</div>
-					<div class="col-12">Bio: <br> {{this.bio}}</div>
-					<div>Intrests: {{this.intrests}}</div>
-				</div>
-				{{!-- <div class="details_content col-12">
-					<div>login_time: {{this.login_time}}</div>
-				</div> --}}
-			</div>
-		</div>
-		<div class="right col-1">rating: {{this.rating}}</div>
-			{{!-- <div>gps: {{this.gps}}</div>
-			<div>viewd: {{this.viewd}}</div>
-			<div>liked: {{this.liked}}</div> --}}
-			{{!-- <div>usr_email: {{this.usr_email}}</div> --}}
-	</div>
-	{{/each}}
 	{{#each match_list}}
 	<div class="users row">
 		<div class="left col-3"><img src={{this.pic}} alt="Profile Picture"></div>
@@ -45,7 +14,7 @@
 					Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate quidem blanditiis nobis voluptate suscipit et ducimus, voluptas consequatur autem reprehenderit ut expedita, cum dolore vitae fuga a fugiat eveniet eius!
 				</p>
 				<a href="#" class="card-link btn btn-info">Add</a>
-				<a href="#" class="card-link btn btn-info">Send Message</a>
+				<a href="./messages" class="card-link btn btn-info">Send Message</a>
 			</div>
 		</div>
 		<div class="right col-1">rating: {{this.rating}}</div>
