@@ -32,21 +32,26 @@ function fn_render_index(req, res, next, msg) {
 
 			var gender;
 			// var sexuality;
-			
-			// 	req.session.oriantation = 'straight';
-			// 	req.session.gender = 'male';
-			// switch (key) {
-			// 	case value:
-					
-			// 		break;
-			
-			// 	default:
-			// 		break;
-			// }
-
+			var gender;
+			var oriantation;
 			gender = '';
+/*
+			if (this.gender == 'male') {
+				this.oriantation =='straight' ? gender: female, oriantation: hetro, bi
+				this.oriantation =='gay' ? gender: male, oriantation:homo, bi
+				this.oriantation =='bi' ? gender: '', oriantation:homo, bi
+			}
+
+			if (this.gender == 'female') {
+				this.oriantation == 'straight' ? gender: male, orientation: hetro, bi
+				this.oriantation == 'gay' ? gender: female, orientation: homo, bi
+				this.oriantation == 'bi' ? gender: '', orientation: homo, bi
+			}
+*/
 			var usr_data = {
-				'gender': gender
+				'verified': 1,
+				'gender': gender,
+				'oriantation': oriantation
 			};
 
 			var msg_arr = [];

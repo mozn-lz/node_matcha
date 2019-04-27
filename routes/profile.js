@@ -5,8 +5,8 @@ const objectId = require('mongodb').ObjectID;
 const assert = require('assert');
 // var helper = require('./helper_functions'); // Helper functions Mk
 
-const url = 'mongodb://localhost:27017';	// Database Address
-const dbName = 'matcha';					// Database Name
+const url = 'mongodb://localhost:27017'; // Database Address
+const dbName = 'matcha'; // Database Name
 var page_name = 'Profile';
 
 function is_empty(str) {
@@ -46,11 +46,11 @@ function fn_render_profile(req, res, next, msg) {
 				client.close();
 				if (res_arr.length == 1) {
 					// if user is found get their details from database
-					res_arr[0].gender == 'male'? male = 'male' : male = ''; 
-					res_arr[0].gender == 'female'? female = 'female' : female = ''; 
-					res_arr[0].oriantation == 'hetrosexual'? hetrosexual = 'hetrosexual' : hetrosexual = ''; 
-					res_arr[0].oriantation == 'homosexual'? homosexual = 'homosexual' : homosexual = ''; 
-					res_arr[0].oriantation == 'bisexual'? bisexual = 'bisexual' : bisexual = ''; 					
+					res_arr[0].gender == 'male' ? male = 'male' : male = '';
+					res_arr[0].gender == 'female' ? female = 'female' : female = '';
+					res_arr[0].oriantation == 'hetrosexual' ? hetrosexual = 'hetrosexual' : hetrosexual = '';
+					res_arr[0].oriantation == 'homosexual' ? homosexual = 'homosexual' : homosexual = '';
+					res_arr[0].oriantation == 'bisexual' ? bisexual = 'bisexual' : bisexual = '';
 					res_arr[0].gps == 'show' ? show_location = 'show' : show_location = '';
 					res_arr[0].gps == 'hide' ? hide_location = 'hide' : hide_location = '';
 					res.render('profile', {
@@ -178,13 +178,21 @@ router.post('/', function (req, res, next) {
 	}
 
 	function check_oriantation(chk_oriantation) {
-		if (is_empty(chk_oriantation)) {
-			redirect_msg.push('Oriantation is not valid');
-			return (false);
-		} else {
-			profile_oriantation = chk_oriantation;
-			return (true);
+		switch (chk_oriantation) {
+			case 'hetrosexual':
+				profile_oriantation = 'hetrosexual';
+				break;
+			case 'homosexual':
+				profile_oriantation = 'homosexual';
+				break;
+			case 'bisexual':
+				profile_oriantation = 'bisexual';
+				break;
+			default:
+				profile_oriantation = 'bisexual';
+				break;
 		}
+		return (true);
 	}
 
 	function check_bio(chk_bio) {
@@ -250,7 +258,7 @@ router.post('/', function (req, res, next) {
 			const collection = db.collection('users');
 			collection.updateOne({
 				'_id': objectId(req.session.usrId)
-			}, {	
+			}, {
 				$set: {
 					usr_user: profile_username,
 					usr_email: profile_email,
