@@ -11,7 +11,7 @@ const dbName = 'matcha';
 
 function is_empty(str) {
 	var ret = str.trim();
-	
+
 	if (ret.length == 0) {
 		console.log('\t\tis_empty: Returning true for ' + str + ' of length ' + ret.length);
 		return (true);
@@ -47,7 +47,7 @@ router.get('/:errors', function (req, res, next) {
 		}
 		return (false);
 	}
-	
+
 	// finds if param1 is equal to param 2
 	function is_match(str1, str2) {
 		if ((is_empty(str1) && is_empty(str2)) || (str1 !== str2)) {
@@ -56,8 +56,8 @@ router.get('/:errors', function (req, res, next) {
 		return (true);
 	}
 	/* 		req.body.psswd	END helper functions 			*/
-	
-	
+
+
 });
 
 router.post('/', function (req, res, next) {
@@ -189,23 +189,29 @@ router.post('/', function (req, res, next) {
 			assert.equal(null, err);
 			console.log("Connected to server and mongo connected Successfully");
 			const db = client.db(dbName);
-
 			const collection = db.collection('users');
 
-			collection.insertOne(usr_data, function (err, result) {
-				assert.equal(null, err);
-				console.log("Documents added to database: " + dbName);
-				client.close();
-				res.redirect('/login/' + 'pass_suc' + user + ' created successfully. Please check your emial to verity your account');
-			});
+			collection.count({ usr_email: email })
+				.then((count) => {
+					if (count > 0) {
+						console.log('Username exists.');
+						res.redirect('/login/' + 'pass_errEmail ' + email + ' is alreday associated with an account.');
+					} else {
+						console.log('Username does not exist.');
+						collection.insertOne(usr_data, function (err, result) {
+							assert.equal(null, err);
+							console.log("Documents added to database: " + dbName);
+							client.close();
+							res.redirect('/login/' + 'pass_suc' + user + ' created successfully. Please check your emial to verity your account');
+						});
+					}
+				});
 		});
-		console.log('end of poeting finction');
 	} else {
 		console.log('Error coint' + error_log.length);
 		console.log('error_log = ' + error_log);
 		res.redirect('/register/' + error_log);
 	}
-
 });
 
 module.exports = router;
