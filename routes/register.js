@@ -9,23 +9,21 @@ const url = 'mongodb://localhost:27017';
 // Database Name
 const dbName = 'matcha';
 
-function is_empty(str) {
-	var ret = str.trim();
+// function is_empty(str) {
+// 	var ret = str.trim();
 
-	if (ret.length == 0) {
-		console.log('\t\tis_empty: Returning true for ' + str + ' of length ' + ret.length);
-		return (true);
-	}
-	console.log('\t\tis_empty: Returning false for ' + str + ' of length ' + ret.length);
-	return (false);
-}
+// 	if (ret.length == 0) {
+// 		return (true);
+// 	}
+// 	return (false);
+// }
 
-function is_match(str1, str2) {
-	if ((is_empty(str1) && is_empty(str2)) || (str1 !== str2)) {
-		return (false);
-	}
-	return (true);
-}
+// function is_match(str1, str2) {
+// 	if ((helper.is_empty(str1) && helper.is_empty(str2)) || (str1 !== str2)) {
+// 		return (false);
+// 	}
+// 	return (true);
+// }
 
 /* GET register listing. */
 router.get('/', function (req, res, next) {
@@ -38,26 +36,7 @@ router.get('/', function (req, res, next) {
 router.get('/:errors', function (req, res, next) {
 	res.render('register', {
 		error_list: req.params.errors.split(',')
-	});/* 			START helper functions 						*/
-	// Finds ireq.body.psswds string is empty
-	function is_empty(str) {
-		ret = str.trim();
-		if (ret.length == 0) {
-			return (true);
-		}
-		return (false);
-	}
-
-	// finds if param1 is equal to param 2
-	function is_match(str1, str2) {
-		if ((is_empty(str1) && is_empty(str2)) || (str1 !== str2)) {
-			return (false);
-		}
-		return (true);
-	}
-	/* 		req.body.psswd	END helper functions 			*/
-
-
+	});
 });
 
 router.post('/', function (req, res, next) {
@@ -70,7 +49,7 @@ router.post('/', function (req, res, next) {
 	var psswd1;
 
 	function check_username(chk_username) {
-		if (!is_empty(chk_username)) {
+		if (!helper.is_empty(chk_username)) {
 			user = req.body.username;
 			console.log('username stored as [username]');
 			return (true);
@@ -82,7 +61,7 @@ router.post('/', function (req, res, next) {
 	}
 
 	function check_email(chk_email) {
-		if (!is_empty(chk_email)) {
+		if (!helper.is_empty(chk_email)) {
 			email = req.body.email;
 			console.log('email stored as [email]');
 			return (true);
@@ -94,7 +73,7 @@ router.post('/', function (req, res, next) {
 	}
 
 	function check_name(chk_name) {
-		if (!is_empty(chk_name)) {
+		if (!helper.is_empty(chk_name)) {
 			name = req.body.name;
 			console.log('name stored as [name]');
 			return (true);
@@ -106,7 +85,7 @@ router.post('/', function (req, res, next) {
 	}
 
 	function check_surname(chk_surname) {
-		if (!is_empty(chk_surname)) {
+		if (!helper.is_empty(chk_surname)) {
 			surname = req.body.surname;
 			console.log('surname stored as [surname]');
 			return (true);
@@ -118,7 +97,7 @@ router.post('/', function (req, res, next) {
 	}
 
 	function check_psswd(chk_psswd) {
-		if (!is_empty(chk_psswd)) {
+		if (!helper.is_empty(chk_psswd)) {
 			psswd = req.body.psswd;
 			console.log('Password stored as [psswd]');
 			return (true);
@@ -130,7 +109,7 @@ router.post('/', function (req, res, next) {
 	}
 
 	function check_psswd1(chk_psswd1) {
-		if (!is_empty(chk_psswd1)) {
+		if (!helper.is_empty(chk_psswd1)) {
 			psswd1 = req.body.psswd1;
 			console.log('psswd1 stored as [psswd1]');
 			return (true);
@@ -142,10 +121,10 @@ router.post('/', function (req, res, next) {
 	}
 
 	function pass_match(chk_pass1, chk_pass2) {
-		if (is_match(chk_pass1, chk_pass2)) {
+		if (helper.is_match(chk_pass1, chk_pass2)) {
 			// if passwords don't match or there are errors in the code
 			return (true);
-		} else if (!is_match(chk_pass1, chk_pass2)) {
+		} else if (!helper.is_match(chk_pass1, chk_pass2)) {
 			error_log.push('Passwords do not match');
 			return (false)
 		}

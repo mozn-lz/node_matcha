@@ -56,6 +56,25 @@ router.post('/', function (req, res, next) {
 					res.redirect('/login/' + 'pass_errPlease check your email address to CONFIRM your account');
 				} else {
 					req.session.usrId = res_arr[0]._id;
+					req.session.usr_user = res_arr[0].usr_user;
+					req.session.usr_email = res_arr[0].usr_email;
+					req.session.usr_name = res_arr[0].usr_name;
+					req.session.usr_surname = res_arr[0].usr_surname;
+					req.session.usr_psswd = res_arr[0].usr_psswd;
+					req.session.login_time = res_arr[0].login_time;
+					req.session.pic = res_arr[0].pic;
+					req.session.age = res_arr[0].age;
+					req.session.gender = res_arr[0].gender;
+					req.session.oriantation = res_arr[0].oriantation;
+					req.session.rating = res_arr[0].rating;
+					req.session.bio = res_arr[0].bio;
+					req.session.intrests = res_arr[0].intrests;
+					req.session.gps = res_arr[0].gps;
+					req.session.viewd = res_arr[0].viewd;
+					req.session.liked = res_arr[0].liked;
+					req.session.verified = res_arr[0].verified;
+					req.session.confirm_code = res_arr[0].confirm_code;
+					
 					console.log('\t\t res_arr[0]._id: ' + res_arr[0]._id);
 					console.log('\t\t req.session.usrId: ' + req.session.usrId);
 					// req.session.email = res_arr[0].usr_email;
