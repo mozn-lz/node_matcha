@@ -28,7 +28,7 @@ module.exports = {
 		return (true);
 	},
 	search_DB: function (usr_data, exception) {
-		
+
 		MongoClient.connect(url, function (err, client) {
 			assert.equal(null, err);
 
@@ -38,18 +38,17 @@ module.exports = {
 
 			collection.find(usr_data).forEach(function (doc, err) {
 				assert.equal(null, err);
-				if (doc.orientation != exception) {
+				if (doc.oriantation != exception) {
 					res_arr.push(doc);
-					console.log(doc.usr_name);
+					console.log("RESULT: Name: " + doc.usr_name + ", Orinat: " + doc.oriantation + " (AKA) !" + exception);
 				}
 			}, function () {
-				console.log('\trun');
-				console.log('\tusr dta: find ' + usr_data.gender);
-				console.log('\texception: but not ' + exception);
-				
 				client.close();
-				console.log("\t\thelp class\n");
-				
+				console.log("\nfn_Helper : db search complete. "+ res_arr.length + " matches found\n");
+				// for (let i = 0; i < res_arr.length; i++) {
+				// 	// const element = res_arr[i];
+				// 	console.log("res_arr[" + i + "] " + res_arr[i].usr_name);
+				// }
 				return (res_arr);
 			});
 		});
