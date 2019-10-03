@@ -33,23 +33,25 @@ module.exports = {
 			assert.equal(null, err);
 
 			const db = client.db(dbName);
-			var res_arr = [];
+			var user_matches = [];
 			const collection = db.collection('users');
 
-			collection.find(usr_data).forEach(function (doc, err) {
+			console.log(usr_data);
+			
+			collection.find({gender: usr_data}).forEach(function (doc, err) {
 				assert.equal(null, err);
 				if (doc.oriantation != exception) {
-					res_arr.push(doc);
+					user_matches.push(doc);
 					console.log("RESULT: Name: " + doc.usr_name + ", Orinat: " + doc.oriantation + " (AKA) !" + exception);
 				}
 			}, function () {
 				client.close();
-				console.log("\nfn_Helper : db search complete. "+ res_arr.length + " matches found\n");
+				console.log("\nfn_Helper : db search complete. "+ user_matches.length + " matches found\n");
 				// for (let i = 0; i < res_arr.length; i++) {
 				// 	// const element = res_arr[i];
 				// 	console.log("res_arr[" + i + "] " + res_arr[i].usr_name);
 				// }
-				return (res_arr);
+				return (user_matches);
 			});
 		});
 	}
