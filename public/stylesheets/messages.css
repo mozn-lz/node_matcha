@@ -1,98 +1,85 @@
-.content{
-	background-color: orangered;
-}
-#hello{
-	width: 3cm;
-	height: 3cm;
-	background-color: green;
-	margin: 10px;
-	border-style: solid;
-	border-width: thick;
-	border-color: darkred;
-	border-radius: 10px;
-}
-.hello{
-	width: 3cm;
-	height: 3cm;
-	background-color: green;
-	margin: 10px;
-}
-#sidebar{
-	width: 20%;
-	height: 100%;
-	background-color: green;
-	margin: 10px;
-	border-style: solid;
-	border-width: thin;
-	border-color: whitesmoke;
-	border-radius: 10px;
-}
-/* .person{} */
-/* .profile_pic{} */
-/* .details{} */
-.name{
-	
-}
-/* .online_status{} */
-#view{
-	width: 70%;
-	background-color: white;
-	margin: 10px;
-	border-style: solid;
-	border-width: thin;
-	border-top-color: silver;
-	border-right-color: silver;
-	border-bottom-color: silver;
-	border-radius: 10px;
-	/* border-top-right-radius: 10px;
-	border-bottom-right-radius: 10px; */
-}
-#title{
-	/* background: rgba(0, 0, 0, 0.8); */
-	width: 100%;
-	background-color: rgba(0, 0, 0, 0.8);
-	padding: 10px;
-	text-align: center;
+a .content :hover {
+	background-color: rgb(255, 0, 64);
 	color: white;
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
-}
-#views_content{
-	padding: 10px;
-}
-.message{
-	border-style: solid;
-	border-width: thin;
-	border-color: blue;
-	padding: 10px;
-}
-.icon_pic{
-	width: 30px;
-	height: 30px;
-	background-color: silver;
-	display: inline-block;
-	border-style: solid;
-	border-width: thin;
+	border-radius: 25px;
+	/* border-width: 1px;
 	border-color: black;
-	border-radius: 100%;
-	vertical-align: 50%;
+	border-style: solid; */
 }
-.message_content{
-	font-size: 18px;
-	font-family: 'Times New Roman', Times, serif;
-	display: inline;
-	/* border-style: solid;
-	border-width: thin;
-	border-color: blue; */
-	padding-right:15 ;
-	padding-left:15 ;
+a {
+	text-decoration: none;
+	}
+.content {
+	border-width: 1px;
+	width: 350px;
+	text-decoration: none;
+	/* border-color: black; */
+	/* border-style: solid; */
+	/* background-color: orangered; */
+	/* width: 100%; */
+	/* margin: 10px; */
+	/* padding: 10px; */
+}
+
+.chat_profile{
+	/* width: 350px;
+	height: 150px; */
+	/* display: inline; */
+	/* width: 100%; */
+	/* background-color: rgb(21, 255, 0); */
+	border-width: 1px;
+	border-color: rgba(255, 0, 0, 0.3);
+	/* border-style: dashed; */
+	/* margin: 10px; */
 	padding: 10px;
-	border-radius: 100px;
-	background-color: chartreuse;
-	/* vertical-align: 50%; */
 }
-.message_time{
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	font-size: 10px;
+.profile_picture {
 	display: inline;
+	border-width: 1px;
+	/* border-style: dashed; */
+	border-color: rgb(0, 0, 0);
+	/* background-color: rgb(99, 29, 4); */
+	margin: 10px;
+	padding: 10px;
+	/* width: 30%; */
+	/* width: 100%; */
+}
+.information{
+	display: inline;
+	border-width: 1px;
+	/* border-style: dashed; */
+	border-color: rgb(0, 0, 0);
+	/* background-color: orangered; */
+	/* margin: 10px; */
+	padding: 10px;
+	/* width: 60%; */
+	/* width: 100%; */
+}
+.name {
+		/* border-width: 1px;
+		border-color: rgb(9, 5, 226);
+		border-style: solid; */
+	text-transform: uppercase;
+
+	/* display: block; */
+	/* background-color: orangered; */
+	/* width: 100%; */
+	margin-top: 30px;
+	margin-bottom: 0px;
+		/* font-family: "Times New Roman", Times, serif;
+		font-weight: bold; */
+	/* padding: 10px; */
+	font: bold 12px/30px Georgia, serif;
+}
+
+.last_text {
+	/* display: block; */
+		/* border-width: 1px;
+		border-color: rgb(201, 32, 173);
+		border-style: solid; */
+	/* background-color: orangered; */
+	/* width: 100%; */
+	/* margin: 10px; */
+	/* padding: 10px; */
+	font: italic bold 12px/30px Georgia, serif;
 }

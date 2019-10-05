@@ -34,6 +34,15 @@ function fn_render_messages(req, res, next, msg) {
 				'gender': session_variable
 			};
 
+			// var message = {
+			// 	id,
+			// 	from,
+			// 	to,
+			// 	datetime,
+			// 	message,
+			// 	uid
+			// };
+
 			var msg_arr = [];
 			(msg.search('pass_err') == 0) ? pass_er = "danger": pass_er = '';
 			(msg.search('pass_suc') == 0) ? pass_suc = "success": pass_suc = '';
@@ -78,11 +87,6 @@ router.get('/', function (req, res, next) {
 	fn_render_messages(req, res, next, '');
 });
 
-// Render messages page with user
-router.get('/', function (req, res, next) {
-	console.log('\n\n\n\n\n\n\t\t\tWELCOME TO THE message PAGE\n');
-	fn_render_messages(req, res, next, '');
-});
 
 // HANDLE Error or success messages.
 router.get('/:redirect_msg', function (req, res, next) {
