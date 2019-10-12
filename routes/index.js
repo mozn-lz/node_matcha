@@ -92,19 +92,13 @@ router.get('/', function (req, res, next) {
 						console.log('Please make sure your gender and oriantation is specified');
 						break;
 				}
-				// console.log("geting matches");
-				// console.log('usr_data: ' + match_criteria.gender);
-				// console.log('usr_data: ' + match_criteria.exception);
 				collection.find(match_criteria.gender).forEach(function (doc, err) {
 					assert.equal(null, err);
 					if (doc.oriantation != match_criteria.exception) {
 						user_matches.push(doc);
-						// console.log("doc.oriantation: " + doc.oriantation + "\t fetchData.exception: " + match_criteria.exception + '\n');
-						// console.log("Result: Name: " + doc.usr_name + ", Orinat: " + doc.oriantation + " (AKA) !" + match_criteria.exception);
 					}
 				})
 			})(), (() => {
-				// console.log("this is the end");
 				client.close();
 				fn_render_index(req, res, next, '', user_matches);
 				// res.redirect('/');
@@ -127,95 +121,5 @@ router.get('/', function (req, res, next) {
 // });
 
 
-() =>{
-// fetchData = (req => {
-// 	var user_matches = null;
-// 	console.log("\t\t_____FETCH_DATA_____\n");
-
-// 	return new Promise((resolve, reject) => {
-// 		switch (req.session.oriantation) {
-// 			case 'hetrosexual':
-// 				if (req.session.gender == 'male') {
-// 					var usr_data = { gender: 'female', exception: 'homosexual' };
-// 					console.log("Looking for " + usr_data.gender + "'s, but not who are " + usr_data.exception);
-// 					user_matches = helper.search_DB(usr_data.gender, usr_data.exception);
-// 					console.log(user_matches.length);
-// 				} else {
-// 					var usr_data = { gender: 'male', exception: 'homosexual' };
-// 					console.log("Looking for " + usr_data.gender + "'s, but not who are " + usr_data.exception);
-// 					user_matches = helper.search_DB(usr_data.gender, usr_data.exception);
-// 					console.log(user_matches.length);
-// 				}
-// 				break;
-// 			case 'homosexual':
-// 				if (req.session.gender == 'male') {
-// 					var usr_data = { gender: 'male', exception: 'hetrosexual' };
-// 					console.log("Looking for " + usr_data.gender + "'s, but not who are " + usr_data.exception);
-// 					user_matches = helper.search_DB(usr_data.gender, usr_data.exception);
-// 					console.log(user_matches.length);
-// 				} else {
-// 					var usr_data = { gender: 'female', exception: 'hetrosexual' };
-// 					console.log("Looking for " + usr_data.gender + "'s, but not who are " + usr_data.exception);
-// 					user_matches = helper.search_DB(usr_data.gender, usr_data.exception);
-// 					console.log(user_matches.length);
-// 				}
-// 				break;
-// 			case 'bisexual':
-// 				if (req.session.gender == 'male') {
-// 					var usr_data = { gender: 'male', exception: 'hetrosexual' };
-// 					console.log("Looking for " + usr_data.gender + "'s, but not who are " + usr_data.exception);
-// 					user_matches = helper.search_DB(usr_data.gender, usr_data.exception);
-// 					console.log(user_matches.length);
-// 					var usr_data = { gender: 'female', exception: 'homosexual' };
-// 					console.log("Looking for " + usr_data.gender + "'s, but not who are " + usr_data.exception);
-// 					user_matches = helper.search_DB(usr_data.gender, usr_data.exception);
-// 					console.log(user_matches.length);
-// 				} else if (req.session.gender == 'female') {
-// 					var usr_data = { gender: 'female', exception: 'homosexual' };
-// 					console.log("Looking for " + usr_data.gender + "'s, but not who are " + usr_data.exception);
-// 					user_matches = helper.search_DB(usr_data.gender, usr_data.exception);
-// 					console.log(user_matches.length);
-// 					var usr_data = { gender: 'male', exception: 'hetrosexual' };
-// 					console.log("Looking for " + usr_data.gender + "'s, but not who are " + usr_data.exception);
-// 					user_matches = helper.search_DB(usr_data.gender, usr_data.exception);
-// 					console.log(user_matches.length);
-// 				}
-// 				break;
-// 			default:
-// 				console.log('Please make sure your gender and oriantation is specified');
-// 				break;
-// 		}
-// 		setTimeout(() => {
-// 			console.log("\t\tResults fetched\n");
-// 			console.log("returning data: " + user_matches);
-// 			if (user_matches != null) {
-// 				for (let i = 0; i < user_matches.length; i++) {
-// 					// const element = res_arr[i];
-// 					console.log("res_arr[" + i + "] " + user_matches[i].usr_name);
-// 				}
-// 			}
-// 			console.log("resolve");
-// 			resolve(user_matches);
-// 		}, 3000);
-// 	});
-// });
-
-// router.get('/', function (req, res, next) {
-// 	console.log('\n\n\n\n\n\n\t\t\tWELCOME TO THE HOME PAGE\n');
-// 	//   res.render('index', { title: 'Matcha' });
-// 	fetchData(req).then(matches => {
-// 		setTimeout(() => {
-// 			fn_render_index(req, res, next, '', matches);
-// 		}, 1000);
-// 		console.log("matches" + matches);
-// 	}).catch((error) => {
-// 		var redirect_msg = "pass_errDatabase returned NULL";
-// 		console.log(redirect_msg);
-
-// 		fn_render_index(req, res, next, redirect_msg, matches);
-// 		// fn_render_index(req, res, next, '', matches);
-// 	});
-// });
-}
 
 module.exports = router;
