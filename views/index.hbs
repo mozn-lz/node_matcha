@@ -10,32 +10,38 @@
 			<p  class="alert alert-success border border-success text-center col-12" role="alert">{{msg_arr}}</p>
 		{{/if}}
 	</div>
-
+	
 <div class="users_list">
 	{{#if match_list}}
 		{{#each match_list}}
-	<div class="users row">
-		<div class="left "><img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Profile Picture" width="150px" height="150px"></div>
-		{{!-- <div class="left col-3"><img src={{this.pic}} alt="Profile Picture"></div> --}}
-		<div class="card" style="width: 18rem;">
-			<div class="card-body">
-				<h5 class="card-title">{{this.usr_user}}</h5>
-				<h6 class="card-subtitle mb-2 text-muted">{{this.usr_name}} &nbsp; {{this.usr_surname}}</h6>
-				<p class="card-text">
-					Bio: {{this.bio}} 
-					Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate quidem blanditiis nobis voluptate suscipit et ducimus, voluptas consequatur autem reprehenderit ut expedita, cum dolore vitae fuga a fugiat eveniet eius!
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam praesentium eum aliquid non quia culpa, velit iste enim perferendis omnis, vel neque. Impedit, necessitatibus! Asperiores maiores ex praesentium quidem repellat.
-				</p>
-				<a href="#" class="card-link btn btn-info">Add</a>
-				<a href="./messages" class="card-link btn btn-info">Send Message</a>
+		{{!-- <div class	="id">{{this._id}}</div> --}}
+		<form action="/index" method="post">
+			<div class="users row" onclick="goViewProfile(`{{this._id}}`)">
+				<div class="left "><img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Profile Picture" width="150px" height="150px"></div>
+				{{!-- <div class="left col-3"><img src={{this.pic}} alt="Profile Picture"></div> --}}
+				<div class="card" style="width: 18rem;">
+					<div class="card-body">
+						<h5 class="card-title">{{this.usr_user}}</h5>
+						<h6 class="card-subtitle mb-2 text-muted">{{this.usr_name}} &nbsp; {{this.usr_surname}}</h6>
+						<p class="card-text">
+							Bio: {{this.bio}} 
+							Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate quidem blanditiis nobis voluptate suscipit et ducimus, voluptas consequatur autem reprehenderit ut expedita, cum dolore vitae fuga a fugiat eveniet eius!
+							Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam praesentium eum aliquid non quia culpa, velit iste enim perferendis omnis, vel neque. Impedit, necessitatibus! Asperiores maiores ex praesentium quidem repellat.
+						</p>
+						<a href="./index:{{this._id}}" class="card-link btn btn-info" value>Add</a>
+						<a href="./view_messages/{{this._id}}" class="card-link btn btn-info">Send Message</a>
+						{{!-- <a href="./view_messages/{{this.usr_email}}" class="card-link btn btn-info">Send Message</a> --}}
+					</div>
+				</div>
+				<div class="right ">4{{this.rating}}/5</div>
+					{{!-- <div>gps: {{this.gps}}</div>
+					<div>viewd: {{this.viewd}}</div>
+					<div>liked: {{this.liked}}</div> --}}
+					{{!-- <div>usr_email: {{this.usr_email}}</div> --}}
 			</div>
-		</div>
-		<div class="right ">4{{this.rating}}/5</div>
-			{{!-- <div>gps: {{this.gps}}</div>
-			<div>viewd: {{this.viewd}}</div>
-			<div>liked: {{this.liked}}</div> --}}
-			{{!-- <div>usr_email: {{this.usr_email}}</div> --}}
-	</div>
+		</form>
 		{{/each}}
 	{{/if}}
 </div>
+
+<script src="/javascripts/index.js"></script>
