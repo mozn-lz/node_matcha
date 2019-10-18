@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
+const objectId = require('mongodb').ObjectID;
 const assert = require('assert');
 var helper = require('./helper_functions'); // Helper functions Mk
 var helper_index = require('./helper_index'); // Helper functions Mk
@@ -15,11 +16,7 @@ function fn_render_index(req, res, next, msg, matches) {
 	var res_arr = matches;
 	// console.log('\n\n\n________fn_render_indexn________\n');
 	if (req.session.usrId) {
-		// console.log('req.session.usrId: ' + req.session.usrId);
 		(req.session.oriantation == '') ? req.session.oriantation = 'bisexual' : 0;
-
-		// console.log("Name " + req.session.usr_user + ", Oriantation is " + req.session.oriantation);
-		// console.log("WE MARCH TO VICTORY");
 
 		var msg_arr = [];
 		(msg.search('pass_err') == 0) ? pass_er = "danger" : pass_er = '';
@@ -28,7 +25,6 @@ function fn_render_index(req, res, next, msg, matches) {
 		// console.log('2. msg_arr: ' + msg_arr + "\n3. res_arr: " + res_arr + '\n');
 		if (msg_arr == '') {
 			if (res_arr > 0) {
-				// if user is found get their details from database
 				res_arr == null;
 				res.redirect('/index/' + "pass_errThere aren't any matches");
 			} else if (res_arr == null) {
@@ -51,65 +47,116 @@ function fn_render_index(req, res, next, msg, matches) {
 	}
 }
 
-router.get('/', function (req, res, next) {
-	if (req.session.usrId) {
-		MongoClient.connect(url, function (err, client) {
-			assert.equal(null, err);
+var fn_getMatches = (req, res, next, msg) => {
 
-			const db = client.db(dbName);
-			var find_user = [];
-			var user_matches = [];
-			var match_criteria = {};
-			const collection = db.collection('users');
-	
-			(() => {
-				switch (req.session.oriantation) {
-					case 'hetrosexual':
-						if (req.session.gender == 'male') {
-							match_criteria = { gender: 'female', exception: 'homosexual' };
-							// user_matches = helper.search_DB(usr_data.gender, usr_data.exception);
-						} else {
-							match_criteria = { gender: 'male', exception: 'homosexual' };
-						}
-						break;
-					case 'homosexual':
-						if (req.session.gender == 'male') {
-							match_criteria = { gender: 'male', exception: 'hetrosexual' };
-						} else {
-							match_criteria = { gender: 'female', exception: 'hetrosexual' };
-						}
-						break;
-					case 'bisexual':
-						if (req.session.gender == 'male') {
-							match_criteria = { gender: 'male', exception: 'hetrosexual' };
-							match_criteria = { gender: 'female', exception: 'homosexual' };
-						} else if (req.session.gender == 'female') {
-							usr_match_criteriadata = { gender: 'female', exception: 'homosexual' };
-							match_criteria = { gender: 'male', exception: 'hetrosexual' };
-						}
-						break;
-					default:
-						console.log('Please make sure your gender and oriantation is specified');
-						break;
-				}
-				collection.find(match_criteria.gender).forEach(function (doc, err) {
-					assert.equal(null, err);
-					if (doc.oriantation != match_criteria.exception) {
-						user_matches.push(doc);
+	console.log('\n\t\tmsg: ', msg, '\n\n');
+	MongoClient.connect(url, function (err, client) {
+		assert.equal(null, err);
+
+		const db = client.db(dbName);
+		var find_user = [];
+		var user_matches = [];
+		var match_criteria = {};
+		const collection = db.collection('users');
+
+		console.log('\n\t\tmsg: ', msg, '\n\n');
+		(() => {
+			switch (req.session.oriantation) {
+				case 'hetrosexual':
+					if (req.session.gender == 'male') {
+						match_criteria = { gender: 'female', exception: 'homosexual' };
+						// user_matches = helper.search_DB(usr_data.gender, usr_data.exception);
+					} else {
+						match_criteria = { gender: 'male', exception: 'homosexual' };
 					}
-				})
-			})(), (() => {
-				client.close();
-				fn_render_index(req, res, next, '', user_matches);
-				// res.redirect('/');
-			})()
-		});
+					break;
+				case 'homosexual':
+					if (req.session.gender == 'male') {
+						match_criteria = { gender: 'male', exception: 'hetrosexual' };
+					} else {
+						match_criteria = { gender: 'female', exception: 'hetrosexual' };
+					}
+					break;
+				case 'bisexual':
+					if (req.session.gender == 'male') {
+						match_criteria = { gender: 'male', exception: 'hetrosexual' };
+						match_criteria = { gender: 'female', exception: 'homosexual' };
+					} else if (req.session.gender == 'female') {
+						usr_match_criteriadata = { gender: 'female', exception: 'homosexual' };
+						match_criteria = { gender: 'male', exception: 'hetrosexual' };
+					}
+					break;
+				default:
+					console.log('Please make sure your gender and oriantation is specified');
+					break;
+			}
+			collection.find(match_criteria.gender).forEach(function (doc, err) {
+				assert.equal(null, err);
+				if (doc.oriantation != match_criteria.exception) {
+					user_matches.push(doc);
+				}
+			})
+		})(), (() => {
+			client.close();
+				console.log('\n\t\tmsg: ', msg, '\n\n');
+					fn_render_index(req, res, next, msg, user_matches);
+		})()
+	});
+}
+
+router.get('/', (req, res, next) => {
+	if (req.session.usrId) {
+		fn_getMatches(req, res, next, '');
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
 	}
 });
 
+router.get('/:reqId', (req, res, next) => {
+	if (req.session.usrId) {
+		let friendReqId = req.params.reqId
+		console.log("friendId: ", friendReqId);
 
+		MongoClient.connect(url, (err, client) => {
+			assert.equal(null, err);
+			const db = client.db(dbName);
+			var find_user = [];
+			const collection = db.collection('users');
+
+			collection.find({ '_id': objectId(friendReqId) }).forEach(function (doc, err) {
+				assert.equal(null, err);
+				find_user.push(doc);
+				console.log('\t\t doc: ' + doc);
+
+			}, () => {
+				client.close();
+				console.log('find_user.length: ', find_user.length);
+				let message = '';
+				if (find_user.length == 1) {
+					/*******************************/
+					/*     make friend request     */
+					/*******************************/
+					console.log('if: find_user.length', find_user.length == 1);
+					message = "pass_sucFriend request has been made";
+					console.log("\n\t\tmessage ", message, "\n")
+					fn_getMatches(req, res, next, message);
+				} else {
+					console.log("Else " + friendReqId + " not found");
+					// res.redirect('/messages');
+					//  (friendReqId.search('pass_suc') == 0) ? res.render(page_name, {
+					message = "pass_errError: friend requiest unsuccessfill, please try again";
+					console.log("\n\t\tmessage ", message, "\n");
+					fn_getMatches(req, res, next, message);
+				}
+				console.log('exiting render misfunction');
+			});
+		});
+
+		// fn_getMatches(req, res, next);
+	} else {
+		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
+	}
+});
 
 // // HANDLE Error or success messages.
 // router.get('/:redirect_msg', function (req, res, next) {
@@ -119,7 +166,5 @@ router.get('/', function (req, res, next) {
 // 		fn_render_index(req, res, next, req.params.redirect_msg, matches)
 // 	// );
 // });
-
-
 
 module.exports = router;
