@@ -14,8 +14,6 @@
 <div class="users_list">
 	{{#if match_list}}
 	{{#each match_list}}
-	{{!-- <div class	="id">{{this._id}}</div> --}}
-	{{!-- <form action="/index" method="post"> --}}
 	<a href="/view_profile/{{this._id}}">
 		<div class="users row" onclick="goViewProfile(`{{this._id}}`)">
 			<div class="left "><img
@@ -37,14 +35,9 @@
 					</p>
 					<a href="/index/{{this._id}}" class="card-link btn btn-info" value>Add</a>
 					<a href="/view_messages/{{this._id}}" class="card-link btn btn-info">Send Message</a>
-					{{!-- <a href="./view_messages/{{this.usr_email}}" class="card-link btn btn-info">Send Message</a> --}}
 				</div>
 			</div>
 			<div class="right ">4{{this.rating}}/5</div>
-			{{!-- <div>gps: {{this.gps}}</div>
-					<div>viewd: {{this.viewd}}</div>
-					<div>liked: {{this.liked}}</div> --}}
-			{{!-- <div>usr_email: {{this.usr_email}}</div> --}}
 		</div>
 	</a>
 	{{/each}}
