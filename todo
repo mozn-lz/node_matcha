@@ -1,3 +1,5 @@
+db.users.find({'usr_email': 'moeketsane.sefako@gmail.com'}, {'usr_psswd': '123456'}).pretty()
+
 Join server to database
     Register:
         be able to Register
@@ -21,10 +23,11 @@ Join server to database
         Profile Picture: change/select profile picture,
 
     Home page:
-        view compatible people, with click to access 'View others Profile' page
+        view compatible people, with click to access 
+		'View Profile' button
+		Send message button
 
-    View others Profile
+    View Match Profile
         Same as profile page but not editable
 
     Make SEARCH button work on the MENU tag -> layout.js
-
