@@ -1,5 +1,38 @@
 var express = require('express');
 var router = express.Router();
+const MongoClient = require('mongodb').MongoClient;
+const objectId = require('mongodb').ObjectID;
+const assert = require('assert');
+var helper = require('./helper_functions'); // Helper functions Mk
+var helper_index = require('./helper_index'); // Helper functions Mk
+
+const url = 'mongodb://localhost:27017';	// Database Address
+const dbName = 'matcha';					// Database Name
+
+var page_name = 'home';
+
+var renderProfile = (res, data) => {
+	res.render('view_profile', {
+		title	: 'View Profile',
+		picture	: data.pic,
+		usr_user	: data.usr_user,
+		usr_name	: data.usr_name,
+		usr_surname	: data.usr_surname,
+		bio			: data.bio,
+		intrests	: [
+			'Reading',
+			'playing music',
+			'Social medias'
+		],
+		pic		: data.pic,
+		age		: data.age,
+		gender	: data.gender,
+		rating	: data.rating,
+		gps		: data.gps,
+		viewd	: data.viewd,
+		liked	: data.liked
+	});
+}
 
 /* GET view_profile listing. */
 router.get('/', function (req, res, next) {
@@ -16,6 +49,53 @@ router.get('/', function (req, res, next) {
 			{hby: 'Social medias'}
 		]
 	});
+});
+
+
+router.get('/:reqId', (req, res, next) => {
+	if (req.session.usrId) {
+		let friendReqId = req.params.reqId
+		console.log("friendId: ", friendReqId);
+
+		MongoClient.connect(url, (err, client) => {
+			assert.equal(null, err);
+			const db = client.db(dbName);
+			var find_user = [];
+			const collection = db.collection('users');
+
+			collection.find({ '_id': objectId(friendReqId) }).forEach(function (doc, err) {
+				assert.equal(null, err);
+				find_user.push(doc);
+				console.log('\t\t doc: ' + doc);
+
+			}, () => {
+				client.close();
+				console.log('find_user.length: ', find_user.length);
+				let message = '';
+				if (find_user.length == 1) {
+					/*******************************/
+					/*     make friend request     */
+					/*******************************/
+					console.log('if: find_user.length', find_user.length == 1);
+					message = "pass_sucFriend request has been made";
+					console.log("\n\t\tmessage ", message, "\n");
+					renderProfile(res, find_user[0]);
+				} else {
+					console.log("Else " + friendReqId + " not found");
+					// res.redirect('/messages');
+					//  (friendReqId.search('pass_suc') == 0) ? res.render(page_name, {
+					message = "pass_errError: friend requiest unsuccessfill, please try again";
+					console.log("\n\t\tmessage ", message, "\n");
+					res.redirect('/index')
+					// renderProfile(res, find_user);
+				}
+				console.log('exiting render misfunction');
+			});
+		});
+
+	} else {
+		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
+	}
 });
 
 module.exports = router;
