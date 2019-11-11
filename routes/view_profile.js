@@ -14,10 +14,11 @@ var page_name = 'home';
 var renderProfile = (res, data) => {
 	res.render('view_profile', {
 		title	: 'View Profile',
+		id		: data._id,
 		picture	: data.pic,
-		usr_user	: data.usr_user,
-		usr_name	: data.usr_name,
-		usr_surname	: data.usr_surname,
+		username: data.usr_user,
+		fname	: data.usr_name,
+		lname	: data.usr_surname,
 		bio			: data.bio,
 		intrests	: [
 			'Reading',
@@ -53,6 +54,8 @@ router.get('/', function (req, res, next) {
 
 
 router.get('/:reqId', (req, res, next) => {
+	console.log("************View Profle************\n");
+	
 	if (req.session.usrId) {
 		let friendReqId = req.params.reqId
 		console.log("friendId: ", friendReqId);

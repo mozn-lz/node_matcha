@@ -49,7 +49,7 @@ function fn_render_index(req, res, next, msg, matches) {
 
 var fn_getMatches = (req, res, next, msg) => {
 
-	console.log('\n\t\tmsg: ', msg, '\n\n');
+	console.log('\n\t\t1. msg: ', msg, '\n\n');
 	MongoClient.connect(url, function (err, client) {
 		assert.equal(null, err);
 
@@ -59,7 +59,7 @@ var fn_getMatches = (req, res, next, msg) => {
 		var match_criteria = {};
 		const collection = db.collection('users');
 
-		console.log('\n\t\tmsg: ', msg, '\n\n');
+		console.log('\n\t\t2. msg: ', msg, '\n\n');
 		(() => {
 			switch (req.session.oriantation) {
 				case 'hetrosexual':
@@ -98,7 +98,7 @@ var fn_getMatches = (req, res, next, msg) => {
 			})
 		})(), (() => {
 			client.close();
-				console.log('\n\t\tmsg: ', msg, '\n\n');
+				console.log('\n\t\t3. msg: ', msg, '\n\n');
 					fn_render_index(req, res, next, msg, user_matches);
 		})()
 	});
@@ -112,59 +112,58 @@ router.get('/', (req, res, next) => {
 	}
 });
 
-router.get('/:reqId', (req, res, next) => {
-	if (req.session.usrId) {
-		let friendReqId = req.params.reqId
-		console.log("friendId: ", friendReqId);
+// router.get('/:reqId', (req, res, next) => {
+// 	if (req.session.usrId) {
+// 		let friendReqId = req.params.reqId
+// 		console.log("friendId: ", friendReqId);
 
-		MongoClient.connect(url, (err, client) => {
-			assert.equal(null, err);
-			const db = client.db(dbName);
-			var find_user = [];
-			const collection = db.collection('users');
+// 		MongoClient.connect(url, (err, client) => {
+// 			assert.equal(null, err);
+// 			const db = client.db(dbName);
+// 			var find_user = [];
+// 			const collection = db.collection('users');
 
-			collection.find({ '_id': objectId(friendReqId) }).forEach(function (doc, err) {
-				assert.equal(null, err);
-				find_user.push(doc);
-				console.log('\t\t doc: ' + doc);
-
-			}, () => {
-				client.close();
-				console.log('find_user.length: ', find_user.length);
-				let message = '';
-				if (find_user.length == 1) {
-					/*******************************/
-					/*     make friend request     */
-					/*******************************/
-					console.log('if: find_user.length', find_user.length == 1);
-					message = "pass_sucFriend request has been made";
-					console.log("\n\t\tmessage ", message, "\n")
-					fn_getMatches(req, res, next, message);
-				} else {
-					console.log("Else " + friendReqId + " not found");
-					// res.redirect('/messages');
-					//  (friendReqId.search('pass_suc') == 0) ? res.render(page_name, {
-					message = "pass_errError: friend requiest unsuccessfill, please try again";
-					console.log("\n\t\tmessage ", message, "\n");
-					fn_getMatches(req, res, next, message);
-				}
-				console.log('exiting render misfunction');
-			});
-		});
-
-		// fn_getMatches(req, res, next);
-	} else {
-		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
-	}
-});
+// 			collection.find({ '_id': objectId(friendReqId) }).forEach(function (doc, err) {
+// 				assert.equal(null, err);
+// 				find_user.push(doc);
+// 				console.log('\t\t doc: ' + doc);
+// 			}, () => {
+// 				client.close();
+// 				console.log('find_user.length: ', find_user.length);
+// 				let message = '';
+// 				if (find_user.length == 1) {
+// 					/*******************************/
+// 					/*     make friend request     */
+// 					/*******************************/
+// 					console.log('if: find_user.length', find_user.length == 1);
+// 					message = "pass_sucFriend request has been made";
+// 					console.log("\n\t\tmessage ", message, "\n")
+// 					// makeReq(find_user[0])
+// 					fn_getMatches(req, res, next, message);
+// 				} else {
+// 					console.log("Else " + friendReqId + " not found");
+// 					// res.redirect('/messages');
+// 					//  (friendReqId.search('pass_suc') == 0) ? res.render(page_name, {
+// 					message = "pass_errError: friend requiest unsuccessfill, please try again";
+// 					console.log("\n\t\tmessage ", message, "\n");
+// 					fn_getMatches(req, res, next, message);
+// 				}
+// 				console.log('exiting render misfunction');
+// 			});
+// 		});
+// 	} else {
+// 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
+// 	}
+// });
 
 // // HANDLE Error or success messages.
-// router.get('/:redirect_msg', function (req, res, next) {
-// 	var matches = fetchData(req);
-// 	// .then(
-// 		// fn_render_index(req, res, next, '', matches)
-// 		fn_render_index(req, res, next, req.params.redirect_msg, matches)
-// 	// );
-// });
+router.get('/:redirect_msg', function (req, res, next) {
+		// fn_render_index(req, res, next, '', matches)
+	console.log('0. req.params.redirect_msg ', req.params.redirect_msg);
+	
+	fn_getMatches(req, res, next, req.params.redirect_msg);
+	// fn_getMatches(req, res, next, message);
+	// fn_render_index(req, res, next, req.params.redirect_msg, matches)
+});
 
 module.exports = router;
