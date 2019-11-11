@@ -270,7 +270,7 @@ router.post('/', function (req, res, next) {
 					bio: profile_bio,
 					gps: profile_gps,
 				}
-			}, function (err, resulr) {
+			}, function (err, result) {
 				assert.equal(null, err);
 				client.close();
 				console.log('\t\tend of poeting finction');
