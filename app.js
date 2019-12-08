@@ -18,6 +18,7 @@ var forgot_passwordRouter = require('./routes/forgot_password');
 var reset_passwordRouter = require('./routes/reset_password');
 var take_pictureRouter = require('./routes/take_picture');
 var friendRequestRouter = require('./routes/friendRequest');
+var sendMessageRouter = require('./routes/sendMessage');
 var verifyRouter = require('./routes/verify');
 var signoutRouter = require('./routes/logout');
 
@@ -49,6 +50,7 @@ app.use('/take_picture', take_pictureRouter);
 app.use('/verify', verifyRouter);
 app.use('/verify', verifyRouter);
 app.use('/friendRequest', friendRequestRouter);
+app.use('/sendMessage', sendMessageRouter);
 app.use('/logout', signoutRouter)
 
 // catch 404 and forward to error handler
