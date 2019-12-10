@@ -59,11 +59,12 @@ router.post('/', function (req, res, next) {
 				if (find_user[0].verified == 0) {
 					res.redirect('/login/' + 'pass_errPlease check your email address to CONFIRM your account');
 				} else {
-					req.session.usrId = find_user[0]._id;
-					req.session.usr_user = find_user[0].usr_user;
-					req.session.usr_email = find_user[0].usr_email;
-					req.session.usr_name = find_user[0].usr_name;
-					req.session.usr_surname = find_user[0].usr_surname;
+					console.log("\t\t_id", find_user[0]._id)
+					req.session.uid = find_user[0]._id;
+					req.session.username = find_user[0].usr_user;
+					req.session.email = find_user[0].usr_email;
+					req.session.name = find_user[0].usr_name;
+					req.session.surname = find_user[0].usr_surname;
 					req.session.usr_psswd = find_user[0].usr_psswd;
 					req.session.login_time = find_user[0].login_time;
 					req.session.pic = find_user[0].pic;

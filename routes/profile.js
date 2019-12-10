@@ -19,8 +19,8 @@ function is_empty(str) {
 
 function fn_render_profile(req, res, next, msg) {
 	console.log('\n\n\nfn_render_profile\n');
-	if (req.session.usrId) {
-		console.log('req.session.usrId: ' + req.session.usrId);
+	if (req.session.uid) {
+		console.log('req.session.uid: ' + req.session.uid);
 
 		MongoClient.connect(url, function (err, client) {
 			assert.equal(null, err);
@@ -30,7 +30,7 @@ function fn_render_profile(req, res, next, msg) {
 			const collection = db.collection('users');
 
 			var usr_data = {
-				'_id': objectId(req.session.usrId)
+				'_id': objectId(req.session.uid)
 			};
 
 			var msg_arr = [];
@@ -257,7 +257,7 @@ router.post('/', function (req, res, next) {
 			const db = client.db(dbName);
 			const collection = db.collection('users');
 			collection.updateOne({
-				'_id': objectId(req.session.usrId)
+				'_id': objectId(req.session.uid)
 			}, {
 				$set: {
 					usr_user: profile_username,

@@ -19,7 +19,7 @@ function is_empty(str) {
 
 function fn_render_messages(req, res, next, msg) {
 	console.log('\n\n\nfn_render_messages\n');
-	var session_variable = req.session.usrId;	// Variable for user session
+	var session_variable = req.session.uid;	// Variable for user session
 	if (session_variable) {
 		console.log('session_variable: ' + session_variable);
 

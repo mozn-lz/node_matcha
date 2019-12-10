@@ -12,10 +12,11 @@ const dbName = 'matcha';					// Database Name
 var page_name = 'home';
 
 function fn_render_index(req, res, next, msg, matches) {
-
+	
+	console.log('req.session.uid ', req.session.uid);
 	var res_arr = matches;
 	// console.log('\n\n\n________fn_render_indexn________\n');
-	if (req.session.usrId) {
+	if (req.session.uid) {
 		(req.session.oriantation == '') ? req.session.oriantation = 'bisexual' : 0;
 
 		var msg_arr = [];
@@ -105,7 +106,7 @@ var fn_getMatches = (req, res, next, msg) => {
 }
 
 router.get('/', (req, res, next) => {
-	if (req.session.usrId) {
+	if (req.session.uid) {
 		fn_getMatches(req, res, next, '');
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
@@ -113,7 +114,7 @@ router.get('/', (req, res, next) => {
 });
 
 // router.get('/:reqId', (req, res, next) => {
-// 	if (req.session.usrId) {
+// 	if (req.session.uid) {
 // 		let friendReqId = req.params.reqId
 // 		console.log("friendId: ", friendReqId);
 

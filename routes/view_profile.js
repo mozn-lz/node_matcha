@@ -56,7 +56,7 @@ router.get('/', function (req, res, next) {
 router.get('/:reqId', (req, res, next) => {
 	console.log("************View Profle************\n");
 	
-	if (req.session.usrId) {
+	if (req.session.uid) {
 		let friendReqId = req.params.reqId
 		console.log("friendId: ", friendReqId);
 

@@ -20,7 +20,7 @@ router.get('/', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
 	let text = req.body.text;
-	let senderId 	= req.session.usrId;
+	let senderId 	= req.session.uid;
 	let recipiantId = req.body.dest;
 	let message_details = {
 			from: senderId,
@@ -29,12 +29,12 @@ router.post('/', function (req, res, next) {
 	};
 
 	console.log('message ', message_details.message);
-	// console.log('sessioinId    ', req.session.id);
+	// console.log('sessioinId    ', req.session.uid);
 	console.log('Time    ', message_details.time);
 	console.log('recipiantId ', recipiantId);
 	console.log('senderId    ', message_details.from);
 
-	if (req.session.usrId) {
+	if (req.session.uid) {
 	// Connect and save data to mongodb
 	MongoClient.connect(url, function (err, client) {
 		assert.equal(null, err);
@@ -91,7 +91,7 @@ router.post('/', function (req, res, next) {
 router.get('/:reqId/:message', (req, res, next) => {
 	console.log("************Send Message(ARG)************\n");
 
-	if (req.session.usrId) {
+	if (req.session.uid) {
 		let friendReqId = req.params.reqId
 		console.log("1. message: ", req.session.message, '\n');
 		console.log("1. friendId: ", friendReqId, '\n');

@@ -4,7 +4,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
 	var page = 'home';
-	req.session.usrId
+	req.session.uid
 	req.session.destroy();
 	res.redirect('/login/' + 'pass_sucYou have successfully signed out.')
 });

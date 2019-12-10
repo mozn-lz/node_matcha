@@ -24,9 +24,9 @@ router.get('/:reqId', (req, res, next) => {
 	console.log("************Friend req(ARG)************\n");
 
 	let message = null;
-	if (req.session.usrId) {
+	if (req.session.uid) {
 		let friendReqId = req.params.reqId
-		console.log("1. usrId: ", req.session.usrId, '\n');
+		console.log("1. usrId: ", req.session.uid, '\n');
 		console.log("1. friendId: ", friendReqId, '\n');
 
 		// Connect and save data to mongodb
@@ -39,7 +39,7 @@ router.get('/:reqId', (req, res, next) => {
 				'_id': objectId(friendReqId)
 			}, { 
 				$addToSet: {
-					request: req.session.usrId 
+					request: req.session.uid 
 				}
 			}, (err, result) => {
 				client.close();
