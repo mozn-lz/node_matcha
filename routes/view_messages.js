@@ -40,78 +40,48 @@ router.get('/:user', function (req, res, next) {
 	MongoClient.connect(url, function (err, client) {
 		assert.equal(null, err);
 		const db = client.db(dbName);
-		var find_user = [];
 
-		let user = '';
-		let friend = '';
-		let texts = '';
+		let user, friend, texts;
+		let find_user = [];
+		let find_friend = [];
 
-		findUser = (id) => {		//	find user
-			// console.log('id ', id), '\n';
-			let i = 0;
-			db.collection('users').find({ '_id': objectId(id) }).forEach(function (doc, err) {
-				assert.equal(null, err);
-				console.log('\t\t doc.push: ', doc._id, ' ', doc.usr_user);
-				find_user.push(doc);
-				++i;
-			}, () => {
-				// console.log('i:', i, '\nfind_user.length: ', find_user.length);
-				// if (find_user.length == 1) {
-				if (i == 1) {
-					console.log('User "', id, '" found');
-					return (find_user[0]);
-				} else {
-					console.log("Error " + id + " not found in database");
-					return (null);
-				}
-			});
-		}
-
-		messages = () => {		// find messages
+		db.collection('users').find({ '_id': objectId(req.session.uid) }).forEach(function (doc, err) {
+			assert.equal(null, err);
+			find_user.push(doc);
+			console.log('\t\t doc.push: ', doc._id, ' ', doc.usr_user);
+		}, () => {
+			if (find_user.length == 1) {
+				console.log('User "', find_user[0]._id, '(', find_user[0].usr_user, ')" found');
+				user = find_user[0];
+			} else {
+				console.log("Error " + req.session.uid + " not found in database");
+				user = null;
+			}
+		}), db.collection('users').find({ '_id': objectId(chatFriendId) }).forEach(function (doc, err) {
+			assert.equal(null, err);
+			find_friend.push(doc);
+			console.log('\t\t doc.push: ', doc._id, ' ', doc.usr_user);
+		}, () => {
+			if (find_friend.length == 1) {
+				console.log('User "', find_friend[0]._id, '(', find_friend[0].usr_user, ')" found');
+				friend = find_friend[0];
+			} else {
+				console.log("Error " + chatFriendId + " not found in database");
+				friend = null;
+			}
+		}),
 			db.collection('chats').find({
 				'user_id': req.session.uid,
 				'partner': chatFriendId
 			}).forEach(function (doc, err) {
 				assert.equal(null, err);
-				find_user.push(doc);
-				// console.log('\t\t Message array: ', doc);
-				return (doc);
+				console.log('messages: ', doc);
+				texts = doc;
+
+				client.close();
+				console.log("closing client and proceding to render page");
+				renderPage(res, req, user, friend, texts);
 			});
-		}
-
-		// some_3secs_function(function () {
-		// 	user = findUser(req.session.uid);
-		// 	friend = findUser(chatFriendId);
-		// 	texts = messages();
-		// 	some_5secs_function(function () {
-		// 		console.log('user: ', user);
-		// 		console.log('friend: ', friend);
-		// 		console.log('texts: ', texts);
-		// 		console.log("closing client and proceding to render page");
-		// 		client.close();
-		// 		some_8secs_function(function () {
-		// 			renderPage(res, req, user, friend, texts);
-		// 		});
-		// 	});
-		// });
-
-		(() => {
-			user = findUser(req.session.uid);
-			friend = findUser(chatFriendId);
-			texts = messages();
-		})();
-		if ((findUser(req.session.uid) != null) && (findUser(chatFriendId) != null)) {
-			console.log('if: user: ', user);
-			console.log('if: friend: ', friend);
-			console.log('if: texts: ', texts);
-			client.close();
-			console.log("closing client and proceding to render page");
-			renderPage(res, req, user, friend, texts);
-		} else {
-			console.log("'user' are empty");
-			console.log("'friend' are empty");
-			console.log("'texts' are empty");
-		}
 	});
 
 });
