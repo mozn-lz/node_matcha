@@ -2,7 +2,7 @@
 
 <div id="chat">
 	<div>
-		{{chat_data.usr_user}}
+		{{!-- {{chat_data.usr_user}}
 		{{chat_data.usr_email}}
 		{{chat_data.usr_name}}
 		{{chat_data.usr_surname}}
@@ -16,14 +16,49 @@
 		{{chat_data.bio}}
 		{{chat_data.intrests}}
 		{{chat_data.gps}}
-		{{chat_data.liked}}
+		{{chat_data.liked}} --}}
+	</div>
+	<div>
+		<div>
+			page: {{page}}
+		</div>
+		<div>
+			user: {{user}}
+		</div>
+		<div>
+			friend: {{friend}}
+		</div>
+		<div>
+			texts: {{texts}}
+		</div>
 	</div>
 	<div id="display-chat">
 
 		<div id="title">
-			<h1>{{chat_data.usr_user}}</h1>
+			<h1>{{chat_data.user.usr_user}}</h1>
 		</div>
+
 		<div class="message-container right">
+			<div class="message">
+				{{message}}
+			</div>
+			<div class="about">
+				<div class="sender d-inline text-muted"><b>friend{{sender}}</b> at </div>
+				<div class="message_time d-inline text-muted">08:15{{time}}</div>
+			</div>
+		</div>
+		<div class="message-container">
+			<div class="message">
+				{{message}}
+			</div>
+			<div class="about">
+				<div class="sender d-inline text-muted"><b>you{{sender}}</b> at </div>
+				<div class="message_time d-inline text-muted">08:35{{time}}</div>
+			</div>
+		</div>
+
+
+		{{!-- <div class="message-container right">
 			<div class="message">
 				Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat, veritatis. Cupiditate maxime eum
 				accusantium eligendi, odio officia unde soluta? Laudantium eum, deleniti ea sed voluptatum quae aperiam
@@ -44,8 +79,8 @@
 				<div class="sender d-inline text-muted"><b>you</b> at </div>
 				<div class="message_time d-inline text-muted">08:35</div>
 			</div>
-		</div>
-		<div class="message-container right">
+		</div> --}}
+		{{!-- <div class="message-container right">
 			<div class="message">
 				Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat, veritatis. Cupiditate maxime eum
 				accusantium eligendi, odio officia unde soluta? Laudantium eum, deleniti ea sed voluptatum quae aperiam
@@ -66,15 +101,20 @@
 				<div class="sender d-inline text-muted"><b>{{chat_data.usr_user}}</b> at </div>
 				<div class="message_time d-inline text-muted">08:15</div>
 			</div>
-		</div>
+		</div> --}}
 		<div class="panel-footer">
-			<div class="input-group">
-				<input id="btn-input" type="text" class="form-control input-sm chat_input"
-					placeholder="Write your message here..." />
-				<span class="input-group-btn">
-					<button class="btn btn-primary btn-sm" id="btn-chat">Send</button>
-				</span>
-			</div>
+			<a href="/view_profile/{{this._id}}">
+			</a>
+			<form action="/sendMessage" method="post">
+				<div class="input-group">
+					<input type="hidden" name="dest" value="{{id}}" >
+					<input id="btn-input" type="text" name="text" class="form-control input-sm chat_input"
+						placeholder="Write your message here..." />
+					<span class="input-group-btn">
+						<button class="btn btn-primary btn-sm" type="submit" id="btn-chat">Send</button>
+					</span>
+				</div>
+			</form>
 		</div>
 	</div>
 

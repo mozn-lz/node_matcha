@@ -11,7 +11,7 @@ const dbName = 'matcha';					// Database Name
 
 var page_name = 'home';
 
-function fn_render_index(req, res, next, msg, matches) {
+let fn_render_index = (req, res, next, msg, matches) => {
 	
 	console.log('req.session.uid ', req.session.uid);
 	var res_arr = matches;

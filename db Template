@@ -1,0 +1,92 @@
+{
+	"_id": "5c7ca533b3991c4b3f0eae13",
+	"usr_user": "Mk",
+	"usr_email": "moeketsane.sefako@gmail.com",
+	"usr_name": "Moeketsane",
+	"usr_surname": "Sefako",
+	"usr_psswd": "123456",
+	"pic": [
+		{"profile": 1,"img" : "5c7ca533b3991c4b3f0eae135c7ca533b3991c4b3f0eae135c7ca533b3991c4b3f0eae135c7ca533b3991c4b3"},
+		{"profile": 0,"img" : "5c7ca533b3991c4b3f0eae135c7ca533b3991c4b3f0eae135c7ca533b3991c4b3f0eae135c7ca533b3991c4b3"},
+		{"profile": 0,"img" : "5c7ca533b3991c4b3f0eae135c7ca533b3991c4b3f0eae135c7ca533b3991c4b3f0eae135c7ca533b3991c4b3"}
+	],
+	"gender": "Male",
+	"oriantation": "hetro",
+	"rating": "3.5",
+	"bio": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate quidem blanditiis nobis voluptate suscipit et ducimus, voluptas consequatur autem reprehenderit ut expedita, cum dolore vitae fuga a fugiat eveniet eius!",
+	"intrests": ["sports", "video games", "anime", "coding"],
+	"login_time": "3 jUNE 2018",
+	"gps": "5753339914, -013575333991",
+	"viewd": ["mozn", "Lord Chaos"],
+	"liked": [],
+	"verified": 1,
+	"confirm_code": 0.0666066598915595,
+	"friends": ["_id1","_id2","_id3","_id4","_id5","_id6"],
+	"request": ["_id1","_id2","_id3","_id4","_id5","_id6"],
+	"messages": {
+		"chaos": [
+			{"from": "chaos","time": "Tur,3 Mar 2019, 08:35","message": "This is my wORLD nOw"},
+			{"from": "mozn","time": "Tur,3 Mar 2019, 08:38","message": "Dont get too big for yourself"}
+		],
+		"mozn": [
+			{"from": "mk","time": "Wed, 2 Mar 2019, 00:19","message": "hay"},
+			{"from": "mozn","time": "Wed, 2 Mar 2019, 00:19","message": "whatsupp"},
+			{"from": "mk","time": "Wed, 2 Mar 2019, 00:19","message": "Awesome"},
+			{"from": "mozn","time": "Wed, 2 Mar 2019, 00:19","message": "alright"},
+			{"from": "mk","time": "Wed, 2 Mar 2019, 00:19","message": "Have something for you todo"},
+			{"from": "mozn","time": "Wed, 2 Mar 2019, 00:19","message": "what"},
+			{"from": "mk","time": "Wed, 2 Mar 2019, 00:19","message": "coding project, dating website"},
+			{"from": "mozn","time": "Wed, 2 Mar 2019, 00:19","message": "languages"},
+			{"from": "mk","time": "Wed, 2 Mar 2019, 00:19","message": "js(node, express) using bare minimum. No validators or anything you didnt build"},
+			{"from": "mozn","time": "Wed, 2 Mar 2019, 00:19","message": "sounda line a pain"},
+			{"from": "mk","time": "Wed, 2 Mar 2019, 00:19","message": "will you do it? Need it on 15.04.2019 "},
+			{"from": "mozn","time": "Wed, 2 Mar 2019, 00:19","message": "fuck, alright"}
+		]
+	},
+	
+}
+
+{
+	userId: {
+		friendId: [
+			{ from : userId, time : Date.now, message : text }
+
+		]
+	},
+
+	friendId: {
+		userId: [
+			{ from : userId, time : Date.now, message : text }
+		]
+	}
+}
+
+db.collection.update(
+	{ userId : ObjectId("57315ba4846dd82425ca2408")},
+	{ $pull: {"myarray.userId": ObjectId("570ca5e48dbe673802c2d035")}}
+)
+db.collection.update(
+	{ _id : ObjectId("57315ba4846dd82425ca2408")},
+	{ $push: {"myarray": {
+		userId:ObjectId("570ca5e48dbe673802c2d035"),
+		point: 10
+	}}
+)
+
+//		UPSERT CHAT
+db.chats.updateOne(
+	{'user_id': '5cd99a8893b83b73b34a5ec3'.'5cc09d5061cbd1097bcef954'},
+	{
+		$addToSet: {
+			'5cc09d5061cbd1097bcef954': 
+			{
+				from: '5cd99a8893b83b73b34a5ec3',time: Date.now(),message: 'hello'
+			}
+		}
+	}
+)
+
+db.collection.update(
+	{col:"value"}, 
+	col:"value"
+)
