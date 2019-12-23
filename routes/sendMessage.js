@@ -28,6 +28,9 @@ router.post('/', function (req, res, next) {
 			message: text
 	};
 
+	console.log("\n\n\t************Send Message(N/A)************\n\n");
+
+
 	console.log('message ', message_details.message);
 	// console.log('sessioinId    ', req.session.uid);
 	console.log('Time    ', message_details.time);
@@ -42,45 +45,52 @@ router.post('/', function (req, res, next) {
 		const db = client.db(dbName);
 		// const usersCollection = db.collection('users');
 		const messagesCollection = db.collection('chats');
-
-		messagesCollection.updateOne({	//	update sender messages
-			'user_id': senderId,
-			'partner': recipiantId
-		}, {
-			$addToSet: {
-				'message': message_details
-			}
-		}, {upsert: true
-		},  (err, result) => {
-			if (err) {
-				console.log("Error ", err);
-			} else {
-				console.log("Success part  1");
-				// console.log("result ", result);
-			}
-		});
-
-		messagesCollection.updateOne({	//	update recipiant messages
-			'user_id': recipiantId,
-			'partner': senderId
-		}, {
-			$addToSet: {
-				'message': message_details
-			}
-		}, {upsert: true
-		}, (err, result) => {
-			client.close();
-			if (err) {
-				console.log("Error ", err);
-			} else {
-				console.log("Success part 2");
-				// console.log("result ", result);
+		if (senderId && recipiantId) {
+			messagesCollection.updateOne({	//	update sender messages
+				'user_id': senderId,
+				'partner': recipiantId
+			}, {
+				$addToSet: {
+					'message': message_details
+				}
+			}, {upsert: true
+			},  (err, result) => {
+				if (err) {
+					console.log("Error ", err);
+				} else {
+					console.log("Success part  1");
+					// console.log("result ", result);
+				}
+			});
+	
+			messagesCollection.updateOne({	//	update recipiant messages
+				'user_id': recipiantId,
+				'partner': senderId
+			}, {
+				$addToSet: {
+					'message': message_details
+				}
+			}, {upsert: true
+			}, (err, result) => {
+				client.close();
+				if (err) {
+					console.log("Error ", err);
+				} else {
+					console.log("Success part 2");
+					// console.log("result ", result);
+					console.log("Redirect to '/view_messages/' + recipiantId ");
+					res.redirect('/view_messages/' + req.body.dest);
+				}
+				// res.redirect('/index/' + message);
+			}), (recipiantId) => {
+				console.log("'/view_messages/' + recipiantId ");
 				res.redirect('/view_messages/' + recipiantId);
-			}
-			// res.redirect('/index/' + message);
-		}), (recipiantId) => {
+			};
+		} else {
+			console.log("\tError: 'sender' or 'recipiant' are empty\n");
+			
 			res.redirect('/view_messages/' + recipiantId);
-		};
+		}
 	});
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
