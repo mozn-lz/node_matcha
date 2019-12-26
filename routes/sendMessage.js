@@ -29,8 +29,6 @@ router.post('/', function (req, res, next) {
 	};
 
 	console.log("\n\n\t************Send Message(N/A)************\n\n");
-
-
 	console.log('message ', message_details.message);
 	// console.log('sessioinId    ', req.session.uid);
 	console.log('Time    ', message_details.time);
@@ -46,6 +44,7 @@ router.post('/', function (req, res, next) {
 		// const usersCollection = db.collection('users');
 		const messagesCollection = db.collection('chats');
 		if (senderId && recipiantId) {
+			message_details.me = true;
 			messagesCollection.updateOne({	//	update sender messages
 				'user_id': senderId,
 				'partner': recipiantId

@@ -17,28 +17,87 @@
 		{{chat_data.intrests}}
 		{{chat_data.gps}}
 		{{chat_data.liked}} --}}
-	</div>
-	<div>
+	{{!-- <div>
 		<div>
 			page: {{page}}
 		</div>
 		<div>
-			user: {{user}}
+			<h2>user</h2>
+			<div>{{user._id}}</div>
+			<div>{{user.usr_user}}</div>
+			<div>{{user.usr_email}}</div>
+			<div>{{user.usr_name}}</div>
+			<div>{{user.usr_surname}}</div>
+			<div>{{user.usr_psswd}}</div>
+			<div>{{user.login_time}}</div>
+			<div>{{user.pic}}</div>
+			<div>{{user.age}}</div>
+			<div>{{user.gender}}</div>
+			<div>{{user.oriantation}}</div>
+			<div>{{user.rating}}</div>
+			<div>{{user.bio}}</div>
+			<div>{{user.intrests}}</div>
+			<div>{{user.gps}}</div>
+			<div>{{user.liked}}</div>
 		</div>
 		<div>
-			friend: {{friend}}
+			<h2>friend</h2>
+			<div>{{friend._id}}</div>
+			<div>{{friend.usr_user}}</div>
+			<div>{{friend.usr_email}}</div>
+			<div>{{friend.usr_name}}</div>
+			<div>{{friend.usr_surname}}</div>
+			<div>{{friend.usr_psswd}}</div>
+			<div>{{friend.login_time}}</div>
+			<div>{{friend.pic}}</div>
+			<div>{{friend.age}}</div>
+			<div>{{friend.gender}}</div>
+			<div>{{friend.oriantation}}</div>
+			<div>{{friend.rating}}</div>
+			<div>{{friend.bio}}</div>
+			<div>{{friend.intrests}}</div>
+			<div>{{friend.gps}}</div>
+			<div>{{friend.liked}}</div>
 		</div>
 		<div>
-			texts: {{texts}}
+			<h2>texts</h2>
+			{{text.message}}
 		</div>
+	</div> --}}
 	</div>
+
 	<div id="display-chat">
 
 		<div id="title">
-			<h1>{{chat_data.user.usr_user}}</h1>
+			<h1>{{friend.usr_user}}</h1>
 		</div>
 
-		<div class="message-container right">
+		{{#each texts.message}}
+			{{#if this.me}}
+				<div class="message-container">
+					<div class="message">
+						{{message}}
+					</div>
+					<div class="about">
+						<div class="sender d-inline text-muted"><b>{{this.from}}</b> at </div>
+						<div class="message_time d-inline text-muted">{{this.time}}</div>
+					</div>
+				</div>
+			{{else}}
+				<div class="message-container right">
+					<div class="message">
+						{{message}}
+					</div>
+					<div class="about">
+						<div class="sender d-inline text-muted"><b>{{this.from}}</b> at </div>
+						<div class="message_time d-inline text-muted">{{this.time}}</div>
+					</div>
+				</div>
+			{{/if}}
+{{user.usr_user}}
+{{friend.usr_user}}
+		{{/each}}
+		{{!-- <div class="message-container right">
 			<div class="message">
 				{{message}}
 			</div>
@@ -53,9 +112,9 @@
 			</div>
 			<div class="about">
 				<div class="sender d-inline text-muted"><b>you{{sender}}</b> at </div>
-				<div class="message_time d-inline text-muted">08:35{{time}}</div>
+				<div class="message_time d-inline text-muted">08:35{{this.time}}</div>
 			</div>
-		</div>
+		</div> --}}
 
 
 		{{!-- <div class="message-container right">
@@ -107,7 +166,7 @@
 			</a>
 			<form action="/sendMessage" method="post">
 				<div class="input-group">
-					<input type="hidden" name="dest" value="{{id}}" >
+					<input type="hidden" name="dest" value="{{friend._id}}" >
 					<input id="btn-input" type="text" name="text" class="form-control input-sm chat_input"
 						placeholder="Write your message here..." />
 					<span class="input-group-btn">
