@@ -29,13 +29,13 @@
 	<div class="profile-info" style="display: none;">
 		<h1>About</h1>
 		<div class="info-area">
-			<p>{{fname}} &nbsp; {{lname}} &nbsp; {{age}}</p>
+			<p>{{fname}} &nbsp; {{lname}}</p>
 			<p>
-				{{bio}}
-				Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.Stet clita kasd gubergren, no sea takimata sanctus est.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
-				Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+				<b>Bio:</b> {{bio}}
+				{{!-- Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.Stet clita kasd gubergren, no sea takimata sanctus est.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+				Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. --}}
 			</p>
-			<p>{{intrests}}</p>
+			<p><b>Hobbies:</b> {{intrests}}</p>
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -53,14 +53,14 @@
 				<div class="digits">51</div>
 				Likes
 			</li>
-			{{!-- <li>
-				<div class="digits">83</div>
-				Followers
-			</li> --}}
-			{{!-- <li>
-				<div class="digits">1507</div>
-				Tweets
-			</li> --}}
+			<li>
+				<div class="digits">{{Rating}} / 83</div>
+				Rating
+			</li>
+			<li>
+				<div class="digits">{{age}}</div>
+				Age
+			</li>
 			{{!-- <li>
 				<div class="digits">42</div>
 				Gits
