@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
+const objectId = require('mongodb').ObjectID;
 const assert = require('assert');
 // var helper = require('./helper_functions'); // Helper functions Mk
 
@@ -9,15 +10,7 @@ const dbName = 'matcha';					// Database Name
 
 var page_name = 'message';
 
-function is_empty(str) {
-	ret = str.trim();
-	if (ret.length == 0) {
-		return (true);
-	}
-	return (false);
-}
-
-function fn_render_messages(req, res, next, msg) {
+fn_render_messages = (req, res, next, msg) => {
 	console.log('\n\n\nfn_render_messages\n');
 	var session_variable = req.session.uid;	// Variable for user session
 	if (session_variable) {
@@ -28,45 +21,52 @@ function fn_render_messages(req, res, next, msg) {
 
 			const db = client.db(dbName);
 			var res_arr = [];
-			const collection = db.collection('users');
-
-			var usr_data = {
-				'gender': session_variable
-			};
-
-			// var message = {
-			// 	id,
-			// 	from,
-			// 	to,
-			// 	datetime,
-			// 	message,
-			// 	uid
-			// };
+			let find_user = [];
 
 			var msg_arr = [];
-			(msg.search('pass_err') == 0) ? pass_er = "danger": pass_er = '';
-			(msg.search('pass_suc') == 0) ? pass_suc = "success": pass_suc = '';
+			(msg.search('pass_err') == 0) ? pass_er = "danger" : pass_er = '';
+			(msg.search('pass_suc') == 0) ? pass_suc = "success" : pass_suc = '';
 			msg_arr = msg.slice(8).split(",");
 			console.log('msg_arr: ' + msg_arr);
 
-			collection.find(usr_data).forEach(function (doc, err) {
+			db.collection('chats').find({ 'user_id': req.session.uid }).forEach(function (doc, err) {
 				assert.equal(null, err);
 				res_arr.push(doc);
-			}, function () {
-				client.close();
-				if (res_arr) {
-					// if user is found get their details from database
-					res.render('messages', {
-						title: 'message',
-						er: pass_er,
-						suc: pass_suc,
-						msg_arr,
-						match_list: res_arr
+				console.log(doc, "\n");
+				
+				console.log("\t\t Partner ID: ", doc.partner);
+			}, () => {
+				// user_data = res_arr;
+				let user_data = [res_arr.length];
+				console.log('Number of conversations: ', res_arr.length, '\n');
+				for (let i = 0; i < res_arr.length; i++) {
+					db.collection('users').find({ '_id': objectId(res_arr[i].partner) }).forEach(function (docs, err) {
+						assert.equal(null, err);
+						// for (let j = 0; j < res_arr.length; j++) {
+						// 	if (res_arr[j].partner == docs._id) {
+						// 		user_data[i].push(docs);
+						// 		user_data[i].messages = res_arr[i];
+						// 	}
+						// }
+						find_user.push(docs);
+						console.log(i, `. doc.push: `, docs.usr_user, `(ID: `,docs._id, `)`);
+					}, () => {
+						console.log("find_user.length: ", find_user.length);
+						console.log("res_arr.length: ", res_arr.length);
+						if (find_user.length == res_arr.length) {
+							console.log('res_arr: ');
+							client.close();
+							console.log('find_user: ');
+			
+							res.render('messages', {
+								title: 'message',
+								er: pass_er,
+								suc: pass_suc,
+								msg_arr,
+								match_list: find_user
+							});
+						}
 					});
-				} else if (res_arr.length < 1) {
-					res.redirect('/' + 'pass_errInvaild email or password');
-				} else {
-					res.redirect('/' + 'pass_errThere seams to be a dubious error that popped up, Please try again');
 				}
 			});
 		});
