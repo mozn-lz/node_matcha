@@ -65,36 +65,51 @@ var fn_getMatches = (req, res, next, msg) => {
 			switch (req.session.oriantation) {
 				case 'hetrosexual':
 					if (req.session.gender == 'male') {
-						match_criteria = { gender: 'female', exception: 'homosexual' };
+						match_criteria = { gender: "female", exception: "homosexual" };
+						console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
 						// user_matches = helper.search_DB(usr_data.gender, usr_data.exception);
 					} else {
-						match_criteria = { gender: 'male', exception: 'homosexual' };
+						match_criteria = { gender: "male", exception: "homosexual" };
+						console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
 					}
 					break;
 				case 'homosexual':
 					if (req.session.gender == 'male') {
-						match_criteria = { gender: 'male', exception: 'hetrosexual' };
+						match_criteria = { gender: "male", exception: "hetrosexual" };
+						console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
 					} else {
-						match_criteria = { gender: 'female', exception: 'hetrosexual' };
+						match_criteria = { gender: "female", exception: "hetrosexual" };
+						console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
 					}
 					break;
 				case 'bisexual':
 					if (req.session.gender == 'male') {
-						match_criteria = { gender: 'male', exception: 'hetrosexual' };
-						match_criteria = { gender: 'female', exception: 'homosexual' };
+						match_criteria = { gender: "male", exception: "hetrosexual" };
+						match_criteria = { gender: "female", exception: "homosexual" };
+						console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
 					} else if (req.session.gender == 'female') {
-						usr_match_criteriadata = { gender: 'female', exception: 'homosexual' };
-						match_criteria = { gender: 'male', exception: 'hetrosexual' };
+						usr_match_criteriadata = { gender: "female", exception: "homosexual" };
+						match_criteria = { gender: "male", exception: "hetrosexual" };
+						console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
 					}
 					break;
 				default:
 					console.log('Please make sure your gender and oriantation is specified');
 					break;
 			}
-			collection.find(match_criteria.gender).forEach(function (doc, err) {
+			// console.log(doc.oriantation, " ", match_criteria.exception, "\n");
+			console.log(match_criteria);
+			console.log("oriantation: ", match_criteria.oriantation);
+			console.log("gender: ", match_criteria.gender);
+			
+			// collection.find({gender: "male"}).forEach(function (doc, err) {
+			collection.find({gender: match_criteria.gender}).forEach(function (doc, err) {
 				assert.equal(null, err);
-				if (doc.oriantation != match_criteria.exception) {
+				if (doc.oriantation != match_criteria.exception && doc._id != req.session.uid) {
 					user_matches.push(doc);
+					console.log("Found a ", doc.oriantation, " ", doc.gender, " named ", doc.usr_user);
+				} else {
+					console.log("\t", doc.oriantation, " ", doc.gender, " named ", doc.usr_user, " Rejected");
 				}
 			})
 		})(), (() => {
