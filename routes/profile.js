@@ -34,8 +34,8 @@ function fn_render_profile(req, res, next, msg) {
 			};
 
 			var msg_arr = [];
-			(msg.search('pass_err') == 0) ? pass_er = "danger": pass_er = '';
-			(msg.search('pass_suc') == 0) ? pass_suc = "success": pass_suc = '';
+			(msg.search('pass_err') == 0) ? pass_er = "danger" : pass_er = '';
+			(msg.search('pass_suc') == 0) ? pass_suc = "success" : pass_suc = '';
 			msg_arr = msg.slice(8).split(",");
 			console.log('msg_arr: ' + msg_arr);
 
@@ -271,6 +271,17 @@ router.post('/', function (req, res, next) {
 					gps: profile_gps,
 				}
 			}, function (err, result) {
+				req.session.username = profile_username;
+				req.session.email = profile_email;
+				req.session.name = profile_name;
+				req.session.surname = profile_surname;
+				req.session.age = profile_age;
+				req.session.gender = profile_gender;
+				req.session.oriantation = profile_oriantation;
+				req.session.bio = profile_bio;
+				req.session.gps = profile_gps;
+				// req.session.intrests = find_user[0].intrests;
+
 				assert.equal(null, err);
 				client.close();
 				console.log('\t\tend of poeting finction');
