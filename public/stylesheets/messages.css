@@ -2,43 +2,28 @@ a .content :hover {
 	background-color: rgb(255, 0, 64);
 	color: white;
 	border-radius: 25px;
-	/* border-width: 1px;
-	border-color: black;
-	border-style: solid; */
 }
 a {
 	text-decoration: none;
 	}
 .content {
+	/* display: inline; */
 	border-width: 1px;
 	width: 350px;
 	text-decoration: none;
-	/* border-color: black; */
-	/* border-style: solid; */
-	/* background-color: orangered; */
-	/* width: 100%; */
-	/* margin: 10px; */
-	/* padding: 10px; */
 }
 
 .chat_profile{
-	/* width: 350px;
-	height: 150px; */
 	/* display: inline; */
 	/* width: 100%; */
-	/* background-color: rgb(21, 255, 0); */
 	border-width: 1px;
 	border-color: rgba(255, 0, 0, 0.3);
-	/* border-style: dashed; */
-	/* margin: 10px; */
 	padding: 10px;
 }
 .profile_picture {
 	display: inline;
 	border-width: 1px;
-	/* border-style: dashed; */
 	border-color: rgb(0, 0, 0);
-	/* background-color: rgb(99, 29, 4); */
 	margin: 10px;
 	padding: 10px;
 	/* width: 30%; */
@@ -47,27 +32,15 @@ a {
 .information{
 	display: inline;
 	border-width: 1px;
-	/* border-style: dashed; */
 	border-color: rgb(0, 0, 0);
-	/* background-color: orangered; */
-	/* margin: 10px; */
 	padding: 10px;
-	/* width: 60%; */
-	/* width: 100%; */
 }
 .name {
-		/* border-width: 1px;
-		border-color: rgb(9, 5, 226);
-		border-style: solid; */
 	text-transform: uppercase;
-
-	/* display: block; */
-	/* background-color: orangered; */
-	/* width: 100%; */
 	margin-top: 30px;
 	margin-bottom: 0px;
-		/* font-family: "Times New Roman", Times, serif;
-		font-weight: bold; */
+	/* font-family: "Times New Roman", Times, serif;
+	font-weight: bold; */
 	/* padding: 10px; */
 	font: bold 12px/30px Georgia, serif;
 }

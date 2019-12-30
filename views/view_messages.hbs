@@ -17,7 +17,7 @@
 		{{chat_data.intrests}}
 		{{chat_data.gps}}
 		{{chat_data.liked}} --}}
-	{{!-- <div>
+		{{!-- <div>
 		<div>
 			page: {{page}}
 		</div>
@@ -69,34 +69,35 @@
 	<div id="display-chat">
 
 		<div id="title">
-			<h1>{{friend.usr_user}}</h1>
+			<h2>{{friend.usr_user}}</h2>
 		</div>
-
-		{{#each texts.message}}
+		<div id="message-body">
+			{{#each texts.message}}
 			{{#if this.me}}
-				<div class="message-container">
-					<div class="message">
-						{{message}}
-					</div>
-					<div class="about">
-						<div class="sender d-inline text-muted"><b>{{this.from}}</b> at </div>
-						<div class="message_time d-inline text-muted">{{this.time}}</div>
-					</div>
+			<div class="message-container">
+				<div class="message">
+					{{message}}
 				</div>
+				<div class="about">
+					<div class="sender d-inline text-muted"><b>{{this.from}}</b> at </div>
+					<div class="message_time d-inline text-muted">{{this.time}}</div>
+				</div>
+			</div>
 			{{else}}
-				<div class="message-container right">
-					<div class="message">
-						{{message}}
-					</div>
-					<div class="about">
-						<div class="sender d-inline text-muted"><b>{{this.from}}</b> at </div>
-						<div class="message_time d-inline text-muted">{{this.time}}</div>
-					</div>
+			<div class="message-container right">
+				<div class="message">
+					{{message}}
 				</div>
+				<div class="about">
+					<div class="sender d-inline text-muted"><b>{{this.from}}</b> at </div>
+					<div class="message_time d-inline text-muted">{{this.time}}</div>
+				</div>
+			</div>
 			{{/if}}
-{{user.usr_user}}
-{{friend.usr_user}}
-		{{/each}}
+			{{user.usr_user}}
+			{{friend.usr_user}}
+			{{/each}}
+		</div>
 		{{!-- <div class="message-container right">
 			<div class="message">
 				{{message}}
@@ -166,7 +167,7 @@
 			</a>
 			<form action="/sendMessage" method="post">
 				<div class="input-group">
-					<input type="hidden" name="dest" value="{{friend._id}}" >
+					<input type="hidden" name="dest" value="{{friend._id}}">
 					<input id="btn-input" type="text" name="text" class="form-control input-sm chat_input"
 						placeholder="Write your message here..." />
 					<span class="input-group-btn">
