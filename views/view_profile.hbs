@@ -35,7 +35,18 @@
 				{{!-- Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.Stet clita kasd gubergren, no sea takimata sanctus est.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
 				Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. --}}
 			</p>
-			<p><b>Hobbies:</b> {{intrests}}</p>
+			<p>
+				<b>Hobbies: &nbsp; </b>
+				{{#if intrests.tatoo}} # tatoo {{/if}}
+				{{#if intrests.smoke}} # smoke {{/if}}
+				{{#if intrests.alcohol}} # alcohol {{/if}}
+				{{#if intrests.travel}} # travel {{/if}}
+				{{#if intrests.party}} # party {{/if}}
+				{{#if intrests.social}} # social {{/if}}
+				{{#if intrests.introvert}} # introvert {{/if}}
+				{{#if intrests.excersise}} # excersise {{/if}}
+				{{#if intrests.sports}} # sports {{/if}}
+			</p>
 		</div>
 		<div class="clear"></div>
 	</div>

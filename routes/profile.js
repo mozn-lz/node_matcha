@@ -115,6 +115,7 @@ router.post('/', function (req, res, next) {
 	var profile_oriantation;
 	var profile_bio;
 	var profile_gps;
+	var	profile_intrests = {};
 
 	function check_usr_user(chk_usr_user) {
 		if (is_empty(chk_usr_user)) {
@@ -214,6 +215,21 @@ router.post('/', function (req, res, next) {
 		return (true);
 	}
 
+	function chk_intrests(chk_intrests) {
+		console.log('chk_intrests ', chk_intrests);
+		if (chk_intrests) {
+			(chk_intrests.includes('tatoo'))	 ? profile_intrests.tatoo = 'tatoo'	  : console.log('Tatoo not foud');
+			(chk_intrests.includes('smoke'))	 ? profile_intrests.smoke = 'smoke'	  : console.log('Smoke not foud');
+			(chk_intrests.includes('alcohol'))	 ? profile_intrests.alcohol = 'alcohol'	  : console.log('Alcohol not foud');
+			(chk_intrests.includes('travel'))	 ? profile_intrests.travel = 'travel'	  : console.log('Travel not foud');
+			(chk_intrests.includes('party'))	 ? profile_intrests.party = 'party'	  : console.log('Party not foud');
+			(chk_intrests.includes('social'))	 ? profile_intrests.social = 'social'	  : console.log('Social not foud');
+			(chk_intrests.includes('introvert')) ? profile_intrests.introvert = 'introvert' : console.log('introvert not foud');
+			(chk_intrests.includes('excersise')) ? profile_intrests.excersise = 'excersise' : console.log('Excersise not foud');
+			(chk_intrests.includes('sports'))	 ? profile_intrests.sports = 'sports'	  : console.log('Sports not foud');
+		}
+	}
+
 	/* because the if statement below will stop on the fist False 
 		this is to log all errors (if any)	*/
 	console.log('\t\t username: ' + req.body.username);
@@ -225,6 +241,7 @@ router.post('/', function (req, res, next) {
 	console.log('\t\t orientation: ' + req.body.orientation);
 	console.log('\t\t bio: ' + req.body.bio);
 	console.log('\t\t gps: ' + req.body.gps);
+	console.log('\t\t intrests[]: ' + req.body.intrests);
 	check_usr_user(req.body.username);
 	check_usr_email(req.body.email);
 	check_usr_name(req.body.fname);
@@ -234,6 +251,7 @@ router.post('/', function (req, res, next) {
 	check_oriantation(req.body.orientation);
 	check_bio(req.body.bio);
 	check_gps(req.body.gps);
+	chk_intrests(req.body.intrests);
 
 	if (check_usr_user(req.body.username) && check_usr_email(req.body.email) && check_usr_name(req.body.fname) && check_usr_surname(req.body.lname) && check_age(req.body.age) && check_gender(req.body.gender) && check_oriantation(req.body.orientation) && check_bio(req.body.bio) && check_gps(req.body.gps)) {
 		// store data to JSON array, to store in mongo
@@ -247,7 +265,8 @@ router.post('/', function (req, res, next) {
 			gender: profile_gender,
 			oriantation: profile_oriantation,
 			bio: profile_bio,
-			gps: profile_gps
+			gps: profile_gps,
+			intrests: profile_intrests
 		};
 
 		// Connect and save data to mongodb
@@ -256,6 +275,7 @@ router.post('/', function (req, res, next) {
 			console.log("\tConnected to server and mongo connected Successfully");
 			const db = client.db(dbName);
 			const collection = db.collection('users');
+			console.log('profile_intrests[0]:  ', profile_intrests);
 			collection.updateOne({
 				'_id': objectId(req.session.uid)
 			}, {
@@ -269,6 +289,7 @@ router.post('/', function (req, res, next) {
 					oriantation: profile_oriantation,
 					bio: profile_bio,
 					gps: profile_gps,
+					intrests: profile_intrests
 				}
 			}, function (err, result) {
 				req.session.username = profile_username;
@@ -280,7 +301,8 @@ router.post('/', function (req, res, next) {
 				req.session.oriantation = profile_oriantation;
 				req.session.bio = profile_bio;
 				req.session.gps = profile_gps;
-				// req.session.intrests = find_user[0].intrests;
+				req.session.intrests = profile_intrests;
+				console.log('profile_intrests[1]:  ', profile_intrests);
 
 				assert.equal(null, err);
 				client.close();

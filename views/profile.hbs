@@ -1,13 +1,13 @@
 <div class="row">
 	{{#if suc}}
-		{{#each msg_arr}}
-			<div class="alert alert-success border border-success text-center col-xs-6" role="alert">{{this}}</div>
-		{{/each}}
+	{{#each msg_arr}}
+	<div class="alert alert-success border border-success text-center col-xs-6" role="alert">{{this}}</div>
+	{{/each}}
 	{{/if}}
 	{{#if er}}
-		{{#each msg_arr}}
-			<div class="alert alert-danger border border-danger text-center col-xs-6" role="alert">{{this}}</div>
-		{{/each}}
+	{{#each msg_arr}}
+	<div class="alert alert-danger border border-danger text-center col-xs-6" role="alert">{{this}}</div>
+	{{/each}}
 	{{/if}}
 </div>
 <form action="/profile" method="post">
@@ -23,12 +23,14 @@
 	</div>
 	<div class="row">
 		<div class="custom-control custom-radio custom-control-inline">
-		<input type="radio" id="hide_location" name="gps" value="hide" class="custom-control-input" {{#if hide_location}}checked{{/if}}>
-		<label class="custom-control-label" for="hide_location">Hide location</label>
+			<input type="radio" id="hide_location" name="gps" value="hide" class="custom-control-input"
+				{{#if hide_location}}checked{{/if}}>
+			<label class="custom-control-label" for="hide_location">Hide location</label>
 		</div>
 		<div class="custom-control custom-radio custom-control-inline">
-		<input type="radio" id="show_location" name="gps" value="show" class="custom-control-input" {{#if show_location}}checked{{/if}}>
-		<label class="custom-control-label" for="show_location">Show location</label>
+			<input type="radio" id="show_location" name="gps" value="show" class="custom-control-input"
+				{{#if show_location}}checked{{/if}}>
+			<label class="custom-control-label" for="show_location">Show location</label>
 		</div>
 	</div>
 	<div class="row">
@@ -61,7 +63,7 @@
 			<select class="form-control" name="gender" id="gender" required>
 				{{!-- <option value="">Choose</option> --}}
 				<option value="" selected disabled hidden>Choose here</option>
-				<option value="male"   {{#if male}}	selected {{/if}}>Male</option>
+				<option value="male" {{#if male}} selected {{/if}}>Male</option>
 				<option value="female" {{#if female}} selected {{/if}}>Female</option>
 			</select>
 		</div>
@@ -73,7 +75,7 @@
 		<div class="form-group col-sm-5">
 			<label for="Sexual Orientation">Sexual Orientation</label> <br>
 			<select class="form-control" name="orientation" id="orientation">
-				<option value="">Choose or leave blank</option>
+				{{!-- <option value="">Choose or leave blank</option> --}}
 				<option value="hetrosexual" {{#if hetrosexual}} selected {{/if}}>Hetrosexual(opposite)</option>
 				<option value="homosexual" {{#if homosexual}} selected {{/if}}>Homosexual(same)</option>
 				<option value="bisexual" {{#if bisexual}} selected {{/if}}>Bisexual(we are all humman)</option>
@@ -85,9 +87,20 @@
 		<div><textarea class="form-control" name="bio" id="bio" cols="30" rows="10" placeholder="About me"
 				minlength="10" maxlength="250" required>{{bio}}</textarea></div>
 	</div>
+
 	<div class="form-group">
-		<label for="">Hash_me</label>
-		<div>[food, music, movies, books,lifestyle, hobbies]</div>
-	</div>￼
+		<h6>Hash_me</h6>
+		<div class="row">
+				<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="intrests" value="tatoo" id="tatoo"{{#if intrests.tatoo}} checked {{/if}}><label class="form-check-label" for="tatoo"><i># Tatoo</i></label></div>
+				<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="intrests" value="smoke" id="smoke"{{#if intrests.smoke}} checked {{/if}}><label class="form-check-label" for="smoke"><i># Smoke</i></label></div>
+				<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="intrests" value="alcohol" id="alcohol"{{#if intrests.alcohol}} checked {{/if}}><label class="form-check-label" for="alcohol"><i># Alcohol</i></label></div>
+				<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="intrests" value="travel" id="travel"{{#if intrests.travel}} checked {{/if}}><label class="form-check-label" for="travel"><i># Travel</i></label></div>
+				<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="intrests" value="party" id="party"{{#if intrests.party}} checked {{/if}}><label class="form-check-label" for="party"><i># Party</i></label></div>
+				<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="intrests" value="social" id="social"{{#if intrests.social}} checked {{/if}}><label class="form-check-label" for="social"><i># Social</i></label></div>
+				<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="intrests" value="introvert" id="introvert"{{#if intrests.introvert}} checked {{/if}}><label class="form-check-label" for="introvert"><i># Introvert</i></label></div>
+				<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="intrests" value="excersise" id="excersise"{{#if intrests.excersise}} checked {{/if}}><label class="form-check-label" for="excersise"><i># Excersise</i></label></div>
+				<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="intrests" value="sports" id="sports"{{#if intrests.sports}} checked {{/if}}><label class="form-check-label" for="sports"><i># Sports</i></label></div>
+		</div>
+	</div>
 	<button class="btn btn-success" type="submit">Save</button>
 </form>

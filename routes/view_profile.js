@@ -20,11 +20,7 @@ var renderProfile = (res, data) => {
 		fname	: data.usr_name,
 		lname	: data.usr_surname,
 		bio			: data.bio,
-		intrests	: [
-			'Reading',
-			'playing music',
-			'Social medias'
-		],
+		intrests	: data.intrests,
 		pic		: data.pic,
 		age		: data.age,
 		gender	: data.gender,
