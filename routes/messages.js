@@ -39,34 +39,34 @@ fn_render_messages = (req, res, next, msg) => {
 				// user_data = res_arr;
 				let user_data = [res_arr.length];
 				console.log('Number of conversations: ', res_arr.length, '\n');
-				for (let i = 0; i < res_arr.length; i++) {
-					db.collection('users').find({ '_id': objectId(res_arr[i].partner) }).forEach(function (docs, err) {
-						assert.equal(null, err);
-						// for (let j = 0; j < res_arr.length; j++) {
-						// 	if (res_arr[j].partner == docs._id) {
-						// 		user_data[i].push(docs);
-						// 		user_data[i].messages = res_arr[i];
-						// 	}
-						// }
-						find_user.push(docs);
-						console.log(i, `. doc.push: `, docs.usr_user, `(ID: `,docs._id, `)`);
-					}, () => {
-						console.log("find_user.length: ", find_user.length);
-						console.log("res_arr.length: ", res_arr.length);
-						if (find_user.length == res_arr.length) {
-							console.log('res_arr: ');
-							client.close();
-							console.log('find_user: ');
-			
-							res.render('messages', {
-								title: 'message',
-								er: pass_er,
-								suc: pass_suc,
-								msg_arr,
-								match_list: find_user
-							});
-						}
-					});
+				if (res_arr.length > 0) {
+					console.log('\tConversations found');
+					for (let i = 0; i < res_arr.length; i++) {
+						db.collection('users').find({ '_id': objectId(res_arr[i].partner) }).forEach(function (docs, err) {
+							assert.equal(null, err);
+							find_user.push(docs);
+							console.log(i, `. doc.push: `, docs.usr_user, `(ID: `,docs._id, `)`);
+						}, () => {
+							console.log("find_user.length: ", find_user.length);
+							console.log("res_arr.length: ", res_arr.length);
+							if (find_user.length == res_arr.length) {
+								console.log('res_arr: ');
+								client.close();
+								console.log('find_user: ');
+	
+								res.render('messages', {
+									title: 'message',
+									er: pass_er,
+									suc: pass_suc,
+									msg_arr,
+									match_list: find_user
+								});
+							}
+						});
+					}
+				} else {
+					console.log('No mesasages, redirecting to home');
+					res.redirect('/index/' + 'pass_errYou dont have any messages yet');
 				}
 			});
 		});
