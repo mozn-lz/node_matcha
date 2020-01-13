@@ -67,7 +67,7 @@ router.post('/', function (req, res, next) {
 					req.session.surname = find_user[0].usr_surname;
 					req.session.usr_psswd = find_user[0].usr_psswd;
 					req.session.login_time = find_user[0].login_time;
-					req.session.pic = find_user[0].pic;
+					req.session.picture = find_user[0].picture;
 					req.session.age = find_user[0].age;
 					req.session.gender = find_user[0].gender;
 					req.session.oriantation = find_user[0].oriantation;

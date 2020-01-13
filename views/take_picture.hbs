@@ -19,31 +19,52 @@
 					<input type="file" onchange="encodeImageFileAsURL(this)" />
 				</div>
 				<div id="imgVidDiv">
-					<img id="tmpImg" src=""  alt="">
-					<img id="tmpImg2" src=""  alt="">
+					<img id="tmpImg" src="" alt="">
+					<img id="tmpImg2" src="" alt="">
 					<video id="video">Stream broken...</video>
-				</div>	
+				</div>
 			</div>
 			<div class="float-left padding-400">
 			</div>
 		</div>
 		<div id="photos">
 			<img id="selfie" src="" alt="" style="width:100%;max-width:300px">
-			
+
 			<!-- The Modal -->
 			<div id="myModal" class="modal">
 				<span class="close">&times;</span>
 				<img class="modal-content" name="user_pic" id="img01">
 				<div id="caption"></div>
-				<form action="" method="post">
+				<form action="/take_picture" method="post">
 					<input class="hidden" type="text" id="thmb" name="thmb" value="#">
 					<button name="cancel" value="cancel" type="submit">Cancel</button>
-					<button name="submit" value="submit" type="submit">Save</button>
+					<button name="save" value="save" type="submit">Save</button>
 				</form>
 			</div>
 		</div>
 	</div>
 	<canvas id="canvas"></canvas>
 </section>
+
+<footer>
+	{{!-- <h5>footer</h5> --}}
+	<h5 class="text-center">Select Profile Picture</h5>
+	<form action="/take_picture" method="post">
+		<div>
+			{{!-- <img id="profilePic" class="rounded-circle" src="" alt=""> --}}
+			<img id="profilePic" class="rounded-circle" src="{{profile}}" alt="">
+			<input type="hidden" name="thmb">
+		</div>
+		{{#each pic}}
+			<div class="ppDiv inline">
+				<img class="profile" src={{this}} alt="" >
+				<div class="center">
+					<div class="inline"><button type="submit" class="btn btn-success" name="change" value="change">Change</button></div>
+					<div class="inline"><button type="submit" class="btn btn-danger"  name="delete" value="delete">Delete</button></div>
+				</div>
+			</div>
+		{{/each}}
+	</form>
+</footer>
 
 <script src="/javascripts/take_pic.js"></script>

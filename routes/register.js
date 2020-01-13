@@ -148,7 +148,8 @@ router.post('/', function (req, res, next) {
 			usr_surname: surname,
 			usr_psswd: psswd, // to be encrypted
 			login_time: '',
-			pic: [],
+			picture: [],
+			profile: 'https://www.billboard.com/files/styles/article_main_image/public/media/Oasis-press-photo-credit-Jill-Furmanovsky-2016-billboard-1548.jpg',
 			age: null,
 			gender: '',
 			oriantation: '',

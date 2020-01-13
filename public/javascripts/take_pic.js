@@ -49,9 +49,9 @@ back.addEventListener('change', function (e) {
 /*      Take Picture    */
 /************************/
 navigator.mediaDevices.getUserMedia({
-		video: true,
-		audio: false
-	})
+	video: true,
+	audio: false
+})
 	.then(function (stream) {
 		// Link to video source
 		video.srcObject = stream;
@@ -204,10 +204,29 @@ function takePicture() {
 
 	// Get the <span> element that closes the modal
 	var span = document.getElementsByClassName("close")[0];
-
 	// When the user clicks on <span> (x), close the modal
 	span.onclick = function () {
 		window.location.replace('./take_picture');
 		modal.style.display = "none";
 	}
 }
+
+//	
+$('.profile').click(function () {
+	console.log("Fuck");
+	// console.log('lolol ',this.src);
+	$('#profilePic').attr("src", this.src);
+	console.log('it works:  ', $('#profilePic').attr("src"));
+	if ($('#profilePic').attr('src') == this.src) {
+		console.log('it works');
+	}
+	// console.log(this.src);
+
+	$( "input[name='thmb']").val(this.src);
+	console.log('input val= ', $( "input[name='thmb']").val());
+});
+$('#profilePic').click(() =>{
+	alert('Hello world');
+	console.log($('#profilePic').src);
+	
+});
