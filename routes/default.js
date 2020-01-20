@@ -7,3 +7,4 @@ router.get('/', function(req, res, next) {
 });
 
 module.exports = router;
+//  https://stackabuse.com/handling-file-uploads-in-node-js-with-expres-and-multer/

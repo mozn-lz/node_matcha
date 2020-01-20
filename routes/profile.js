@@ -41,9 +41,11 @@ function fn_render_profile(req, res, next, msg) {
 
 			collection.find(usr_data).forEach(function (doc, err) {
 				assert.equal(null, err);
+				(!doc.profile) ? doc.profile = "/images/ionicons.designerpack/md-person.svg" : 0;
 				res_arr.push(doc);
 			}, function () {
 				client.close();
+				// (!res_arr[0].profile) ? res_arr[0].profile = 'https://www.billboard.com/files/styles/article_main_image/public/media/Oasis-press-photo-credit-Jill-Furmanovsky-2016-billboard-1548.jpg' : 0;
 				if (res_arr.length == 1) {
 					// if user is found get their details from database
 					res_arr[0].gender == 'male' ? male = 'male' : male = '';
@@ -64,6 +66,7 @@ function fn_render_profile(req, res, next, msg) {
 						surname: res_arr[0].usr_surname,
 						login_time: res_arr[0].login_time,
 						pic: res_arr[0].pic,
+						profile: res_arr[0].profile,
 						age: res_arr[0].age,
 						gender: res_arr[0].gender,
 						oriantation: res_arr[0].oriantation,

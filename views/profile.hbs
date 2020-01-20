@@ -13,7 +13,8 @@
 <form action="/profile" method="post">
 	<div class="text-center">
 		<div class="d-inline">
-			<img src="/images/202579_med.jpg" alt="" width="300" class="rounded">
+			{{!-- <img src="/images/202579_med.jpg" alt="" width="300" class="rounded"> --}}
+			<img src={{profile}} alt="" width="300" class="rounded">
 		</div>
 		<div class="d-inline">
 			<a href="/take_picture">
@@ -104,3 +105,6 @@
 	</div>
 	<button class="btn btn-success" type="submit">Save</button>
 </form>
+
+
+<script src="/javascripts/profile.js"></script>

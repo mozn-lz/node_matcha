@@ -211,8 +211,14 @@ function takePicture() {
 	}
 }
 
+$('.user_pics').load( ()=>{
+	console.log("before: ", $(this).attr("src"));
+	$(this).attr("src") = $(this).attr("src").slice(0, -1);
+	console.log("after: ", $(this).attr("src"));
+});
+
 //	
-$('.profile').click(function () {
+$('.user_pics').click(function () {
 	console.log("Fuck");
 	// console.log('lolol ',this.src);
 	$('#profilePic').attr("src", this.src);

@@ -106,6 +106,7 @@ var fn_getMatches = (req, res, next, msg) => {
 			collection.find({gender: match_criteria.gender}).forEach(function (doc, err) {
 				assert.equal(null, err);
 				if (doc.oriantation != match_criteria.exception && doc._id != req.session.uid) {
+					(!doc.profile) ? doc.profile = "/images/ionicons.designerpack/md-person.svg" : 0;
 					user_matches.push(doc);
 					console.log("Found a ", doc.oriantation, " ", doc.gender, " named ", doc.usr_user);
 				} else {
