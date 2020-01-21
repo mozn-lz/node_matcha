@@ -29,6 +29,10 @@ router.get('/:reqId', (req, res, next) => {
 		console.log("1. usrId: ", req.session.uid, '\n');
 		console.log("1. friendId: ", friendReqId, '\n');
 
+		let notification = {	// notification object
+			from: req.session.uid,
+			type: 'friend request'
+		}
 		// Connect and save data to mongodb
 		MongoClient.connect(url, function (err, client) {
 			assert.equal(null, err);
@@ -41,6 +45,11 @@ router.get('/:reqId', (req, res, next) => {
 				$addToSet: {
 					request: req.session.uid 
 				}
+			}, () => {
+				collection.updateOne({ '_id': objectId(friendReqId) }, 	// send norification to 'friend'
+				{$addToSet: {
+					notifications : notification
+				}});
 			}, (err, result) => {
 				client.close();
 				message = 'pass_sucFriend request has been made';

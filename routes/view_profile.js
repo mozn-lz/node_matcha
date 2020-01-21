@@ -56,6 +56,11 @@ router.get('/:reqId', (req, res, next) => {
 		let friendReqId = req.params.reqId
 		console.log("friendId: ", friendReqId);
 
+		let notification = {	// notification object
+			from : req.session.uid,
+			type : 'view profile'
+		}
+
 		MongoClient.connect(url, (err, client) => {
 			assert.equal(null, err);
 			const db = client.db(dbName);
@@ -69,6 +74,11 @@ router.get('/:reqId', (req, res, next) => {
 				console.log('\t\t doc: ' + doc);
 
 			}, () => {
+				collection.updateOne({ '_id': objectId(friendReqId) }, 	// send norification to 'friend'
+				{$addToSet: {
+					notifications : notification
+				}});
+			}, () => {
 				client.close();
 				console.log('find_user.length: ', find_user.length);
 				let message = '';
@@ -81,7 +91,6 @@ router.get('/:reqId', (req, res, next) => {
 					console.log("\n\t\tmessage ", message, "\n");
 					(!find_user[0].profile) ? find_user[0].profile = "/images/ionicons.designerpack/md-person.svg" : 0;
 					(find_user[0] == 'show') ? find_user[0].gps = gps : find_user[0].gps = '';		//
-
 					renderProfile(res, find_user[0]);
 				} else {
 					console.log("Else " + friendReqId + " not found");

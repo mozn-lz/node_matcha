@@ -20,12 +20,12 @@ router.get('/', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
 	let text = req.body.text;
-	let senderId 	= req.session.uid;
+	let senderId = req.session.uid;
 	let recipiantId = req.body.dest;
 	let message_details = {
-			from: senderId,
-			time: Date.now(),
-			message: text
+		from: senderId,
+		time: Date.now(),
+		message: text
 	};
 
 	console.log("\n\n\t************Send Message(N/A)************\n\n");
@@ -36,61 +36,75 @@ router.post('/', function (req, res, next) {
 	console.log('senderId    ', message_details.from);
 
 	if (req.session.uid) {
-	// Connect and save data to mongodb
-	MongoClient.connect(url, function (err, client) {
-		assert.equal(null, err);
-		console.log("\tConnected to server and mongo connected Successfully");
-		const db = client.db(dbName);
-		// const usersCollection = db.collection('users');
-		const messagesCollection = db.collection('chats');
-		if (senderId && recipiantId) {
-			message_details.me = true;
-			messagesCollection.updateOne({	//	update sender messages
-				'user_id': senderId,
-				'partner': recipiantId
-			}, {
-				$addToSet: {
-					'message': message_details
-				}
-			}, {upsert: true
-			},  (err, result) => {
-				if (err) {
-					console.log("Error ", err);
-				} else {
-					console.log("Success part  1");
-					// console.log("result ", result);
-				}
-			});
-	
-			messagesCollection.updateOne({	//	update recipiant messages
-				'user_id': recipiantId,
-				'partner': senderId
-			}, {
-				$addToSet: {
-					'message': message_details
-				}
-			}, {upsert: true
-			}, (err, result) => {
-				client.close();
-				if (err) {
-					console.log("Error ", err);
-				} else {
-					console.log("Success part 2");
-					// console.log("result ", result);
-					console.log("Redirect to '/view_messages/' + recipiantId ");
-					res.redirect('/view_messages/' + req.body.dest);
-				}
-				// res.redirect('/index/' + message);
-			}), (recipiantId) => {
-				console.log("'/view_messages/' + recipiantId ");
+		// Connect and save data to mongodb
+		MongoClient.connect(url, function (err, client) {
+			assert.equal(null, err);
+			console.log("\tConnected to server and mongo connected Successfully");
+			const db = client.db(dbName);
+			const usersCollection = db.collection('users');
+			const messagesCollection = db.collection('chats');
+			let notification = {	// notification object
+				from: req.session.uid,
+				type: 'send message'
+			}
+			if (senderId && recipiantId) {
+				message_details.me = true;
+				(() => {
+					usersCollection.updateOne({ '_id': objectId(recipiantId) }, 	// send norification to 'friend'
+						{
+							$addToSet: {
+								notifications: notification
+							}
+						});
+				})();
+				messagesCollection.updateOne({	//	update sender messages
+					'user_id': senderId,
+					'partner': recipiantId
+				}, {
+					$addToSet: {
+						'message': message_details
+					}
+				}, {
+					upsert: true
+				}, (err, result) => {
+					if (err) {
+						console.log("Error ", err);
+					} else {
+						console.log("Success part  1");
+						// console.log("result ", result);
+					}
+				});
+
+				messagesCollection.updateOne({	//	update recipiant messages
+					'user_id': recipiantId,
+					'partner': senderId
+				}, {
+					$addToSet: {
+						'message': message_details
+					}
+				}, {
+					upsert: true
+				}, (err, result) => {
+					client.close();
+					if (err) {
+						console.log("Error ", err);
+					} else {
+						console.log("Success part 2");
+						// console.log("result ", result);
+						console.log("Redirect to '/view_messages/' + recipiantId ");
+						res.redirect('/view_messages/' + req.body.dest);
+					}
+					// res.redirect('/index/' + message);
+				}), (recipiantId) => {
+					console.log("'/view_messages/' + recipiantId ");
+					res.redirect('/view_messages/' + recipiantId);
+				};
+			} else {
+				console.log("\tError: 'sender' or 'recipiant' are empty\n");
+
 				res.redirect('/view_messages/' + recipiantId);
-			};
-		} else {
-			console.log("\tError: 'sender' or 'recipiant' are empty\n");
-			
-			res.redirect('/view_messages/' + recipiantId);
-		}
-	});
+			}
+		});
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
 	}
@@ -126,7 +140,7 @@ router.get('/:reqId/:message', (req, res, next) => {
 		res.redirect('/view_messages/' + friendReqId);
 		// 		});
 		// 	});
-		} else {
+	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
 	}
 });
