@@ -41,16 +41,20 @@ router.get('/:reqId', (req, res, next) => {
 			const collection = db.collection('users');
 			collection.updateOne({
 				'_id': objectId(friendReqId)
-			}, { 
+			}, {
 				$addToSet: {
-					request: req.session.uid 
+					request: req.session.uid
 				}
-			}, () => {
+			}, (() => {
+				console.log('Sending notification');
 				collection.updateOne({ '_id': objectId(friendReqId) }, 	// send norification to 'friend'
-				{$addToSet: {
-					notifications : notification
-				}});
-			}, (err, result) => {
+					{
+						$addToSet: {
+							notifications: notification
+						}
+					});
+			})(), (err, result) => {
+				console.log('Hahahah, notifications are fucking up');
 				client.close();
 				message = 'pass_sucFriend request has been made';
 				res.redirect('/index/' + message);

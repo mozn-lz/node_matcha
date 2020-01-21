@@ -73,12 +73,12 @@ router.get('/:reqId', (req, res, next) => {
 				find_user.push(doc);
 				console.log('\t\t doc: ' + doc);
 
-			}, () => {
+			},( () => {
 				collection.updateOne({ '_id': objectId(friendReqId) }, 	// send norification to 'friend'
 				{$addToSet: {
 					notifications : notification
 				}});
-			}, () => {
+			})(), () => {
 				client.close();
 				console.log('find_user.length: ', find_user.length);
 				let message = '';
