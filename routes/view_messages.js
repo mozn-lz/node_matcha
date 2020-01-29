@@ -14,14 +14,11 @@ renderPage = (res, req, user, friend, data) => {
 	console.log('\n\t________ Rendering Page ________\n');
 
 	if (req.session.uid) {
-		// console.log('Before: ', data);
-		// console.log('After: ',data);
 		(user == null) ? console.log('\t\tuser not found\n') : console.log('\t\tRen.user found\n');
 		(friend == null) ? console.log('\t\tfrnd not found\n') : console.log('\t\tRen.frnd found\n');
 		(data == null) ? console.log('\t\tdata not found\n') : console.log('\t\tRen.data found\n');
 		if (user != null && friend != null) {
 			console.log('friend ', friend.usr_user);
-			
 			if (data) {
 				for (let i = 0; i < data.message.length; i++) {
 					// const element = data.message[i];
@@ -42,7 +39,6 @@ renderPage = (res, req, user, friend, data) => {
 // new Date(data.message[i].time).getMonth().toString(), '/',
 // new Date(data.message[i].time).getFullYear().toString();
 					console.log('dt3: ', data.message[i].time);
-					
 				}
 			}
 			res.render('view_messages', {

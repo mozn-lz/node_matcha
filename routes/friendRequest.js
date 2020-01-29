@@ -8,9 +8,7 @@ var helper_index = require('./helper_index'); // Helper functions Mk
 
 const url = 'mongodb://localhost:27017';	// Database Address
 const dbName = 'matcha';					// Database Name
-
-var page_name = 'home';
-
+var page_name = 'friend request';
 
 /* GET view_profile listing. */
 router.get('/', function (req, res, next) {

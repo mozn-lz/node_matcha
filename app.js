@@ -22,6 +22,9 @@ var friendRequestRouter = require('./routes/friendRequest');
 var sendMessageRouter = require('./routes/sendMessage');
 var verifyRouter = require('./routes/verify');
 var signoutRouter = require('./routes/logout');
+var searchRouter = require('./routes/search');
+var friendsRouter = require('./routes/friends');
+var notificationsRouter = require('./routes/notifications');
 
 var app = express();
 
@@ -57,7 +60,11 @@ app.use('/verify', verifyRouter);
 app.use('/verify', verifyRouter);
 app.use('/friendRequest', friendRequestRouter);
 app.use('/sendMessage', sendMessageRouter);
-app.use('/logout', signoutRouter)
+app.use('/logout', signoutRouter);
+app.use('/search', searchRouter);
+app.use('/friends', friendsRouter);
+app.use('/notifications', notificationsRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
