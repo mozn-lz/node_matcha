@@ -8,17 +8,87 @@
 			<p  class="alert alert-success border border-success text-center col-12" role="alert">{{username}}</p>
 		{{/if}}
 	</div>
-<form action="/login" method="post">
-	<div>
-		<label for="email">Email</label>
-		<input class="form-control" type="email" name="email" id="email" placeholder="email" required>
-	</div>
-	<div>
-		<label for="password">Password</label>
-		<input class="form-control" type="password" name="password" id="password" placeholder="password" required>
-	</div>
-	<button class="btn btn-success" type="submit">login</button>
-	<div class="d-inline left">
-		<a href="/register">register here</a>
-	</div>
-</form>
+
+<div class="container">
+
+  <div class="row bg-light">
+
+           <div class="col-sm" >
+             
+             <div class='col-sm-9'>
+				 <br>
+			   <hr>
+               <br>
+               <br>
+               <form class="col-30" action="/login" method="post">
+                <div class='form-group'>
+                  <label class="font-weight-bold" for="email">Email</label>
+                  <input class="form-control" type="email" name="email" id="email" placeholder="email" required>
+					<br>
+                  <label class="font-weight-bold" for="password">Password</label>
+                  <input class="form-control" type="password" name="password" id="password" placeholder="password" required>
+                </div>
+                <br>
+				<br>
+				<hr>
+                <button class="btn btn-danger" type="submit">Login</button>
+				<br>
+                <div class="d-inline left">
+                  <a href="/register"> SignUp Here</a> |
+				   <a href="/forgot_password"> Forgot Password ?</a>
+                </div>
+              </form>
+        <br>      
+        <hr>
+             </div>
+
+             </div>
+          
+         <div class="col-sm">
+           
+           <div class="container mt-3" style="max-height: 250rem;">
+
+             <h2 class="text-info">Find Your Perfect Match ...</h2>
+             <br>
+             <div id="myCarousel" class="carousel slide" data-ride="carousel">
+             
+               <!-- Indicators -->
+               <ul class="carousel-indicators">
+                 <li data-target="#myCarousel" data-slide-to="2" class="active"></li>
+                 <li data-target="#myCarousel" data-slide-to="1"></li>
+                 <li data-target="#myCarousel" data-slide-to="0"></li>
+               </ul>
+               
+               <!-- The slideshow -->
+               <div class="carousel-inner">
+                 <div class="carousel-item active">
+                   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS5kpWhaZD21P7kVUlFYniBuFiPvPV6b9IrUVxx0iso6aZecUl&s"  class="rounded-circle" alt="" width="1100" height="500">
+                 </div>
+                 <div class="carousel-item">
+                   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwZfXB526yVaPfrVRYVrM4vXXppdscHX9BBVUVBADzyvDEmJX9&s"  class="rounded-circle" alt="" width="1100" height="500">
+                 </div>
+                 <div class="carousel-item">
+                   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTeoVJXcqOnaa7QlHSmOoiZ8z39pXYr3YA2RAiwUwk5J3AZ4ta&s"  class="rounded-circle" alt="" width="1100" height="500">
+                 </div>
+               </div>
+               
+               <!-- Left and right controls -->
+               <a class="carousel-control-prev" href="#myCarousel" data-slide="prev">
+                 <span class="carousel-control-prev-icon"></span>
+               </a>
+               <a class="carousel-control-next" href="#myCarousel" data-slide="next">
+                 <span class="carousel-control-next-icon"></span>
+               </a>
+             </div>
+             
+             </div>
+             <br>
+             <br>
+             <h2 class="text-info">Right here!!!</h2>
+             
+             <hr>
+           </div>
+       </div>
+
+</div>
+

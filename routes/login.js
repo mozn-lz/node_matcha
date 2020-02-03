@@ -12,7 +12,7 @@ const page_name = 'login';		// page name
 /* GET login listing. */
 router.get('/', function (req, res, next) {
 	res.render('login', {
-		page: 'Login'
+		page: 'Login' , condition1: true , notCondition: false
 	});
 });
 
@@ -79,8 +79,6 @@ router.post('/', function (req, res, next) {
 					req.session.liked = find_user[0].liked;
 					req.session.verified = find_user[0].verified;
 					req.session.confirm_code = find_user[0].confirm_code;
-					req.session.friends = find_user[0].friends;
-					req.session.notifications = find_user[0].notifications;
 					(() => {
 						res.redirect('/');
 					})()

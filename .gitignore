@@ -99,3 +99,5 @@ public
 
 # Texteditor files
 .vscode/
+
+.DS_Store

@@ -8,7 +8,9 @@ var helper_index = require('./helper_index'); // Helper functions Mk
 
 const url = 'mongodb://localhost:27017';	// Database Address
 const dbName = 'matcha';					// Database Name
-var page_name = 'friend request';
+
+var page_name = 'home';
+
 
 /* GET view_profile listing. */
 router.get('/', function (req, res, next) {
@@ -27,10 +29,6 @@ router.get('/:reqId', (req, res, next) => {
 		console.log("1. usrId: ", req.session.uid, '\n');
 		console.log("1. friendId: ", friendReqId, '\n');
 
-		let notification = {	// notification object
-			from: req.session.uid,
-			type: 'friend request'
-		}
 		// Connect and save data to mongodb
 		MongoClient.connect(url, function (err, client) {
 			assert.equal(null, err);
@@ -39,20 +37,11 @@ router.get('/:reqId', (req, res, next) => {
 			const collection = db.collection('users');
 			collection.updateOne({
 				'_id': objectId(friendReqId)
-			}, {
+			}, { 
 				$addToSet: {
-					request: req.session.uid
+					request: req.session.uid 
 				}
-			}, (() => {
-				console.log('Sending notification');
-				collection.updateOne({ '_id': objectId(friendReqId) }, 	// send norification to 'friend'
-					{
-						$addToSet: {
-							notifications: notification
-						}
-					});
-			})(), (err, result) => {
-				console.log('Hahahah, notifications are fucking up');
+			}, (err, result) => {
 				client.close();
 				message = 'pass_sucFriend request has been made';
 				res.redirect('/index/' + message);

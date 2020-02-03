@@ -28,7 +28,7 @@ const dbName = 'matcha';
 /* GET register listing. */
 router.get('/', function (req, res, next) {
 	res.render('register', {
-		page: 'Register'
+		page: 'Register', condition: true, notCondition: false
 	});
 });
 

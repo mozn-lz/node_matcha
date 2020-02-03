@@ -5,19 +5,10 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-			<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
-			<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
-			<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-		<script src="/javascripts/jquery/jquery.min.js"></script>
-		<script src="/javascripts/bootstrap.min.js"></script>
-		<script src="/javascripts/helper_functions.js"></script>
-			<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"crossorigin="anonymous">
-			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-		<link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
-		<link rel='stylesheet' href='/stylesheets/style.css' />
+			
 		<title>{{title}}</title>
 	</head>
-
+<!--
 	<body>
 		<menu>
 			<nav class="navbar fixed-top navbar-expand-lg navbar-danger bg-danger">
@@ -30,43 +21,127 @@
 					<a class="navbar-brand" href="/index">Matcha</a>
 					<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 						<li class="nav-item active">
-											 <a class="nav-link" href="/index"><img src="/images/ionicons.designerpack/ios-heart-half.svg" alt="Home"> Home <span class="sr-only">(current)</span></a> </li>
-						<li class="nav-item"><a class="nav-link" href="/profile"><img src="/images/ionicons.designerpack/ios-person.svg" alt="Profile"> Profile</a></li>
-						<li class="nav-item"><a class="nav-link" href="/messages"><img src="/images/ionicons.designerpack/ios-mail.svg" alt="Messages"> Messages</a></li>
-						<li class="nav-item"><a class="nav-link" href="/friends"><img src="/images/ionicons.designerpack/ios-people.svg" alt="Friends"> Friends</a></li>
-						<li class="nav-item"><a class="nav-link" href="/notifications"><img src="/images/ionicons.designerpack/ios-notifications.svg" alt="Notificaions">Notificaions</a>
-						{{!-- <ul>
-							<li>friend_req</li>
-							<li>prifile_view</li>
-							<li>messages</li>
-						</ul> --}}
+							<a class="nav-link" href="/index">Home <span class="sr-only">(current)</span></a>
 						</li>
-						<li class="nav-item"><a class="nav-link" href="/logout"><img src="/images/ionicons.designerpack/ios-log-out.svg" alt="Logout"> Login/out</a></li>
+						<li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+						<li class="nav-item"><a class="nav-link" href="/messages">Messages</a></li>
+						<li class="nav-item"><a class="nav-link" href="/notifications">Notifications</a></li>
+						<li class="nav-item"><a class="nav-link" href="/logout">Login/out</a></li>
 					</ul>
-					<form action="/search" method="post" class="form-inline my-2 my-lg-0">
-						<input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" aria-label="Search">
+					<form class="form-inline my-2 my-lg-0">
+						<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
 						<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 					</form>
 				</div>
 			</nav>
 		</menu>
-		<div>
-			<div class="d-inline-block"><a href="/index"><button type="button" class="btn btn-primary text-white">Home</button></a></div>
-			<div class="d-inline-block"><a href="/profile"><button type="button" class="btn btn-primary text-white">profile</button></a></div>
-			<div class="d-inline-block"><a href="/friends"><button type="button" class="btn btn-primary text-white">friends</button></a></div>
-			<div class="d-inline-block"><a href="/search"><button type="button" class="btn btn-primary text-white">search</button></a></div>
-			<div class="d-inline-block"><a href="/view_profile"><button type="button" class="btn btn-primary text-white">view_profile</button></a></div>
-			<div class="d-inline-block"><a href="/messages"><button type="button" class="btn btn-primary text-white">messages</button></a></div>
-			<div class="d-inline-block"><a href="/view_messages"><button type="button" class="btn btn-primary text-white">view_messages</button></a></div>
-			<div class="d-inline-block"><a href="/register"><button type="button" class="btn btn-primary text-white">register</button></a></div>
-			<div class="d-inline-block"><a href="/login"><button type="button" class="btn btn-primary text-white">login</button></a></div>
-			<div class="d-inline-block"><a href="/forgot_password"><button type="button" class="btn btn-primary text-white">forgot_password</button></a></div>
-			<div class="d-inline-block"><a href="/reset_password"><button type="button" class="btn btn-primary text-white">reset_password</button></a></div>
-			<div class="d-inline-block"><a href="/take_picture"><button type="button" class="btn btn-primary text-white">take_picture</button></a></div>
-			<div class="d-inline-block"><a href="/verify"><button type="button" class="btn btn-primary text-white">verify</button></a></div>
-			<div class="d-inline-block"><a href="/logout"><button type="button" class="btn btn-primary text-white">login/out</button></a></div>
+		<div> 
+			
+			 <title>{{title}}</title>
+			 -->
+  
+  
+  
+  <style>
+  /* Make the image fully responsive */
+  .carousel-inner img {
+    width: 100%;
+    height: 100%;
+  }
+
+  #footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   
+   text-align: center;
+}
+  </style>
+</head>
+
+<body class="bg-light">
+    <div class="bg-info">
+      <nav class="navbar navbar-expand-lg navbar-light bg-info">
+        <a class="navbar-brand" href="/index"> <h1><span class="badge badge-danger"> Matcha!</h1></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+            </li>
+		<!--	<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+						
+						<li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+						<li class="nav-item"><a class="nav-link" href="/messages">Messages</a></li>
+						<li class="nav-item"><a class="nav-link" href="/notifications">Notifications</a></li>
+						<li class="nav-item"><a class="nav-link" href="/logout">Login/out</a></li>
+						
+					</ul>
+          </ul>
+		  -->
+
+		  <li class="nav-item">
+                    <a class="nav-link" href="/Profile">Profile</a>
+                  </li>
+                  <li class="nav-item">
+                    <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Notifications</button>
+                    <div id="demo" class="collapse">
+                      {{message}} at {{this_time}}
+                    </div>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Search
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <a class="dropdown-item" href="#">Age</a>
+                      <a class="dropdown-item" href="#">Likes</a>
+                      <a class="dropdown-item" href="#">Location</a>
+                      <a class="dropdown-item" href="#">Fame Rate</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="/">Settings</a>
+                    </div>
+                  </li>
+				  <li class="nav-item"><a class="nav-link" href="/messages">Messages</a></li>
+          </ul>
+            
+			
+			{{#if condition1}}
+				<a  class="btn btn-outline-light" href="/Register">SignUp</a>
+			
+			{{else}}		
+				<a class="btn btn-outline-light btn my-2 my-sm-0" href="/login">SignOut</a>
+			{{/if}}
+
+			{{#if condition}}
+				<a class="btn btn-outline-light btn my-2 my-sm-0" href="/login">SignIn</a>
+			
+			{{/if}}
+			
+			
+        </div>
+      </nav>
+    </div>
+
+	<br>
+
 		</div>
 		{{{body}}}
 	</body>
 
+	<br>
+	<footer id="footer" class="card-footer">
+         <div class="copy">
+            <p class="text-center">&copy; Group Project(Matcha)</p>
+         </div>
+    </footer>
+
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </html>

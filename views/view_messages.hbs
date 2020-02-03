@@ -1,7 +1,7 @@
 <link rel='stylesheet' href='/stylesheets/view_messages.css' />
 
-<div id="chat">
-	<div>
+<div class="container">
+	<div class="border border-info">
 		{{!-- {{chat_data.usr_user}}
 		{{chat_data.usr_email}}
 		{{chat_data.usr_name}}
@@ -64,40 +64,52 @@
 			{{text.message}}
 		</div>
 	</div> --}}
-	</div>
+	
+	<div class="container">
 
 	<div id="display-chat">
 
 		<div id="title">
-			<h2>{{friend.usr_user}}</h2>
+			<h2>Your Chats with : @{{friend.usr_user}}</h2>
 		</div>
-		<div id="message-body">
+		<div id="text-primary">
 			{{#each texts.message}}
 			{{#if this.me}}
-			<div class="message-container">
-				<div class="message">
-					{{message}}
-				</div>
+		<hr class="w-100">
+			<div class="panel-body msg_container_base">
+				<div class="text-info">
+					<h6>{{message}}</h6>
+		
+				
 				<div class="about">
-					<div class="sender d-inline text-muted"><b>{{this.from}}</b> at </div>
-					<div class="message_time d-inline text-muted">{{this.time}}</div>
+					<small class="pull-right text-muted"><i class="far fa-clock"></i><b>{{this.from}}</b></small> 
+					 <small class="pull-right text-muted"><i class="far fa-clock">at </i>{{this.time}}</small>
+					 </div>
 				</div>
 			</div>
+			<hr class="w-50">
 			{{else}}
 			<div class="message-container right">
 				<div class="message">
-					{{message}}
-				</div>
-				<div class="about">
-					<div class="sender d-inline text-muted"><b>{{this.from}}</b> at </div>
-					<div class="message_time d-inline text-muted">{{this.time}}</div>
-				</div>
+					<h6>{{message}}</h6>
+					
+				<div class="far fa-clock">
+					<small class="pull-right text-muted"><i class="far fa-clock"></i><b>{{this.from}}</b></small>
+					 <small class="pull-right text-muted"><i class="far fa-clock">at </i>{{this.time}}</small>
+					</div>
+				
 			</div>
 			{{/if}}
 			{{user.usr_user}}
 			{{friend.usr_user}}
 			{{/each}}
 		</div>
+
+
+		
+
+
+
 		{{!-- <div class="message-container right">
 			<div class="message">
 				{{message}}
@@ -162,7 +174,79 @@
 				<div class="message_time d-inline text-muted">08:15</div>
 			</div>
 		</div> --}}
-		<div class="panel-footer">
+		<div class="col-sm-9">
+			<a href="/view_profile/{{this._id}}">
+			</a>
+			<form action="/sendMessage" method="post">
+				<div class="input-group">
+					<input type="hidden" name="dest" value="{{friend._id}}">
+
+					<textarea id="exampleFormControlTextarea2" type="text" name="text" class="form-control pl-2 my-0" rows="3"
+						placeholder="Write your message here..."></textarea> 
+						
+		
+						
+				
+				</div>
+				<button class="btn btn-info btn-rounded btn-sm waves-effect waves-light float-right" type="submit" id="btn-chat">Send</button>
+			</form>
+		</div>
+	</div>
+
+</div>
+
+<hr>
+<!--
+<div class="">
+      
+  <ul class="list-unstyled chat">
+    <li class="d-flex justify-content-between mb-4">
+      <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-6.jpg" alt="avatar" class="avatar rounded-circle mr-2 ml-lg-3 ml-0 z-depth-1">
+      <div class="chat-body white p-3 ml-2 z-depth-1">
+        <div class="header">
+          <strong class="primary-font">{{friend.usr_user}}</strong>
+          <small class="pull-right text-muted"><i class="far fa-clock"></i> {{this.time}}</small>
+        </div>
+        <hr class="w-100">
+        <p class="mb-0">
+          {{#each texts.message}}
+							{{#if this.me}}
+        </p>
+      </div>
+    </li>
+    <li class="d-flex justify-content-between mb-4">
+      <div class="chat-body white p-3 z-depth-1">
+        <div class="header">
+          <strong class="primary-font">{{this.from}}</strong>
+          <small class="pull-right text-muted"><i class="far fa-clock"></i>{{this.time}}</small>
+        </div>
+        <hr class="w-100">
+        <p class="mb-0">
+          {{message}}
+        </p>
+      </div>
+      {{else}}
+
+      {{this.from}}
+	  
+      {{this.time}}
+
+      {{/if}}
+		{{friend.usr_user}}
+		{{user.usr_user}}
+		<hr>
+		<img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-5.jpg" alt="avatar" class="avatar rounded-circle mr-0 ml-3 z-depth-1">
+	 {{/each}}
+    </li>
+	</div>
+</ul>
+	<div  class="container col-sm-6">
+		<hr>
+	</div>
+	</div>
+	
+<div class="container col-sm-6">
+	 <div class="panel-footer">
 			<a href="/view_profile/{{this._id}}">
 			</a>
 			<form action="/sendMessage" method="post">
@@ -174,10 +258,11 @@
 						<button class="btn btn-primary btn-sm" type="submit" id="btn-chat">Send</button>
 					</span>
 				</div>
-			</form>
-		</div>
-	</div>
-
+	  -->
+	
+</div>
 </div>
 
-<script src="/javascripts/view_messages.js"></script>
+ 
+      
+           

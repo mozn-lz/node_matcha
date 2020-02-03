@@ -1,12 +1,13 @@
 <link rel='stylesheet' href='/stylesheets/profile.css' />
 
+<!--
 <div class="profile-card">
 	<div class="profile-cover">
 		<div class="menu-container">
 			<a class="list-icon" title="Expand" href="javascript:void(0);"></a>
 			<ul class="profile-actions" style="display: none;">
 				{{!-- <li><a href="#">Follow</a></li> --}}
-				<li><a href="/friendRequest/{{this.id}}">Add as Friend</a></li>
+				<li><a href="/friendRequest/{{this.id}}">Add Friend</a></li>
 				{{!-- <li><a href="#">Like</a></li> --}}
 			</ul>
 		</div>
@@ -22,6 +23,8 @@
 			<a href="#"><img src="/images/ionicons.designerpack/md-person.svg" alt="profile picture" /></a>
 			<a href="#"><img src="/images/ionicons.designerpack/md-person.svg" alt="profile picture" /></a>
 		</div>
+
+		
 		<div class="profile-details">
 			<h5 class="alert alert-danger text-muted">
 				<b>{{username}}</b>
@@ -67,13 +70,108 @@
 				Likes
 			</li>
 			<li>
-				<div class="digits">{{rating}}</div>
+				<div class="digits">{{Rating}} / 83</div>
 				Rating
 			</li>
 			<li>
 				<div class="digits">{{age}}</div>
 				Age
 			</li>
+			-->
+
+		<div class="container">
+    	<div class="">
+
+      <div class="col-xs-1" align="center">
+        <div class="card mb-3" style="max-width: 540px;">
+          <div class="row no-gutters">
+            <div class="col-md-4">
+              <img class="rounded-circle"  src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="card-img-top" alt="...">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body" >
+                <h5 class="card-title"><b>{{username}}</b></h5>
+                <p class="card-text"><b>Bio:</b> {{bio}}</p>
+                <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo1">more..</button>
+                <div id="demo1" class="collapse">
+                  <div class="container">
+                    <div class="row">
+                      <div class="profile-details">
+						  <hr>
+						  <h1>About</h1>
+                        <blockquote>
+                          <p><p>{{fname}} &nbsp; {{lname}}</p></p>
+                          <small><cite title="Source Title">{{Location}}  <i class="icon-map-marker"></i></cite></small>
+                        </blockquote>
+                        <p>
+                          <b>Hobbies: &nbsp; </b>
+                          {{#if intrests.tatoo}} # tatoo {{/if}}
+                          {{#if intrests.smoke}} # smoke {{/if}}
+                          {{#if intrests.alcohol}} # alcohol {{/if}}
+                          {{#if intrests.travel}} # travel {{/if}}
+                          {{#if intrests.party}} # party {{/if}}
+                          {{#if intrests.social}} # social {{/if}}
+                          {{#if intrests.introvert}} # introvert {{/if}}
+                          {{#if intrests.excersise}} # excersise {{/if}}
+                          {{#if intrests.sports}} # sports {{/if}}
+                        </p>
+                      </div>
+					  <br>
+                      <div class="btns-container">
+                        <blockquote>
+                          <ul>
+                            <li>
+                              <div class="digits">234</div>
+                              Friends
+                            </li>
+                            <li>
+                              <div class="digits">51</div>
+                              Likes
+                            </li>
+                            <li>
+                              <div class="digits">{{Rating}} / 83</div>
+                              Rating
+                            </li>
+                            <li>
+                              <div class="digits">{{age}}</div>
+                              Age
+                            </li>
+                            {{!-- <li>
+                              <div class="digits">42</div>
+                              Gits
+                            </li> --}}
+                          </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                 <hr>
+               <div class="btns-container" align="center">
+
+        <li><a href="/friendRequest/{{this.id}}">Add Friend</a></li>
+			<div class="profile-links">
+					<a class="zoom-avatar" href="#"><img src="https://dl.dropboxusercontent.com/s/5liaxzvwbfuqzpo/zoom.png"></a>
+					<a class="read-more" href="#"><img src="https://dl.dropboxusercontent.com/s/62dfoo9h44o58lw/more.png"></a>
+					<a class="view-map" href="#"><img src="https://dl.dropboxusercontent.com/s/9ofmihok0h64lvn/location.png"></a>
+				</div>
+      			</div>
+		       </div>
+            </div>
+          </div>
+        </div> 
+    </div>
+
+    <hr>
+      
+    <hr>
+    
+    </div>
+    </div>
+    </div>
+
+
+
+
 			{{!-- <li>
 				<div class="digits">42</div>
 				Gits
@@ -82,6 +180,9 @@
 		<div class="clear"></div>
 	</div>
 </div>
+
+
+
 {{!-- <div>
 	<p>
 		<h5>About {{user_name}}</h5>
