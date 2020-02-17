@@ -13,7 +13,7 @@ let search = '';
 
 let fn_render_notifications = (req, res, next, msg, matches) => {
 
-	console.log('req.session.uid ', req.session.uid);
+	// console.log('req.session.uid ', req.session.uid);
 	let res_arr = matches;
 	// console.log('\n\n\n________fn_render_search________\n');
 	if (req.session.uid) {
@@ -34,9 +34,11 @@ let fn_render_notifications = (req, res, next, msg, matches) => {
 				res_arr == null;
 			}
 		}
+		// console.log('res Arr: ', res_arr);
+
 		// if (notification.type )
 		res.render(page_name, {
-			match_list: res_arr,
+			notifications: res_arr,
 			msg_arr,
 			er: pass_er,
 			suc: pass_suc,
@@ -47,41 +49,92 @@ let fn_render_notifications = (req, res, next, msg, matches) => {
 	}
 }
 
-var fn_getMatches = (req, res, next, msg) => {
+// function vis(){
+function fn_getMatches (req, res, next, msg) {
 
 	console.log('\n\t\t1. msg: ', msg, '\n\n');
 	MongoClient.connect(url, function (err, client) {
 		assert.equal(null, err);
 
 		const db = client.db(dbName);
-		var find_user = [];
+		// var find_user = [];
 		var user_matches = [];
 		const collection = db.collection('users');
 		// console.log(search_criteria);
 
 		let notification = req.session.notifications;
 
-		console.log(notification);
-		
+		// console.log('\t\t', notification);
+
 		// let notification = {	// notification object
-		// 	from: req.session.uid,
 		// 	type: 'friend request'
 		// 	// type: 'send message'
 		// 	// type : 'view profile'
 		// }
+
+		// console.log("notification[0].from ", notification);
+		
 		if (notification) {
-			for (let i = 0; i < notification.length; i++) {
-				collection.find({ '_id' : objectId(notification[i].from )}).forEach(function (doc, err) {
-					assert.equal(null, err);
-					notification[i].push(doc);
-					// user_matches.push(doc);
-					console.log(doc);
-				}), (() => {
-					client.close();
-					console.log('\n\t\t3. msg: ', msg, '\n\n');
-					fn_render_notifications(req, res, next, msg, notification);
-				})()
-			}
+			let find_user = new Promise((resolve, reject) => {
+				for (let i = 0; i <= notification.length; i++) {
+					if (i < notification.length) {
+						collection.find({ '_id': objectId(notification[i].from) }).forEach(function (doc, err) {
+							assert.equal(null, err);
+							// user_matches[i].push(doc);
+							// console.log(doc);
+							// 	from: req.session.uid,
+							notification[i].pic = doc.profile;
+							notification[i].name = doc.usr_user;
+							if (notification[i].type == 'friend request') {
+								notification[i].request = 'friend request';
+								// notification[i].request = true;
+								console.log('\t\tnotification.request: ', notification[i].request);
+							} else if (notification[i].type == 'send message') {
+								notification[i].message = 'send message';
+								// notification[i].message = true;
+								console.log('\t\tnotification.message: ', notification[i].message);
+							} else if (notification[i].type == 'view profile') {
+								// notification[i].profile = true;
+								notification[i].profile = 'view profile';
+								console.log('\t\tnotification.profile: ', notification[i].profile);
+							}
+						});
+					}
+					 else {
+						// console.log('Irh  i: ', i);
+						
+						// console.log('notification: ', notification, " \nnote.");
+						// console.log('notification.length, ', notification.length);
+											// if (i == notification.length) {
+											// 	console.log(notification[0].from, " ", notification[0].type, " R:", notification[0].request, " P:", notification[0].profile, " M:", notification[0].message);
+											// 	console.log(notification[1].from, " ", notification[1].type, " R:", notification[1].request, " P:", notification[1].profile, " M:", notification[1].message);
+											// 	fn_render_notifications(req, res, next, msg, notification);
+											// 	console.log('\n\t\tClosing database\n\n');
+											// 	client.close();
+											// }
+						client.close();
+						console.log('\n\t\t3. msg: ', msg, '\n\n');
+						console.log('\n\t\tClosing database\n\n');
+					}
+					
+					// console.log('\titerate: ', i, ' vs ', notification.length);
+					setTimeout(() => {
+						resolve(notification);
+					}, 1000);
+				}
+			});
+
+			find_user.then((notification) => {
+				// console.log(notification);
+					console.log('\n\n',
+						notification[0].from, '\t\t', notification[1].from, '\n',
+						notification[0].name, '\t\t', notification[1].name, '\n',
+						notification[0].type, '\t\t', notification[1].type, '\nr: ',
+						notification[0].request, '\t\t', notification[1].request, '\np: ',
+						notification[0].profile, '\t\t', notification[1].profile, '\nm: ',
+						notification[0].message, '\t\t', notification[1].message, '\n');
+				fn_render_notifications(req, res, next, msg, notification);
+			})
 		} else {
 			console.log('No notifications found');
 			fn_render_notifications(req, res, next, msg, user_matches);
