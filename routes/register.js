@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
+const passwordHash = require('password-hash');
+
 var helper = require('./helper_functions'); // Helper functions Mk
 
 const url = 'mongodb://localhost:27017';
@@ -146,7 +148,7 @@ router.post('/', function (req, res, next) {
 			usr_email: email,
 			usr_name: name,
 			usr_surname: surname,
-			usr_psswd: psswd, // to be encrypted
+			usr_psswd: passwordHash.generate(psswd), // to be encrypted
 			login_time: '',
 			profile: '/images/ionicons.designerpack/md-person.svg',
 			age: null,
