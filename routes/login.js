@@ -6,7 +6,7 @@ const assert = require('assert');
 
 const url = 'mongodb://localhost:27017';	// Database(mongo) url
 
-const dbName = 'matcha';		// Database Name
+const dbName = 'mk_matcha';;		// Database Name
 const page_name = 'login';		// page name
 
 /* GET login listing. */

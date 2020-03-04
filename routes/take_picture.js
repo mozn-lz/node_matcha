@@ -5,7 +5,7 @@ const objectId = require('mongodb').ObjectID;
 const assert = require('assert');
 
 const url = 'mongodb://localhost:27017';
-const dbName = 'matcha';
+const dbName = 'mk_matcha';
 const multer = require('multer');
 const upload = multer({dest: 'uploads/'});
 

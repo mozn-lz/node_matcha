@@ -7,17 +7,16 @@ var helper = require('./helper_functions'); // Helper functions Mk
 var helper_index = require('./helper_index'); // Helper functions Mk
 
 const url = 'mongodb://localhost:27017';	// Database Address
-const dbName = 'matcha';					// Database Name
+const dbName = 'mk_matcha';					// Database Name
 
 var page_name = 'friends';
 
-let fn_render_index = (req, res, next, msg, matches) => {
+let fn_render_friends = (req, res, next, msg, matches) => {
 
 	console.log('req.session.uid ', req.session.uid);
 	var res_arr = matches;
 	// console.log('\n\n\n________fn_render_indexn________\n');
 	if (req.session.uid) {
-		(req.session.oriantation == '') ? req.session.oriantation = 'bisexual' : 0;
 
 		var msg_arr = [];
 		(msg.search('pass_err') == 0) ? pass_er = "danger" : pass_er = '';
@@ -60,19 +59,26 @@ var fn_getMatches = (req, res, next, msg) => {
 		const collection = db.collection('users');
 		let friends = req.session.friends;
 
-		if (friends) {
-			for (let i = 0; i < friends.length; i++) {
-				collection.find({ '_id': objectId(friends[i]) }).forEach(function (doc, err) {
-					assert.equal(null, err);
-					user_matches.push(doc);
+		(() => {
+
+			collection.count({ '_id': objectId(req.session.uid), 'friends': friends })
+				.then((count) => {
+					if (count > 0) {
+						for (let i = 0; i < friends.length; i++) {
+							collection.find({ '_id': objectId(friends[i]) }).forEach(function (doc, err) {
+								assert.equal(null, err);
+								user_matches.push(doc);
+								console.log(doc);
+							});
+						}
+					}
+				}, () => {
+					client.close();
+					console.log('\n\t\t3. msg: ', msg, '\n\n');
+					fn_render_friends(req, res, next, msg, user_matches);
 				});
-			}
-		}
-	}), (() => {
-		client.close();
-		console.log('\n\t\t3. msg: ', msg, '\n\n');
-		fn_render_index(req, res, next, msg, user_matches);
-	})();
+		})();
+	});
 }
 
 router.get('/', (req, res, next) => {

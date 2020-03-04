@@ -7,7 +7,7 @@ var helper = require('./helper_functions'); // Helper functions Mk
 var helper_index = require('./helper_index'); // Helper functions Mk
 
 const url = 'mongodb://localhost:27017';	// Database Address
-const dbName = 'matcha';					// Database Name
+const dbName = 'mk_matcha';;					// Database Name
 let page_name = 'notifications';
 let search = '';
 
@@ -63,16 +63,6 @@ function fn_getMatches (req, res, next, msg) {
 		// console.log(search_criteria);
 
 		let notification = req.session.notifications;
-
-		// console.log('\t\t', notification);
-
-		// let notification = {	// notification object
-		// 	type: 'friend request'
-		// 	// type: 'send message'
-		// 	// type : 'view profile'
-		// }
-
-		// console.log("notification[0].from ", notification);
 		
 		if (notification) {
 			let find_user = new Promise((resolve, reject) => {

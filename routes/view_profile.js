@@ -7,11 +7,12 @@ var helper = require('./helper_functions'); // Helper functions Mk
 var helper_index = require('./helper_index'); // Helper functions Mk
 
 const url = 'mongodb://localhost:27017';	// Database Address
-const dbName = 'matcha';					// Database Name
+const dbName = 'mk_matcha';					// Database Name
 
 var page_name = 'view_profile';
 
-var renderProfile = (res, data) => {
+let renderProfile = (res, data) => {
+	console.log('rendering page: ', page_name);
 	res.render(page_name, {
 		title	: page_name,
 		id		: data._id,
@@ -57,11 +58,15 @@ router.get('/:reqId', (req, res, next) => {
 				console.log('\t\t doc: ' + doc);
 
 			},( () => {
+
 				collection.updateOne({ '_id': objectId(friendReqId) }, 	// send norification to 'friend'
 				{$addToSet: {
 					notifications : notification
 				}});
-			})(), () => {
+				console.log('\t\t Sending notification');
+			})(), (() => {
+
+				console.log('\t\t Closing databse connection');
 				client.close();
 				console.log('find_user.length: ', find_user.length);
 				let message = '';
@@ -85,7 +90,7 @@ router.get('/:reqId', (req, res, next) => {
 					// renderProfile(res, find_user);
 				}
 				console.log('exiting render misfunction');
-			});
+			})());
 		});
 
 	} else {

@@ -6,7 +6,7 @@ const assert = require('assert');
 // var helper = require('./helper_functions'); // Helper functions Mk
 
 const url = 'mongodb://localhost:27017'; // Database Address
-const dbName = 'matcha'; // Database Name
+const dbName = 'mk_matcha';; // Database Name
 var page_name = 'Profile';
 
 function is_empty(str) {

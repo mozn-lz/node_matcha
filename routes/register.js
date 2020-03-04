@@ -7,7 +7,7 @@ var helper = require('./helper_functions'); // Helper functions Mk
 const url = 'mongodb://localhost:27017';
 
 // Database Name
-const dbName = 'matcha';
+const dbName = 'mk_matcha';;
 
 // function is_empty(str) {
 // 	var ret = str.trim();

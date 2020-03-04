@@ -5,7 +5,7 @@ const assert = require('assert');
 var helper_index = require('./helper_index'); // Helper functions Mk
 
 const url = 'mongodb://localhost:27017';	// Database Address
-const dbName = 'matcha';					// Database Name
+const dbName = 'mk_matcha';					// Database Name
 
 module.exports = {
 	// Finds ireq.body.psswds string is empty
