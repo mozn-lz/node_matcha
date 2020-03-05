@@ -8,7 +8,7 @@ const assert = require('assert');
 const url = 'mongodb://localhost:27017';	// Database Address
 const dbName = 'mk_matcha';					// Database Name
 
-var page_name = 'message';
+var page_name = 'messages';
 
 fn_render_messages = (req, res, next, msg) => {
 	console.log('\n\n\nfn_render_messages\n');
@@ -44,23 +44,28 @@ fn_render_messages = (req, res, next, msg) => {
 					for (let i = 0; i < res_arr.length; i++) {
 						db.collection('users').find({ '_id': objectId(res_arr[i].partner) }).forEach(function (docs, err) {
 							assert.equal(null, err);
-							find_user.push(docs);
-							console.log(i, `. doc.push: `, docs.usr_user, `(ID: `,docs._id, `)`);
+							if (docs.usr_user && docs._id) {
+								find_user.push(docs);
+								console.log(i, `. doc.push: `, docs.usr_user, `(ID: `,docs._id, `)`);
+							}
 						}, () => {
 							console.log("find_user.length: ", find_user.length);
 							console.log("res_arr.length: ", res_arr.length);
-							if (find_user.length == res_arr.length) {
+							if (find_user.length > 0) {
 								console.log('res_arr: ');
 								client.close();
 								console.log('find_user: ');
-	
-								res.render('messages', {
-									title: 'message',
+								
+								console.log('Rendering messages');
+								res.render(page_name, {
+									title: page_name,
 									er: pass_er,
 									suc: pass_suc,
 									msg_arr,
 									match_list: find_user
 								});
+							} else {
+								res.redirect('/index/' + 'pass_errYou dont have any messages yet');
 							}
 						});
 					}
