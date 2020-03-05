@@ -3,11 +3,86 @@ var router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const objectId = require('mongodb').ObjectID;
 const assert = require('assert');
+const passwordHash = require('password-hash');
+const faker = require('faker');
+// const passwordHash = require('./lib/password-hash');
 
 const url = 'mongodb://localhost:27017';	// Database(mongo) url
 
 const dbName = 'mk_matcha';;		// Database Name
 const page_name = 'login';		// page name
+
+// Use connect method to connect to the server
+
+MongoClient.connect(url, function (err, client) {
+	assert.equal(null, err);
+	
+	const db = client.db(dbName);
+	const collection = db.collection('users');
+	
+	// get access to the relevant collections
+
+	let users = [];
+
+	// users.push(doc);
+	let maxUSers = 20;
+	collection.count().then((count) => {
+		console.log("users", count);
+		if (count < maxUSers) {
+			for (let i = 0; i < maxUSers; i += 1) {
+				const genders = ['male', 'female'];
+				const oriantations = ['hetrosexual', 'homosexual', 'bisexual'];
+				const name = faker.name.firstName();
+				const surname = faker.name.lastName();
+				let gender = faker.random.arrayElement(genders);
+				let oriantation = faker.random.arrayElement(oriantations);
+				password = "!!11QQqq";
+
+
+				let newUser = {
+					usr_user: name,
+					usr_email: faker.internet.email(name, surname),
+					usr_name: name,
+					usr_surname: surname,
+					usr_psswd: passwordHash.generate(password), // to be encrypted
+					login_time: '',
+					profile: '/images/ionicons.designerpack/md-person.svg',
+					age: null,
+					gender,
+					oriantation,
+					rating: '',
+					bio: '',
+					intrests: [],
+					gps: '',
+					viewd: [],
+					liked: [],
+					verified: 1,
+					confirm_code: Math.random() // to be encrypted
+				};
+				users.push(newUser);
+
+				// visual feedback always feels nice!
+				console.log(newUser.usr_email);
+			}
+			// let images = faker.image.avatar();
+			// for (let i = 0; i < images.length; i++) {
+
+			// }
+
+			for (let i = 0; i < users.length; i++) {
+				collection.insertOne(users[i], (err, res) => {
+					if (err) throw err;
+
+				});
+			}
+			console.log('\t\t', maxUSers, ' users created\n');
+		} else {
+			console.log('\t\tUsers past ', maxUSers, '\n');
+		}
+	});
+
+});
+
 
 /* GET login listing. */
 router.get('/', function (req, res, next) {
@@ -43,19 +118,14 @@ router.post('/', function (req, res, next) {
 		var find_user = [];
 		var user_matches = [];
 		const collection = db.collection('users');
-		
-		var usr_credentials = {
-			'usr_email': email,
-			'usr_psswd': psswd
-		};
-
-		collection.find(usr_credentials).forEach(function (doc, err) {
+	
+		collection.find({'usr_email': email}).forEach(function (doc, err) {
 			assert.equal(null, err);
 			find_user.push(doc);
 			console.log('\t\t doc: ' + doc);
 		}, function () {
 			client.close();
-			if (find_user.length == 1) {
+			if (find_user.length == 1 && passwordHash.verify(psswd, find_user[0].usr_psswd)) {
 				if (find_user[0].verified == 0) {
 					res.redirect('/login/' + 'pass_errPlease check your email address to CONFIRM your account');
 				} else {
