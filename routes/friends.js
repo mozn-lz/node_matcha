@@ -13,29 +13,16 @@ var page_name = 'friends';
 
 let fn_render_friends = (req, res, next, msg, matches) => {
 
-	console.log('req.session.uid ', req.session.uid);
-	var res_arr = matches;
-	// console.log('\n\n\n________fn_render_indexn________\n');
+	console.log('\n\n\n________fn_render_', page_name, '________\n');
 	if (req.session.uid) {
 
 		var msg_arr = [];
 		(msg.search('pass_err') == 0) ? pass_er = "danger" : pass_er = '';
 		(msg.search('pass_suc') == 0) ? pass_suc = "success" : pass_suc = '';
 		msg_arr = msg.slice(8).split(",");
-		// console.log('2. msg_arr: ' + msg_arr + "\n3. res_arr: " + res_arr + '\n');
-		if (msg_arr == '') {
-			if (res_arr > 0) {
-				res_arr == null;
-				res.redirect('/index/' + "pass_errThere aren't any matches");
-			} else if (res_arr == null) {
-				res_arr == null;
-				res.redirect('/index/' + 'pass_errYou broke our matching AI, give it a few days to find you a match');
-			} else {
-				res_arr == null;
-			}
-		}
+
 		res.render(page_name, {
-			match_list: res_arr,
+			friends: matches,
 			msg_arr,
 			er: pass_er,
 			suc: pass_suc,
@@ -54,30 +41,35 @@ var fn_getMatches = (req, res, next, msg) => {
 
 		const db = client.db(dbName);
 		var find_user = [];
-		var user_matches = [];
-		var match_criteria = {};
 		const collection = db.collection('users');
-		let friends = req.session.friends;
+
+		let find_friends = () => {
+			let friends = [];
+			if (find_user[0].friends) {
+				for (let i = 0; i < find_user[0].friends.length; i++) {
+					collection.find({ '_id': objectId(find_user[0].friends[i]) }).forEach((doc, err) => {
+						assert.equal(null, err);
+						console.log('5. Friend: ', doc.usr_email, ' ', doc.usr_user);
+						friends.push(doc);
+					});
+				}
+				} else {
+					console.log('4. you do not have friends right now');
+				}
+			setTimeout(() => {
+				console.log('6. Sendin ot trnder');
+				fn_render_friends(req, res, next, '', friends);
+			}, 1000);
+
+		}
 
 		(() => {
-
-			collection.count({ '_id': objectId(req.session.uid), 'friends': friends })
-				.then((count) => {
-					if (count > 0) {
-						for (let i = 0; i < friends.length; i++) {
-							collection.find({ '_id': objectId(friends[i]) }).forEach(function (doc, err) {
-								assert.equal(null, err);
-								user_matches.push(doc);
-								console.log(doc);
-							});
-						}
-					}
-				}, () => {
-					client.close();
-					console.log('\n\t\t3. msg: ', msg, '\n\n');
-					fn_render_friends(req, res, next, msg, user_matches);
-				});
-		})();
+			console.log('0. Finding friends\n');
+			collection.find({ '_id': objectId(req.session.uid) }).forEach((docs, err) => {
+				console.log('1. docs: ', docs.usr_email, 'friend array: ', docs.friends);
+				find_user.push(docs);
+			}, () => { find_friends() });
+		})()
 	});
 }
 
