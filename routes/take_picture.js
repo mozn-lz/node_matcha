@@ -7,7 +7,7 @@ const assert = require('assert');
 const url = 'mongodb://localhost:27017';
 const dbName = 'mk_matcha';
 const multer = require('multer');
-const upload = multer({dest: 'uploads/'});
+const upload = multer({ dest: 'uploads/' });
 
 let page_name = 'take picture';
 
@@ -30,7 +30,7 @@ router.get('/', function (req, res, next) {
 				if (result.length == 1) {
 					client.close();
 					// console.log(result[0].picture);
-					
+
 					res.render('take_picture', {
 						page: page_name,
 						pic: result[0].picture,
@@ -44,12 +44,12 @@ router.get('/', function (req, res, next) {
 	}
 });
 
-router.post('/', upload.single('profilePciture') ,(req, res, next) => {
+router.post('/', upload.single('profilePciture'), (req, res, next) => {
 	let pic = req.body.thmb;
 
 	if (pic) {
 		console.log('Pic Present\n');
-		console.log('Pic Present, ', pic);
+		// console.log('Pic Present, ', pic);
 	}
 	console.log('\n\t\t1\n');
 
@@ -64,49 +64,68 @@ router.post('/', upload.single('profilePciture') ,(req, res, next) => {
 			assert.equal(null, err);
 			console.log('\n\t\t3\n');
 			const collection = db.collection('users');
-			if (req.body.save == 'save') {
-				console.log('\n\t\t4. Saving new picture\n');
-				collection.updateOne({'_id': objectId(req.session.uid)}, {$addToSet: { 'picture': pic }
-				}, () => {
-					assert.equal(null, err);
-					client.close();
-					console.log('redirecting to profile page');
-					res.redirect('/take_picture');
-				});
-			} else if (req.body.change == 'change') {
-				if (pic) {
-					console.log('\n\t\t4. Changing profile picture\n');
-					collection.updateOne({
-						'_id': objectId(req.session.uid)
-					}, {
-						$set: {'profile': pic}
-					}, () => {
-						assert.equal(null, err);
-						client.close();
+
+			let userObj = [];
+			let picNum = 0;
+			collection.find({ '_id': objectId(req.session.uid) }).forEach((doc, err) => {
+				userObj.push(doc);
+			}, () => {
+				(userObj[0].picture) ? picNum = userObj[0].picture.length : 0;
+				// setTimeout(() => {
+					if (req.body.save == 'save') {
+						console.log('picNum: ', picNum);
+						
+						if (picNum < 5) {
+							console.log('\n\t\t4. Saving new picture\n');
+							collection.updateOne({ '_id': objectId(req.session.uid) }, {
+								$addToSet: { 'picture': pic }
+							}, () => {
+								assert.equal(null, err);
+								client.close();
+								console.log('redirecting to profile page');
+								res.redirect('/take_picture');
+							});
+						} else {
+							console.log('Too many pictures');
+							res.redirect('/take_picture');
+						}
+					} else if (req.body.change == 'change') {
+						if (pic) {
+							console.log('\n\t\t4. Changing profile picture\n');
+							collection.updateOne({
+								'_id': objectId(req.session.uid)
+							}, {
+								$set: { 'profile': pic }
+							}, () => {
+								assert.equal(null, err);
+								client.close();
+								res.redirect('/take_picture');
+								// res.redirect('/profile');
+							});
+						} else {
+							console.log('\t\tNo picture\n');
+							res.redirect('/take_picture');
+						}
+					} else if (req.body.delete == 'delete') {
+						console.log('\n\t\t4. Deleting Picture\n');
+						collection.updateOne({
+							'_id': objectId(req.session.uid)
+						}, {
+							$pull:
+								{ 'picture': pic }
+						}, () => {
+							assert.equal(null, err);
+							client.close();
+							res.redirect('/take_picture');
+							// res.redirect('/profile');
+						});
+					} else if (req.body.cancel == 'cancel') {
+						console.log('\n\t\t5\n');
 						res.redirect('/take_picture');
-						// res.redirect('/profile');
-					});
-				} else {
-					console.log('\t\tNo picture\n');
-					res.redirect('/take_picture');
-				}
-			} else if (req.body.delete == 'delete') {
-				console.log('\n\t\t4. Deleting Picture\n');
-				collection.updateOne({
-					'_id': objectId(req.session.uid)
-				}, {
-					$pull:
-						{ 'picture': pic }
-				}, () => {
-					assert.equal(null, err);
-					client.close();
-					res.redirect('/take_picture');
-					// res.redirect('/profile');
-				});
-			} else if (req.body.cancel == 'cancel') {
-				console.log('\n\t\t5\n');
-				res.redirect('/take_picture');
-			}
+					}
+				// }, 1000);
+			});
+
 		});
 	} else {
 		res.redirect('/login');
