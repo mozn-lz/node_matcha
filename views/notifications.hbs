@@ -26,7 +26,7 @@
 			{{#each notifications}}
 			{{#if this.request}}
 			<form action="/notifications" method="post">
-				<button type="submit" name="type" value="remove" class="btn">x</button>
+				<button type="submit" name="type" value="friend request" class="btn">x</button>
 				<div>
 					<img src="{{this.pic}}" width="150px" height="150px" alt="">
 					<input type="hidden" name="user" value={{this.from}}>
@@ -45,7 +45,7 @@
 			{{#each notifications}}
 			{{#if this.message}}
 			<form action="/notifications" method="post">
-				<button type="submit" name="type" value="remove" class="btn">x</button>
+				<button type="submit" name="type" value="send message" class="btn">x</button>
 				<div>
 					<img src="{{this.pic}}" width="150px" height="150px" alt="">
 					<input type="hidden" name="user" value={{this.from}}>
@@ -63,7 +63,7 @@
 			{{#each notifications}}
 			{{#if this.profile}}
 			<form action="/notifications" method="post">
-				<button type="submit" name="type" value="remove" class="btn">x</button>
+				<button type="submit" name="type" value="view profile" class="btn">x</button>
 				<div>
 					<img src="{{this.pic}}" width="150px" height="150px" alt="">
 					<input type="hidden" name="user" value={{this.from}}>
