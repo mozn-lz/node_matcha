@@ -11,7 +11,7 @@ const dbName = 'mk_matcha';;					// Database Name
 let page_name = 'notifications';
 let search = '';
 
-let fn_render_notifications = (req, res, next, msg, matches) => {
+let fn_render_notifications = (req, res, msg, matches) => {
 
 	// console.log('req.session.uid ', req.session.uid);
 	let res_arr = matches;
@@ -51,7 +51,7 @@ let fn_render_notifications = (req, res, next, msg, matches) => {
 }
 
 // function vis(){
-function fn_getMatches(req, res, next, msg) {
+function fn_getNotifications(req, res, notification, msg) {
 
 	console.log('\n\t\t1. msg: ', msg, '\n\n');
 	MongoClient.connect(url, function (err, client) {
@@ -61,9 +61,9 @@ function fn_getMatches(req, res, next, msg) {
 		// var find_user = [];
 		var user_matches = [];
 		const collection = db.collection('users');
-		// console.log(search_criteria);
+		console.log('Notifications ', notification);
 
-		let notification = req.session.notifications;
+		// let notification = req.session.notifications;
 
 		if (notification) {
 			let find_user = new Promise((resolve, reject) => {
@@ -106,7 +106,7 @@ function fn_getMatches(req, res, next, msg) {
 						// if (i == notification.length) {
 						// 	console.log(notification[0].from, " ", notification[0].type, " R:", notification[0].request, " P:", notification[0].profile, " M:", notification[0].message);
 						// 	console.log(notification[1].from, " ", notification[1].type, " R:", notification[1].request, " P:", notification[1].profile, " M:", notification[1].message);
-						// 	fn_render_notifications(req, res, next, msg, notification);
+						// 	fn_render_notifications(req, res, msg, notification);
 						// 	console.log('\n\t\tClosing database\n\n');
 						// 	client.close();
 						// }
@@ -139,12 +139,30 @@ function fn_getMatches(req, res, next, msg) {
 						notification[i].type, ', ', notification[i].request, ', ',
 						notification[i].profile, ', ', notification[i].message, '\n');
 				}
-				fn_render_notifications(req, res, next, msg, notification);
+				fn_render_notifications(req, res, msg, notification);
 			});
 		} else {
 			console.log('No notifications found');
-			fn_render_notifications(req, res, next, msg, user_matches);
+			fn_render_notifications(req, res, msg, user_matches);
 		}
+	});
+}
+
+let fn_getFriends = (req, res, next, msg) => {
+
+	MongoClient.connect(url, function (err, client) {
+		assert.equal(null, err);
+
+		let user = [];
+		let notifications = '';
+		const collection = client.db(dbName).collection('users');
+		collection.find({ '_id': objectId(req.session.uid) }).forEach((doc, err) => {
+			user.push(doc);
+			console.log(doc.us);
+		}, ()=> {
+			(user[0].notifications) ? notifications = user[0].notifications : notifications = null;
+			fn_getNotifications(req, res, notifications, msg);
+		});
 	});
 }
 
@@ -159,7 +177,7 @@ router.post('/', (req, res, next) => {
 			res.redirect(location);
 		}
 		remove_notification = (location, callback) => {
-
+			console.log('removinge ', notify, ' from: ', friendId ,'\n');
 			MongoClient.connect(url, function (err, client) {
 				assert.equal(null, err);
 
@@ -208,7 +226,7 @@ router.post('/', (req, res, next) => {
 			remove_notification('/notifications/', fn_redirect);
 		} else {
 			console.log('false\n');
-			fn_getMatches(req, res, next, '');
+			fn_getFriends(req, res, next, '');
 		}
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
@@ -217,7 +235,7 @@ router.post('/', (req, res, next) => {
 
 router.get('/', (req, res, next) => {
 	if (req.session.uid) {
-		fn_getMatches(req, res, next, '');
+		fn_getFriends(req, res, next, '');
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
 	}
@@ -226,7 +244,7 @@ router.get('/', (req, res, next) => {
 // // HANDLE Error or success messages.
 router.get('/:redirect_msg', function (req, res, next) {
 	console.log('0. req.params.redirect_msg ', req.params.redirect_msg);
-	fn_getMatches(req, res, next, req.params.redirect_msg);
+	fn_getFriends(req, res, next, req.params.redirect_msg);
 });
 
 module.exports = router;
