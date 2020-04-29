@@ -25,21 +25,18 @@ var signoutRouter = require('./routes/logout');
 var searchRouter = require('./routes/search');
 var friendsRouter = require('./routes/friends');
 var notificationsRouter = require('./routes/notifications');
+var notifyRouter = require('./routes/notify');
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-// 		app.use(bodyParser.json({limit: '50mb'}));
-// 		app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000 }));
-// app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(expressSession({ secret: 'max', saveUninitialized: false, resave: false }));
 app.use(bodyParser.json({limit: '10mb', extended: true}));
 app.use(bodyParser.urlencoded({limit: '10mb', extended: true}));
@@ -64,7 +61,7 @@ app.use('/logout', signoutRouter);
 app.use('/search', searchRouter);
 app.use('/friends', friendsRouter);
 app.use('/notifications', notificationsRouter);
-
+app.use('/notify', notifyRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
