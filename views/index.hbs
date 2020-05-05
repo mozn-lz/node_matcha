@@ -13,6 +13,7 @@
 
 <div class="users_list">
 	{{#if match_list}}
+	<div><a href="/search" class="card-link btn btn-secondary">Search & Sort</a></div>
 	{{#each match_list}}
 	<a href="/view_profile/{{this._id}}">
 		<div class="users row" onclick="goViewProfile(`{{this._id}}`)">
