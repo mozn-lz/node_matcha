@@ -99,3 +99,6 @@ public
 
 # Texteditor files
 .vscode/
+
+# Mac System dir file
+DS_Store
