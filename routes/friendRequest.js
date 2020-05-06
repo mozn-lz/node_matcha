@@ -23,40 +23,48 @@ router.get('/:reqId', (req, res, next) => {
 
 	let message = null;
 	if (req.session.uid) {
-		let friendReqId = req.params.reqId
-		console.log("1. usrId: ", req.session.uid, '\n');
-		console.log("1. friendId: ", friendReqId, '\n');
+		helper.findUserById(req.session.uid, (user) => {
+			// if (user.picture)
+			if (user.picture && user.picture.length <= 1) {
+				let friendReqId = req.params.reqId
+				console.log("1. usrId: ", req.session.uid, '\n');
+				console.log("1. friendId: ", friendReqId, '\n');
 
-		let notification = {	// notification object
-			from: req.session.uid,
-			type: 'friend request'
-		}
-		// Connect and save data to mongodb
-		MongoClient.connect(url, function (err, client) {
-			assert.equal(null, err);
-			console.log("\tConnected to server and mongo connected Successfully");
-			const db = client.db(dbName);
-			const collection = db.collection('users');
-			collection.updateOne({
-				'_id': objectId(friendReqId)
-			}, {
-				$addToSet: {
-					request: req.session.uid
+				let notification = {	// notification object
+					from: req.session.uid,
+					type: 'friend request'
 				}
-			}, (() => {
-				console.log('Sending notification');
-				collection.updateOne({ '_id': objectId(friendReqId) }, 	// send norification to 'friend'
-					{
+				// Connect and save data to mongodb
+				MongoClient.connect(url, function (err, client) {
+					assert.equal(null, err);
+					console.log("\tConnected to server and mongo connected Successfully");
+					const db = client.db(dbName);
+					const collection = db.collection('users');
+					collection.updateOne({
+						'_id': objectId(friendReqId)
+					}, {
 						$addToSet: {
-							notifications: notification
+							request: req.session.uid
 						}
+					}, (() => {
+						console.log('Sending notification');
+						collection.updateOne({ '_id': objectId(friendReqId) }, 	// send norification to 'friend'
+							{
+								$addToSet: {
+									notifications: notification
+								}
+							});
+					})(), (err, result) => {
+						console.log('Hahahah, notifications are fucking up');
+						client.close();
+						message = 'pass_sucFriend request has been made';
+						res.redirect('/index/' + message);
 					});
-			})(), (err, result) => {
-				console.log('Hahahah, notifications are fucking up');
-				client.close();
-				message = 'pass_sucFriend request has been made';
+				});
+			} else {
+				message = 'pass_errPlease upouad a picture first';
 				res.redirect('/index/' + message);
-			});
+			}
 		});
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
