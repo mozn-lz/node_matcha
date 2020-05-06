@@ -7,6 +7,8 @@ const assert = require('assert');
 const url = 'mongodb://localhost:27017';	// Database Address
 const dbName = 'mk_matcha';;					// Database Name
 
+(req.session.uid) ? helper.logTme : 0;	//	update last online
+
 router.get('/', function (req, res) {
 	let page_name = 'notify';
 	if (req.session.uid) {
@@ -22,7 +24,7 @@ router.get('/', function (req, res) {
 			}, () => {
 				if (usersArray) {
 					(usersArray[0].notifications) ? notifications = usersArray[0].notifications : notifications = null;
-					console.log(notifications);
+					// console.log(notifications);
 					setTimeout(() => {
 						res.send({ notifications });
 					}, 1000);

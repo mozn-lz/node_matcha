@@ -12,7 +12,7 @@ module.exports = {
 	// Finds ireq.body.psswds string is empty
 	is_empty: function (str) {
 		ret = str.trim();
-		
+
 		if (ret.length == 0) {
 			console.log('\t\tis_empty: Returning true for ' + str + ' of length ' + ret.length);
 			return (true);
@@ -38,8 +38,8 @@ module.exports = {
 			const collection = db.collection('users');
 
 			console.log(usr_data);
-			
-			collection.find({gender: usr_data}).forEach(function (doc, err) {
+
+			collection.find({ gender: usr_data }).forEach(function (doc, err) {
 				assert.equal(null, err);
 				if (doc.oriantation != exception) {
 					user_matches.push(doc);
@@ -47,7 +47,7 @@ module.exports = {
 				}
 			}, function () {
 				client.close();
-				console.log("\nfn_Helper : db search complete. "+ user_matches.length + " matches found\n");
+				console.log("\nfn_Helper : db search complete. " + user_matches.length + " matches found\n");
 				// for (let i = 0; i < res_arr.length; i++) {
 				// 	// const element = res_arr[i];
 				// 	console.log("res_arr[" + i + "] " + res_arr[i].usr_name);
@@ -64,15 +64,32 @@ module.exports = {
 
 			var user = [];
 
-			client.db(dbName).collection('users').find({'_id': objectId(user_id)}).forEach(function (doc, err) {
+			client.db(dbName).collection('users').find({ '_id': objectId(user_id) }).forEach(function (doc, err) {
 				assert.equal(null, err);
-					user.push(doc);
-					console.log("RESULT: Name: " + doc.usr_name);
+				user.push(doc);
+				console.log("RESULT: Name: " + doc.usr_name);
 			}, function () {
 				client.close();
-				console.log("\nfn_Helper : db search complete. "+ user.length + " matches found\n");
+				console.log("\nfn_Helper : db search complete. " + user.length + " matches found\n");
 				callback(user[0]);
 			});
 		});
+	},
+
+	logTme: () => {
+		MongoClient.connect(url, function (err, client) {
+			assert.equal(null, err);
+
+			var user = [];
+
+			client.db(dbName).collection('users').updateOne({ '_id': objectId(req.session.uid) }, {
+				$set: { 'login_time': Date.now() }
+			}, () => {
+				assert.equal(null, err);
+				client.close();
+				console.log('Time');
+			});
+		});
+
 	}
 };

@@ -9,6 +9,8 @@ var helper_index = require('./helper_index'); // Helper functions Mk
 const url = 'mongodb://localhost:27017';	// Database Address
 const dbName = 'mk_matcha';					// Database Name
 
+(req.session.uid) ? helper.logTme : 0;	//	update last online
+
 var page_name = 'search';
 let search = '';
 let search_extra = {};

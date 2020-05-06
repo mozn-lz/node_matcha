@@ -10,6 +10,8 @@ const url = 'mongodb://localhost:27017';	// Database Address
 const dbName = 'mk_matcha';;					// Database Name
 var page_name = 'friend request';
 
+(req.session.uid) ? helper.logTme : 0;	//	update last online
+
 /* GET view_profile listing. */
 router.get('/', function (req, res, next) {
 	console.log("************Friend Req(N/A)************\n");

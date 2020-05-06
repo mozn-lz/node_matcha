@@ -9,6 +9,8 @@ const dbName = 'mk_matcha';
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
+(req.session.uid) ? helper.logTme : 0;	//	update last online
+
 let page_name = 'take picture';
 
 /* GET take_picture listing. */
