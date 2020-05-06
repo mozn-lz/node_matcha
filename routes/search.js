@@ -11,6 +11,51 @@ const dbName = 'mk_matcha';					// Database Name
 
 var page_name = 'search';
 let search = '';
+let search_extra = {};
+
+function is_empty(str) {
+	ret = str.trim();
+	if (ret.length == 0) {
+		return (true);
+	}
+	return (false);
+}
+
+function check_fame(chk_fame) {
+	if (is_empty(chk_fame)) {
+		// redirect_msg.push('Age is not valid');
+		return (false);
+	} else {
+		// req.body.fame = chk_fame;
+		return (true);
+	}
+}
+
+function check_age(chk_age) {
+	if (is_empty(chk_age)) {
+		// redirect_msg.push('Age is not valid');
+		return (false);
+	} else {
+		// req.body.age = chk_age;
+		return (true);
+	}
+}
+
+function check_intrests(chk_intrests) {
+	console.log('chk_intrests ', chk_intrests);
+	if (chk_intrests) {
+		(chk_intrests.includes('tatoo'))	 ? req.body.intrests.tatoo = 'tatoo'	  : console.log('Tatoo not foud');
+		(chk_intrests.includes('smoke'))	 ? req.body.intrests.smoke = 'smoke'	  : console.log('Smoke not foud');
+		(chk_intrests.includes('alcohol'))	 ? req.body.intrests.alcohol = 'alcohol'	  : console.log('Alcohol not foud');
+		(chk_intrests.includes('travel'))	 ? req.body.intrests.travel = 'travel'	  : console.log('Travel not foud');
+		(chk_intrests.includes('party'))	 ? req.body.intrests.party = 'party'	  : console.log('Party not foud');
+		(chk_intrests.includes('social'))	 ? req.body.intrests.social = 'social'	  : console.log('Social not foud');
+		(chk_intrests.includes('introvert')) ? req.body.intrests.introvert = 'introvert' : console.log('introvert not foud');
+		(chk_intrests.includes('excersise')) ? req.body.intrests.excersise = 'excersise' : console.log('Excersise not foud');
+		(chk_intrests.includes('sports'))	 ? req.body.intrests.sports = 'sports'	  : console.log('Sports not foud');
+	}
+}
+
 let fn_render_search = (req, res, next, msg, matches) => {
 
 	console.log('req.session.uid ', req.session.uid);
@@ -67,7 +112,7 @@ var fn_getMatches = (req, res, next, msg) => {
 		const collection = db.collection('users');
 		console.log(search_criteria);
 
-		collection.find({ $or: search_criteria }).forEach(function (doc, err) {
+		collection.find({ $or: search_criteria }, search_extra).forEach(function (doc, err) {
 			if (search) {
 				assert.equal(null, err);
 				user_matches.push(doc);
@@ -92,6 +137,21 @@ router.get('/', (req, res, next) => {
 router.post('/', function (req, res, next) {
 	search = req.body.search;
 
+	if (check_fame(req.body.fame) || check_age(req.body.age) || check_intrests(req.body.intrests) || check_location(req.body.location)) {
+		// store data to JSON array, to store in mongo
+		if (check_fame(req.body.fame)) {
+			search_extra = {fame: req.body.fame};
+		}
+		if (check_age(req.body.age)) {
+			search_extra = {age: req.body.age};
+		}
+		if (check_intrests(req.body.intrests)) {
+			search_extra = {intrests: req.body.intrests};
+		}
+		if (check_location(req.body.location)) {
+			search_extra = {gps: req.body.location};
+		}
+	}
 	console.log("\t\t\t\tHello: ", search);
 
 	fn_getMatches(req, res, next, '');
