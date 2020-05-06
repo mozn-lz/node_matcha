@@ -31,13 +31,13 @@ renderPage = (res, req, user, friend, data) => {
 					}
 					console.log('dt1: ', data.message[i].time);
 					console.log('dt2: ', (new Date(data.message[i].time).getHours()).toString(), ':', (new Date(data.message[i].time).getMinutes()).toString(), ' ', (new Date(data.message[i].time).getDate()).toString(), '/', (new Date(data.message[i].time).getMonth()).toString(), '/', (new Date(data.message[i].time).getFullYear()).toString());
-					data.message[i].time = (new Date(data.message[i].time).getHours()).toString() + ':'+ (new Date(data.message[i].time).getMinutes()).toString() + ' ',+ (new Date(data.message[i].time).getDate()).toString() + '/',+ (new Date(data.message[i].time).getMonth()).toString() + '/'+ (new Date(data.message[i].time).getFullYear()).toString();
+					data.message[i].time = (new Date(data.message[i].time).getHours()).toString() + ':' + (new Date(data.message[i].time).getMinutes()).toString() + ' ', + (new Date(data.message[i].time).getDate()).toString() + '/', + (new Date(data.message[i].time).getMonth()).toString() + '/' + (new Date(data.message[i].time).getFullYear()).toString();
 
-// new Date(data.message[i].time).getHours().toString(), ':',
-// new Date(data.message[i].time).getMinutes().toString(), ' ',
-// new Date(data.message[i].time).getDate().toString(), '/',
-// new Date(data.message[i].time).getMonth().toString(), '/',
-// new Date(data.message[i].time).getFullYear().toString();
+					// new Date(data.message[i].time).getHours().toString() +':'+
+					// new Date(data.message[i].time).getMinutes().toString() +' '+
+					// new Date(data.message[i].time).getDate().toString() +'/'+
+					// new Date(data.message[i].time).getMonth().toString() +'/'+
+					// new Date(data.message[i].time).getFullYear().toString();
 					console.log('dt3: ', data.message[i].time);
 				}
 			}
@@ -78,7 +78,7 @@ router.get('/:user', function (req, res, next) {
 
 		console.log("user ", req.session.uid);
 		console.log("fridend ", chatFriendId);
-		
+
 		db.collection('users').find({ '_id': objectId(req.session.uid) }).forEach(function (doc, err) {
 			assert.equal(null, err);
 			find_user.push(doc);
@@ -103,7 +103,7 @@ router.get('/:user', function (req, res, next) {
 				console.log("Error " + chatFriendId + " not found in database");
 				friend = null;
 			}
-		}), db.collection('chats').find({'user_id': req.session.uid, 'partner': chatFriendId}).forEach(function (doc, err) {
+		}), db.collection('chats').find({ 'user_id': req.session.uid, 'partner': chatFriendId }).forEach(function (doc, err) {
 			assert.equal(null, err);
 			// console.log('messages: ', doc);
 			texts = doc;
@@ -113,7 +113,6 @@ router.get('/:user', function (req, res, next) {
 			renderPage(res, req, user, friend, texts);
 		});
 	});
-
 });
 
 module.exports = router;
