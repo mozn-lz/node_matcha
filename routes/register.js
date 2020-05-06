@@ -9,7 +9,7 @@ var helper = require('./helper_functions'); // Helper functions Mk
 const url = 'mongodb://localhost:27017';
 
 // Database Name
-const dbName = 'mk_matcha';;
+const dbName = 'mk_matcha';
 
 // function is_empty(str) {
 // 	var ret = str.trim();
@@ -161,7 +161,7 @@ router.post('/', function (req, res, next) {
 			viewd: [],
 			liked: [],
 			verified: 0,
-			confirm_code: Math.random() // to be encrypted
+			confirm_code: passwordHash.generate(Math.random()) // to be encrypted
 		};
 
 		// Connect and save data to mongodb
@@ -183,6 +183,40 @@ router.post('/', function (req, res, next) {
 							assert.equal(null, err);
 							console.log("Documents added to database: " + dbName);
 							client.close();
+/*
+							//email Sender
+							var transporter = nodemailer.createTransport({
+								service: 'gmail',
+								auth: {
+									user: 'unathinkomo16@gmail.com',
+									pass: '0786324448'
+								}
+							});
+							// Sending email to recipiant
+							const message = () => {
+								var l1 = 'Your verification Code is ';
+								var code = confirm_code;
+								var l3 = ', Please Click On ';
+								var link = `<a href="http://localhost:5000/verify?email=${email}&code=${code}">this link</a>`;//{}&code=">this link</a>';
+								var l4 = ' to activate your account.';
+								return l1 + code + l3 + link + l4;
+							}
+
+							var mailOptions = {
+								from: 'auth@matcha.com',
+								to: email,
+								subject: 'Matcha Verification',
+								html: message()
+							};
+							transporter.sendMail(mailOptions, (error, info) => {
+								if (error) {
+									console.log(error);
+								} else {
+									console.log('Email sent: ' + info.response);
+								}
+							});
+							//	end email
+*/
 							res.redirect('/login/' + 'pass_suc' + user + ' created successfully. Please check your emial to verity your account');
 						});
 					}
