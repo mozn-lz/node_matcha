@@ -7,7 +7,7 @@ const assert = require('assert');
 const url = 'mongodb://localhost:27017';	// Database Address
 const dbName = 'mk_matcha';;					// Database Name
 
-(req.session.uid) ? helper.logTme : 0;	//	update last online
+// (req.session.uid) ? helper.logTme : 0;	//	update last online
 
 router.get('/', function (req, res) {
 	let page_name = 'notify';
@@ -24,16 +24,22 @@ router.get('/', function (req, res) {
 			}, () => {
 				if (usersArray) {
 					(usersArray[0].notifications) ? notifications = usersArray[0].notifications : notifications = null;
+					let time = Date.now();
+					db.collection('users').updateOne({ '_id': objectId(usersArray[0]._id) }, {
+						$set: { login_time: time }
+					});
 					// console.log(notifications);
 					setTimeout(() => {
+						client.close();
 						res.send({ notifications });
 					}, 1000);
 				}
 			});
 		});
-	} else {
-		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
 	}
+	//  else {
+	// 	res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
+	// }
 });
 
 module.exports = router;

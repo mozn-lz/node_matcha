@@ -9,14 +9,26 @@ var helper_index = require('./helper_index'); // Helper functions Mk
 const url = 'mongodb://localhost:27017';	// Database Address
 const dbName = 'mk_matcha';					// Database Name
 
-(req.session.uid) ? helper.logTme : 0;	//	update last online
+// (req.session.uid) ? helper.logTme : 0;	//	update last online
 
 var page_name = 'view_profile';
 
 let renderProfile = (res, data) => {
 	// console.log('profile pic ', data.profile);
-	console.log('data.history ', data.history);
+	// console.log('data.history ', data.history);
 	// console.log('rendering page: ', page_name);
+	let tim  = Date.now();
+	if (data.login_time) {
+		if (parseInt(data.login_time) <= (time - 300000)) {
+			data.login_time = 'online';
+			console.log('t', time);
+			console.log('time - 300000: ', time - 300000);
+		}
+	} else {
+		console.log('data.login_time; ', data.login_time);
+		data.login_time = '-';
+		console.log('data.login_time; ', data.login_time);
+	}
 	res.render(page_name, {
 		title: page_name,
 		id: data._id,
@@ -33,7 +45,8 @@ let renderProfile = (res, data) => {
 		gps: data.gps,
 		viewd: data.viewd,
 		liked: data.liked,
-		history: data.history
+		history: data.history,
+		login: data.login_time
 	});
 }
 
@@ -59,17 +72,16 @@ router.get('/:reqId', (req, res, next) => {
 				find_user.push(doc);
 				console.log('\t\t doc: ' + doc);
 			}, () => {
-				collection.updateOne({ '_id': objectId(req.session.uid) }, 	// Add to visit history
-					{
-						$addToSet: {
-							history: {
-								id: find_user[0].uid,
-								name: find_user[0].name,
-								surname: find_user[0].surname,
-								date: Date.now()
-							}
+				collection.updateOne({ '_id': objectId(req.session.uid) }, { 	// Add to visit history
+					$addToSet: {
+						history: {
+							id: find_user[0]._id,
+							name: find_user[0].usr_name,
+							surname: find_user[0].usr_surname,
+							date: Date.now()
 						}
-					});
+					}
+				});
 				collection.updateOne({ '_id': objectId(friendId) }, 	// send norification to 'friend'
 					{
 						$addToSet: {
