@@ -24,7 +24,7 @@
 			<div class="card" style="width: 18rem;">
 				<div class="card-body">
 					<h5 class="card-title">{{this.usr_user}}</h5>
-					<h6 class="card-subtitle mb-2 text-muted">{{this.usr_name}} &nbsp; {{this.usr_surname}}</h6>
+					<h6 class="card-subtitle mb-2 text-muted">{{this.usr_name}} &nbsp; {{this.usr_surname}} <br>{{this.usr_email}}</h6>
 					<p class="card-text">
 						Bio: {{this.bio}}
 						{{!-- Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate quidem blanditiis nobis
@@ -34,8 +34,8 @@
 						culpa, velit iste enim perferendis omnis, vel neque. Impedit, necessitatibus! Asperiores maiores
 						ex praesentium quidem repellat. --}}
 					</p>
-					<a href="/friendRequest/{{this._id}}" class="card-link btn btn-info">Add</a>
-					<a href="/view_messages/{{this._id}}" class="card-link btn btn-info">Send Message</a>
+					{{!-- <a href="/friendRequest/{{this._id}}" class="card-link btn btn-info">Add</a>
+					<a href="/view_messages/{{this._id}}" class="card-link btn btn-info">Send Message</a> --}}
 				</div>
 			</div>
 			<div class="right ">4{{this.rating}}/5</div>

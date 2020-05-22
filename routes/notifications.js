@@ -11,7 +11,7 @@ const dbName = 'mk_matcha';;					// Database Name
 let page_name = 'notifications';
 let search = '';
 
-(req.session.uid) ? helper.logTme : 0;	//	update last online
+// (req.session.uid) ? helper.logTme : 0;	//	update last online
 
 let fn_render_notifications = (req, res, msg, matches) => {
 
