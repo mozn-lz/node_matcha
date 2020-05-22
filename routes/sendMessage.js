@@ -9,7 +9,7 @@ var helper_index = require('./helper_index'); // Helper functions Mk
 const url = 'mongodb://localhost:27017';	// Database Address
 const dbName = 'mk_matcha';					// Database Name
 
-(req.session.uid) ? helper.logTme : 0;	//	update last online
+// (req.session.uid) ? helper.logTme : 0;	//	update last online
 
 var page_name = 'Send Message';
 
@@ -52,8 +52,7 @@ router.post('/', function (req, res, next) {
 			if (senderId && recipiantId) {
 				message_details.me = true;
 				(() => {
-					usersCollection.updateOne({ '_id': objectId(recipiantId) }, 	// send norification to 'friend'
-						{
+					usersCollection.updateOne({ '_id': objectId(recipiantId) }, {	// send norification to 'friend'
 							$addToSet: {
 								notifications: notification
 							}

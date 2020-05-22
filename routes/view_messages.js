@@ -8,7 +8,7 @@ const url = 'mongodb://localhost:27017';	// Database(mongo) url
 const dbName = 'mk_matcha';		// Database Name
 const page_name = 'View Messages';		// page name
 
-(req.session.uid) ? helper.logTme : 0;	//	update last online
+// (req.session.uid) ? helper.logTme : 0;	//	update last online
 
 let chatFriendId = null;
 
