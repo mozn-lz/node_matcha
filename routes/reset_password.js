@@ -9,67 +9,74 @@ const url = 'mongodb://localhost:27017';
 const dbName = 'mk_matcha';	// Database Name
 
 /* GET reset_password listing. */
-router.get('/', function (req, res, next) {
-	//   res.send('respond with a resource');
-	res.render('reset_password', { page: 'Reset Password' });
+// router.get('/', function (req, res, next) {
+// 	//   res.send('respond with a resource');
+// 	res.render('reset_password', { page: 'Reset Password' });
+// });
+
+router.get('/', (req, res) => {
+	// let email = res.query.email;
+	// let code = res.query.code;
+	let email = req.query.email;
+	let code = req.query.code;
+	
+	if (email && code) {
+		console.log(email);
+		console.log(code);
+		res.render('reset_password', { email, code });
+	} else {
+		console.log('email not found');
+		res.redirect('forgot_password' + 'pass_err' + 'Reset pssword request not found.\nPlease submit the form below to reset your password');
+	}
 });
 
 router.post('/', function (req, res, next) {
-	var email = req.body.email;
-	var usr_data = null;
+	let email = req.body.email;
+	let code = req.body.code;
+	let password = req.body.password;
+	let confirm_password = req.body.confirm_password;
+	let user = [];
 
-	// Connect and save data to mongodbreq.params.user
-	MongoClient.connect(url, function (err, client) {
-		assert.equal(null, err);
+	let user_data = {
+		'usr_email': email, 'confirm_code': code
+	};
 
+	MongoClient.connect(url, (err, client) => {
+		assert.equal(err, null);
 		const db = client.db(dbName);
-		var find_user = [];
-		var user_matches = [];
 		const collection = db.collection('users');
-
-		collection.find({ 'usr_email': email }).forEach(function (doc, err) {
-			assert.equal(null, err);
-			find_user.push(doc);
-			console.log('\t\t doc: ' + doc);
+		let user = [];
+		collection.find({'usr_email': email}).forEach((doc, err) => {
+			assert.equal(err, null);
+			user.push(doc);
 		}, () => {
-			client.close();
-			/*
-			//email Sender
-			var transporter = nodemailer.createTransport({
-				service: 'gmail',
-				auth: {
-					user: 'unathinkomo16@gmail.com',
-					pass: '0786324448'
+			if (user.length === 1 && user[0].confirm_code === parseFloat(code) ) {
+				console.log('______user found___________________');
+				if (password === confirm_password) {
+					collection.updateOne({ 
+						'usr_email': email 
+					}, {
+						$set: {
+							'usr_psswd': passwordHash.generate(password),
+							'confirm_code': Math.random()
+						}
+					}, () => {	//	password change is successfull
+						console.log('changed');
+						res.redirect('/login/' + 'pass_sucPassword has succesfully ben changed');
+					});
+				} else {	// passwords do not match
+					console.log('passwords dont match');
+					res.redirect(`/reset_password?email=${email}&code=${code}`);
 				}
-			});
-			// Sending email to recipiant
-			const message = () => {
-				var l1 = 'Your verification Code is ';
-				var code = confirm_code;
-				var l3 = ', Please Click On ';
-				var link = `<a href="http://localhost:5000/verify?email=${email}&code=${code}">this link</a>`;//{}&code=">this link</a>';
-				var l4 = ' to activate your account.';
-				return l1 + code + l3 + link + l4;
+			} else {	//	code or email is invalid
+				conole.log('who tf is this?');
+				res.redirect(`/reset_password?email=${email}&code=${code}`);
 			}
-
-			var mailOptions = {
-				from: 'auth@matcha.com',
-				to: email,
-				subject: 'Matcha Verification',
-				html: message()
-			};
-			transporter.sendMail(mailOptions, (error, info) => {
-				if (error) {
-					console.log(error);
-				} else {
-					console.log('Email sent: ' + info.response);
-				}
-			});
-			//	end email
-			*/
 		});
-		res.render('reset_password', { page: 'Reset Password' });
 	});
+	setTimeout(() => {
+		res.redirect('/login/' + 'pass_sucPasswprd has succesfully ben changed');
+	}, 1500);
 });
 
 module.exports = router;

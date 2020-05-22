@@ -161,7 +161,7 @@ router.post('/', function (req, res, next) {
 			viewd: [],
 			liked: [],
 			verified: 0,
-			confirm_code: passwordHash.generate(Math.random()) // to be encrypted
+			confirm_code: Math.random()
 		};
 
 		// Connect and save data to mongodb
@@ -183,6 +183,7 @@ router.post('/', function (req, res, next) {
 							assert.equal(null, err);
 							console.log("Documents added to database: " + dbName);
 							client.close();
+							// helper.sendMail(to, from, subject, message);
 /*
 							//email Sender
 							var transporter = nodemailer.createTransport({
@@ -215,9 +216,27 @@ router.post('/', function (req, res, next) {
 									console.log('Email sent: ' + info.response);
 								}
 							});
+							*/
+
+							// const message = () => {
+							// 	return (
+							// 		`<b>Welcome to Matcha ${usr_user}</b>\n
+							// 		Please click on the button below to verify your email address\n
+							// 		<a href="http://localhost:3000/verify?email=${email}&code=${code}"><button>Verify</button></a>
+							// 		`);
+							// }
+							const to = email;
+							const from = '';
+							const subject = 'Matcha Email Verification';
+							const message = `<br>Welcome to Matcha ${usr_data.usr_user }<br>
+							Please click on the button below to verify your email address<br>
+							<a href="http://localhost:3000/verify?email=${usr_data.usr_email}&code=${usr_data.confirm_code}"><button>Verify</button></a>
+							`;
+
+							helper.sendMail(from, to, subject, message, ()=>{res.redirect('/login/' + 'pass_suc' + user + ' created successfully. Please check your emial to verity your account');});
 							//	end email
-*/
-							res.redirect('/login/' + 'pass_suc' + user + ' created successfully. Please check your emial to verity your account');
+
+							
 						});
 					}
 				});

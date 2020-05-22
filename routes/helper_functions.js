@@ -2,6 +2,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 let objectId = require('mongodb').ObjectID;
+let nodemailer = require('nodemailer');
 // var helper = require('./helper_functions'); // Helper functions Mk
 var helper_index = require('./helper_index'); // Helper functions Mk
 
@@ -91,5 +92,54 @@ module.exports = {
 			});
 		});
 
+	},
+
+	sendMail: (from, to, subject, message, callback) => {
+		//email Sender
+		// var transporter = nodemailer.createTransport({
+		// 	service: 'gmail',
+		// 	auth: {
+		// 		user: 'unathinkomo16@gmail.com',
+		// 		pass: '0786324448'
+		// 	}
+		// });
+		// var transporter = nodemailer.createTransport({
+		// 	service: 'yahoo',
+		// 	auth: {
+		// 		user: 'mozn_lozn@yahoo.com',
+		// 		pass: 'M0zzy10zzy'
+		// 	}
+		// });
+		const mailCredentials = {
+			user: 'mozn.lozn2000@gmail.com',
+			pass: 'm0zzy10zzy'
+		}
+		if(from === '') from = 'mozn.lozn2000@gmail.com';
+		
+		console.log('___fn_Mail___\nfrom: ',from, '\nto: ', to, '\nsubject:', subject,'\nmessage: ', message);
+		
+		var transporter = nodemailer.createTransport({
+			service: 'gmail',
+			auth: mailCredentials
+		});
+
+		// Sending email to recipiant
+		var mailOptions = {
+			'from' : from,
+			'to' : to,
+			'subject' : subject,
+			'html' : message
+		};
+
+		transporter.sendMail(mailOptions, (error, info) => {
+			if (error) {
+				console.log(error);
+				
+			} else {
+				console.log('\t\tEmail sent: ' + info.response);
+			}
+		});
+		//	end email
+		callback();
 	}
 };
