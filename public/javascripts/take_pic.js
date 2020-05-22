@@ -36,11 +36,11 @@ back.addEventListener('change', function (e) {
 	if (back.checked == true) {
 		overlay2.style.visibility = "visible";
 		overlay2.src = back.value;
-		console.log(overlay2.src);
+		// console.log(overlay2.src);
 	} else if (back.checked == false) {
 		overlay2.style.visibility = "hidden";
 		overlay2.src = '';
-		console.log(overlay2.src);
+		// console.log(overlay2.src);
 	}
 }, false);
 
@@ -59,7 +59,7 @@ navigator.mediaDevices.getUserMedia({
 		video.play();
 	})
 	.catch(function (err) {
-		console.log(`Error: ${err}`);
+		// console.log(`Error: ${err}`);
 	});
 
 // Play when ready 
@@ -150,10 +150,10 @@ function takePicture() {
 			};
 		}
 		if (video.style.visibility == "hidden") {
-			console.log("1. uploadImage.src: " + uploadImage);
+			// console.log("1. uploadImage.src: " + uploadImage);
 			// Draw image of the video on the canvas
-			console.log("uploadImage:> " + uploadImage + "\n");
-			console.log("overlay:> " + overlay + "\n");
+			// console.log("uploadImage:> " + uploadImage + "\n");
+			// console.log("overlay:> " + overlay + "\n");
 			context.drawImage(uploadImage, 0, 0, width, height);
 			context.drawImage(overlay, 150, 0, 200, 200);
 			context.drawImage(overlay2, 150, 0, 200, 200);
@@ -211,28 +211,22 @@ function takePicture() {
 	}
 }
 
-$('.user_pics').load( ()=>{
-	console.log("before: ", $(this).attr("src"));
+$('.user_pics').load(() => {
+	// console.log("before: ", $(this).attr("src"));
 	$(this).attr("src") = $(this).attr("src").slice(0, -1);
-	console.log("after: ", $(this).attr("src"));
+	// console.log("after: ", $(this).attr("src"));
 });
 
-//	
 $('.user_pics').click(function () {
-	console.log("Fuck");
+	// console.log("Fuck");
 	// console.log('lolol ',this.src);
 	$('#profilePic').attr("src", this.src);
-	console.log('it works:  ', $('#profilePic').attr("src"));
-	if ($('#profilePic').attr('src') == this.src) {
-		console.log('it works');
-	}
+	// console.log('it works:  ', $('#profilePic').attr("src"));
+	// if ($('#profilePic').attr('src') == this.src) {
+	// 	console.log('it works');
+	// }
 	// console.log(this.src);
 
-	$( "input[name='thmb']").val(this.src);
-	console.log('input val= ', $( "input[name='thmb']").val());
-});
-$('#profilePic').click(() =>{
-	alert('Hello world');
-	console.log($('#profilePic').src);
-	
+	$("input[name='thmb']").val(this.src);
+	// console.log('input val= ', $("input[name='thmb']").val());
 });

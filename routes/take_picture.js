@@ -9,7 +9,7 @@ const dbName = 'mk_matcha';
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
-(req.session.uid) ? helper.logTme : 0;	//	update last online
+// (req.session.uid) ? helper.logTme : 0;	//	update last online
 
 let page_name = 'take picture';
 
@@ -92,7 +92,8 @@ router.post('/', upload.single('profilePciture'), (req, res, next) => {
 							res.redirect('/take_picture');
 						}
 					} else if (req.body.change == 'change') {
-						if (pic) {
+						if (pic.length > 20) {
+							console.log('\t\tpic: ', pic)
 							console.log('\n\t\t4. Changing profile picture\n');
 							collection.updateOne({
 								'_id': objectId(req.session.uid)
