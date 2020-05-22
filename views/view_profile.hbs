@@ -22,11 +22,18 @@
 					{{#if intrests.excersise}}#Excersise {{/if}}
 					{{#if intrests.sports}}#Sports {{/if}}
 				</li>
-				<li class="list-group-item">Dapibus ac facilisis in</li>
+				<li class="list-group-item">Online: {{login}}</li>
 				<li class="list-group-item">Vestibulum at eros</li>
 			</ul>
 			<div class="card-body">
-				<a href="/friendRequest/{{this._id}}" class="card-link">Add</a>
+				{{!-- <a href="/friendRequest/{{this._id}}" class="card-link">Add</a> --}}
+				{{!-- <a href="/friendRequest/"+{{this._id}}><button>Add</button></a> --}}
+				<form action="/friendRequest" method="post">
+					<input type="hidden" name="friendId" value={{id}}>
+					<button type="submit" name="submit" value="add">Add</button>
+					<button type="submit" name="submit" value="block">Block</button>
+					<button type="submit" name="submit" value="fake">Fake Account</button>
+				</form>
 			</div>
 		</div>
 	</div>

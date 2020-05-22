@@ -15,6 +15,10 @@
 	{{#if friends}}
 	{{#each friends}}
 	<a href="/view_profile/{{this._id}}">
+	<form action="/friends" method="post">
+	<input type="hidden" name="friend" value="{{this._id}}">
+	<button type="submit">x</button>
+	</form>
 		<div class="users row" onclick="goViewProfile(`{{this._id}}`)">
 			<div class="left "><img
 					src={{this.profile}}
