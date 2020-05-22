@@ -141,6 +141,13 @@ footer {
 	border-color: black;
 	border-width: 2px;
 }
+#profile_Pic {
+	width: 200px;
+	height: 200px;
+	border-style: solid;
+	border-color: black;
+	border-width: 2px;
+}
 .ppDiv img {
 	padding: 10px;
 	width: 180px;
