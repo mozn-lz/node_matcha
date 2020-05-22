@@ -127,8 +127,8 @@ router.post('/', function (req, res, next) {
 			client.close();
 			if (find_user.length == 1 && passwordHash.verify(psswd, find_user[0].usr_psswd)) {
 				if (find_user[0].verified == 0) {
-					res.redirect('/login/' + 'pass_errPlease check your email address to CONFIRM your account');
-				} else {
+					res.redirect('/login/' + 'pass_errPlease check your email address to VERIFY your account');
+				} else if (find_user[0].verified == 1) {
 					console.log("\t\t_id", find_user[0]._id)
 					req.session.uid = find_user[0]._id;
 					req.session.username = find_user[0].usr_user;
@@ -154,6 +154,10 @@ router.post('/', function (req, res, next) {
 					(() => {
 						res.redirect('/');
 					})()
+				} else if (find_user[0].verified === 2) {
+					res.redirect('/login/' + 'pass_errYour account has been reported as fake, please contact admin');
+				} else {
+					res.redirect('/login/');
 				}
 			} else if (find_user.length < 1) {
 				res.redirect('/login/' + 'pass_errInvaild email or password');

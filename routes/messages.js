@@ -8,7 +8,7 @@ const assert = require('assert');
 const url = 'mongodb://localhost:27017';	// Database Address
 const dbName = 'mk_matcha';					// Database Name
 
-(req.session.uid) ? helper.logTme : 0;	//	update last online
+// (req.session.uid) ? helper.logTme : 0;	//	update last online
 
 var page_name = 'messages';
 

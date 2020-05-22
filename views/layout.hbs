@@ -11,6 +11,7 @@
 		<script src="/javascripts/jquery/jquery.min.js"></script>
 		<script src="/javascripts/bootstrap.min.js"></script>
 		<script src="/javascripts/helper_functions.js"></script>
+		<script src="/javascripts/updateNotifications.js"></script>
 			<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"crossorigin="anonymous">
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
@@ -30,18 +31,13 @@
 					<a class="navbar-brand" href="/index">Matcha</a>
 					<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 						<li class="nav-item active">
-											 <a class="nav-link" href="/index"><img src="/images/ionicons.designerpack/ios-heart-half.svg" alt="Home"> Home <span class="sr-only">(current)</span></a> </li>
-						<li class="nav-item"><a class="nav-link" href="/profile"><img src="/images/ionicons.designerpack/ios-person.svg" alt="Profile"> Profile</a></li>
-						<li class="nav-item"><a class="nav-link" href="/messages"><img src="/images/ionicons.designerpack/ios-mail.svg" alt="Messages"> Messages</a></li>
-						<li class="nav-item"><a class="nav-link" href="/friends"><img src="/images/ionicons.designerpack/ios-people.svg" alt="Friends"> Friends</a></li>
-						<li class="nav-item"><a class="nav-link" href="/notifications"><img src="/images/ionicons.designerpack/ios-notifications.svg" alt="Notificaions">Notificaions</a>
-						{{!-- <ul>
-							<li>friend_req</li>
-							<li>prifile_view</li>
-							<li>messages</li>
-						</ul> --}}
+							<a class="nav-link" href="/index"><img src="/images/ionicons.designerpack/ios-heart-half.svg" alt="Home" width="30"> Home <span class="sr-only">(current)</span></a> </li>
+						<li class="nav-item"><a class="nav-link" href="/profile"><img src="/images/ionicons.designerpack/ios-person.svg" alt="Profile" width="30"> Profile</a></li>
+						<li class="nav-item"><a class="nav-link" href="/messages"><img src="/images/ionicons.designerpack/ios-mail.svg" alt="Messages" width="30"> Messages</a></li>
+						<li class="nav-item"><a class="nav-link" href="/friends"><img src="/images/ionicons.designerpack/ios-people.svg" alt="Friends" width="30"> Friends</a></li>
+						<li class="nav-item"><a class="nav-link" href="/notifications"><img src="/images/ionicons.designerpack/ios-notifications.svg" alt="Notificaions" width="30">Notificaions <p id="notificationNumber"></p></a>
 						</li>
-						<li class="nav-item"><a class="nav-link" href="/logout"><img src="/images/ionicons.designerpack/ios-log-out.svg" alt="Logout"> Login/out</a></li>
+						<li class="nav-item"><a class="nav-link" href="/logout"><img src="/images/ionicons.designerpack/ios-log-out.svg" alt="Logout" width="30"> Login/out</a></li>
 					</ul>
 					<form action="/search" method="post" class="form-inline my-2 my-lg-0">
 						<input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" aria-label="Search">

@@ -7,6 +7,7 @@ var expressSession = require('express-session');
 var bodyParser = require('body-parser');
 
 var defaultRouter = require('./routes/default');
+var testRouter = require('./routes/test');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var profileRouter = require('./routes/profile');
@@ -42,6 +43,7 @@ app.use(bodyParser.json({limit: '10mb', extended: true}));
 app.use(bodyParser.urlencoded({limit: '10mb', extended: true}));
 
 app.use('/', defaultRouter);
+app.use('/test', testRouter);
 app.use('/index', indexRouter);
 app.use('/users', usersRouter);
 app.use('/profile', profileRouter);
