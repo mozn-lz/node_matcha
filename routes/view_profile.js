@@ -14,15 +14,15 @@ const dbName = 'mk_matcha';					// Database Name
 var page_name = 'view_profile';
 
 let renderProfile = (res, data) => {
-	// console.log('profile pic ', data.profile);
-	// console.log('data.history ', data.history);
-	// console.log('rendering page: ', page_name);
-	let tim  = Date.now();
+	let time  = Date.now();
 	if (data.login_time) {
-		if (parseInt(data.login_time) <= (time - 300000)) {
+		// console.log('(time - 300000) <= data.login_time = ', (time - 300000) <= data.login_time);
+		if ((time - 300000) <= data.login_time) {
 			data.login_time = 'online';
 			console.log('t', time);
-			console.log('time - 300000: ', time - 300000);
+			console.log('Login time: ', data.login_time);
+		} else  {
+			data.login_time = new Date(data.login_time);
 		}
 	} else {
 		console.log('data.login_time; ', data.login_time);
@@ -46,7 +46,7 @@ let renderProfile = (res, data) => {
 		viewd: data.viewd,
 		liked: data.liked,
 		history: data.history,
-		login: data.login_time
+		checkin: data.login_time
 	});
 }
 
