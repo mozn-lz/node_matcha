@@ -16,16 +16,16 @@ router.get('/', function (req, res) {
 		usersArray = [];
 
 		MongoClient.connect(url, (err, client) => {
-			const db = client.db(dbName);
+			const collection = client.db(dbName).collection('users');
 			assert.equal(err, null);
-			db.collection('users').find({ '_id': objectId(req.session.uid) }).forEach((doc, err) => {
+			collection.find({ '_id': objectId(req.session.uid) }).forEach((doc, err) => {
 				assert.equal(err, null);
 				usersArray.push(doc);
 			}, () => {
 				if (usersArray) {
 					(usersArray[0].notifications) ? notifications = usersArray[0].notifications : notifications = null;
 					let time = Date.now();
-					db.collection('users').updateOne({ '_id': objectId(usersArray[0]._id) }, {
+					collection.updateOne({ '_id': objectId(usersArray[0]._id) }, {
 						$set: { login_time: time }
 					});
 					// console.log(notifications);
