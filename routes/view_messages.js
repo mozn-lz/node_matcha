@@ -33,14 +33,15 @@ renderPage = (res, req, user, friend, data) => {
 					}
 					console.log('dt1: ', data.message[i].time);
 					console.log('dt2: ', (new Date(data.message[i].time).getHours()).toString(), ':', (new Date(data.message[i].time).getMinutes()).toString(), ' ', (new Date(data.message[i].time).getDate()).toString(), '/', (new Date(data.message[i].time).getMonth()).toString(), '/', (new Date(data.message[i].time).getFullYear()).toString());
-					data.message[i].time = (new Date(data.message[i].time).getHours()).toString() + ':' + (new Date(data.message[i].time).getMinutes()).toString() + ' ', + (new Date(data.message[i].time).getDate()).toString() + '/', + (new Date(data.message[i].time).getMonth()).toString() + '/' + (new Date(data.message[i].time).getFullYear()).toString();
+					// data.message[i].time = (new Date(data.message[i].time).getHours()).toString() + ':' + (new Date(data.message[i].time).getMinutes()).toString() + ' ', + (new Date(data.message[i].time).getDate()).toString() + '/', + (new Date(data.message[i].time).getMonth()).toString() + '/' + (new Date(data.message[i].time).getFullYear()).toString();
+					data.message[i].time = new Date(data.message[i].time);
 
 					// new Date(data.message[i].time).getHours().toString() +':'+
 					// new Date(data.message[i].time).getMinutes().toString() +' '+
 					// new Date(data.message[i].time).getDate().toString() +'/'+
 					// new Date(data.message[i].time).getMonth().toString() +'/'+
 					// new Date(data.message[i].time).getFullYear().toString();
-					console.log('dt3: ', data.message[i].time);
+					console.log('dt3: ', data.message[i].time).slice(0.24);
 				}
 			}
 			res.render('view_messages', {

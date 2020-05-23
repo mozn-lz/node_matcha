@@ -78,7 +78,7 @@ router.get('/:reqId', (req, res, next) => {
 							id: find_user[0]._id,
 							name: find_user[0].usr_name,
 							surname: find_user[0].usr_surname,
-							date: Date.now()
+							date: new Date(Date.now())
 						}
 					}
 				});
