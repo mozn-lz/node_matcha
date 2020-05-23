@@ -50,56 +50,64 @@ router.post('/', function (req, res, next) {
 				type: 'send message'
 			}
 			if (senderId && recipiantId) {
-				message_details.me = true;
-				(() => {
-					usersCollection.updateOne({ '_id': objectId(recipiantId) }, {	// send norification to 'friend'
+				helper.findUserById(recipiantId, (isfriend) => {
+					if (isfriend.friends.includes(senderId)) {
+						message_details.me = true;
+						(() => {
+							usersCollection.updateOne({ '_id': objectId(recipiantId) }, {	// send norification to 'friend'
+								$addToSet: {
+									notifications: notification
+								}
+							});
+						})();
+						messagesCollection.updateOne({	//	update sender messages
+							'user_id': senderId,
+							'partner': recipiantId
+						}, {
 							$addToSet: {
-								notifications: notification
+								'message': message_details
+							}
+						}, {
+							upsert: true
+						}, (err, result) => {
+							if (err) {
+								console.log("Error ", err);
+							} else {
+								console.log("Success part  1");
+								// console.log("result ", result);
 							}
 						});
-				})();
-				messagesCollection.updateOne({	//	update sender messages
-					'user_id': senderId,
-					'partner': recipiantId
-				}, {
-					$addToSet: {
-						'message': message_details
-					}
-				}, {
-					upsert: true
-				}, (err, result) => {
-					if (err) {
-						console.log("Error ", err);
+
+						messagesCollection.updateOne({	//	update recipiant messages
+							'user_id': recipiantId,
+							'partner': senderId
+						}, {
+							$addToSet: {
+								'message': message_details
+							}
+						}, {
+							upsert: true
+						}, (err, result) => {
+							client.close();
+							if (err) {
+								console.log("Error ", err);
+							} else {
+								console.log("Success part 2");
+								// console.log("result ", result);
+								console.log("Redirect to '/view_messages/' + recipiantId ");
+								res.redirect('/view_messages/' + req.body.dest);
+							}
+							// res.redirect('/index/' + message);
+						}), (recipiantId) => {
+							console.log("'/view_messages/' + recipiantId ");
+							res.redirect('/view_messages/' + recipiantId);
+						};
 					} else {
-						console.log("Success part  1");
-						// console.log("result ", result);
+						let err_msg = 'Send '+ isfriend.usr_user + ' a friend request to chat with them.'
+						console.log(err_msg);
+						res.redirect('/index/' + 'pass_err' + err_msg)
 					}
 				});
-
-				messagesCollection.updateOne({	//	update recipiant messages
-					'user_id': recipiantId,
-					'partner': senderId
-				}, {
-					$addToSet: {
-						'message': message_details
-					}
-				}, {
-					upsert: true
-				}, (err, result) => {
-					client.close();
-					if (err) {
-						console.log("Error ", err);
-					} else {
-						console.log("Success part 2");
-						// console.log("result ", result);
-						console.log("Redirect to '/view_messages/' + recipiantId ");
-						res.redirect('/view_messages/' + req.body.dest);
-					}
-					// res.redirect('/index/' + message);
-				}), (recipiantId) => {
-					console.log("'/view_messages/' + recipiantId ");
-					res.redirect('/view_messages/' + recipiantId);
-				};
 			} else {
 				console.log("\tError: 'sender' or 'recipiant' are empty\n");
 
