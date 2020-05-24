@@ -29,6 +29,7 @@ let renderProfile = (res, data) => {
 		data.login_time = '-';
 		console.log('data.login_time; ', data.login_time);
 	}
+	data.history = data.history.reverse()
 	res.render(page_name, {
 		title: page_name,
 		id: data._id,
@@ -67,37 +68,41 @@ router.get('/:reqId', (req, res, next) => {
 			const db = client.db(dbName);
 			var find_user = [];
 			const collection = db.collection('users');
+			
 			collection.find({ '_id': objectId(friendId) }).forEach((doc, err) => {
 				assert.equal(null, err);
 				find_user.push(doc);
 				console.log('\t\t doc: ' + doc);
 			}, () => {
-				collection.updateOne({ '_id': objectId(req.session.uid) }, { 	// Add to visit history
-					$addToSet: {
-						history: {
-							id: find_user[0]._id,
-							name: find_user[0].usr_name,
-							surname: find_user[0].usr_surname,
-							date: new Date(Date.now())
-						}
-					}
-				});
-				collection.updateOne({ '_id': objectId(friendId) }, 	// send norification to 'friend'
-					{
+				console.log('find_user.blocked.includes(req.session.uid): ' + find_user[0].blocked.includes(req.session.uid));
+				if (!find_user[0].blocked.includes(req.session.uid)) {
+					collection.updateOne({ '_id': objectId(req.session.uid) }, { 	// Add to visit history
 						$addToSet: {
-							notifications: notification
+							history: {
+								id: find_user[0]._id,
+								name: find_user[0].usr_name,
+								surname: find_user[0].usr_surname,
+								date: new Date(Date.now())
+							}
 						}
 					});
-				client.close();
-				let message = '';
-				if (find_user.length == 1) {
-					helper.findUserById(req.session.uid, (user) => {
-						find_user[0].history = user.history;	// bad code #quickfix
-						renderProfile(res, find_user[0]);
-					});
-				} else {
-					message = "pass_errError: friend requiest unsuccessfill, please try again";
-					res.redirect('/index');
+					collection.updateOne({ '_id': objectId(friendId) }, 	// send norification to 'friend'
+						{
+							$addToSet: {
+								notifications: notification
+							}
+						});
+					client.close();
+					let message = '';
+					if (find_user.length == 1) {
+						helper.findUserById(req.session.uid, (user) => {
+							find_user[0].history = user.history;	// bad code #quickfix
+							renderProfile(res, find_user[0]);
+						});
+					} else {
+						message = "pass_errError: friend requiest unsuccessfill, please try again";
+						res.redirect('/index');
+					}
 				}
 			});
 		});
