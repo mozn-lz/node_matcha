@@ -51,7 +51,7 @@ router.post('/', function (req, res, next) {
 			}
 			if (senderId && recipiantId) {
 				helper.findUserById(recipiantId, (isfriend) => {
-					if (isfriend.friends.includes(senderId)) {
+					if (isfriend.friends.includes(senderId) && !isfriend.blocked.includes(senderId)) {
 						message_details.me = true;
 						(() => {
 							usersCollection.updateOne({ '_id': objectId(recipiantId) }, {	// send norification to 'friend'
