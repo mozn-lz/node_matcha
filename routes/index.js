@@ -16,7 +16,9 @@ var page_name = 'home';
 let fn_render_index = (req, res, next, msg, matches) => {
 	
 	console.log('req.session.uid ', req.session.uid);
-	var res_arr = matches;
+	// var res_arr = matches;
+	var res_arr = helper.sort_locate(matches, req.session.gps.country);
+	
 	// console.log('\n\n\n________fn_render_indexn________\n');
 	if (req.session.uid) {
 		(req.session.oriantation == '') ? req.session.oriantation = 'bisexual' : 0;
@@ -37,6 +39,8 @@ let fn_render_index = (req, res, next, msg, matches) => {
 				res_arr == null;
 			}
 		}
+
+
 		res.render('index', {
 			match_list: res_arr,
 			msg_arr,
@@ -117,8 +121,10 @@ var fn_getMatches = (req, res, next, msg) => {
 			})
 		})(), (() => {
 			client.close();
-				console.log('\n\t\t3. msg: ', msg, '\n\n');
-					fn_render_index(req, res, next, msg, user_matches);
+			setTimeout(() => {
+				console.log('\n\t\t3. msg: ', msg, '\n\num  ++', user_matches.length);
+						fn_render_index(req, res, next, msg, user_matches);
+					}, 1500);
 		})()
 	});
 }
@@ -130,50 +136,6 @@ router.get('/', (req, res, next) => {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
 	}
 });
-
-// router.get('/:reqId', (req, res, next) => {
-// 	if (req.session.uid) {
-// 		let friendReqId = req.params.reqId
-// 		console.log("friendId: ", friendReqId);
-
-// 		MongoClient.connect(url, (err, client) => {
-// 			assert.equal(null, err);
-// 			const db = client.db(dbName);
-// 			var find_user = [];
-// 			const collection = db.collection('users');
-
-// 			collection.find({ '_id': objectId(friendReqId) }).forEach(function (doc, err) {
-// 				assert.equal(null, err);
-// 				find_user.push(doc);
-// 				console.log('\t\t doc: ' + doc);
-// 			}, () => {
-// 				client.close();
-// 				console.log('find_user.length: ', find_user.length);
-// 				let message = '';
-// 				if (find_user.length == 1) {
-// 					/*******************************/
-// 					/*     make friend request     */
-// 					/*******************************/
-// 					console.log('if: find_user.length', find_user.length == 1);
-// 					message = "pass_sucFriend request has been made";
-// 					console.log("\n\t\tmessage ", message, "\n")
-// 					// makeReq(find_user[0])
-// 					fn_getMatches(req, res, next, message);
-// 				} else {
-// 					console.log("Else " + friendReqId + " not found");
-// 					// res.redirect('/messages');
-// 					//  (friendReqId.search('pass_suc') == 0) ? res.render(page_name, {
-// 					message = "pass_errError: friend requiest unsuccessfill, please try again";
-// 					console.log("\n\t\tmessage ", message, "\n");
-// 					fn_getMatches(req, res, next, message);
-// 				}
-// 				console.log('exiting render misfunction');
-// 			});
-// 		});
-// 	} else {
-// 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
-// 	}
-// });
 
 // // HANDLE Error or success messages.
 router.get('/:redirect_msg', function (req, res, next) {
