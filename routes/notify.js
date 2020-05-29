@@ -42,4 +42,21 @@ router.get('/', function (req, res) {
 	// }
 });
 
+router.post('/', (req, res) => {
+	let location = {};
+	let data = JSON.parse(JSON.stringify(req.body));
+	if (req.body && req.session.uid) {
+		location.country = data.country;
+		location.city = data.city;
+		location.timezone = data.timezone;
+		MongoClient.connect(url, (err, client) => {
+			assert.equal(null, err);
+			client.db(dbName).collection('users').updateOne({'_id': objectId(req.session.uid)}, {$set: {
+				'gps': location
+			}})
+		})
+	} else
+		console.log('body not found');
+});
+
 module.exports = router;
