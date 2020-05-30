@@ -26,6 +26,8 @@ MongoClient.connect(url, function (err, client) {
 
 	// users.push(doc);
 	let maxUSers = 20;
+	let min = 18;
+	let max = 50;
 	collection.count().then((count) => {
 		console.log("users", count);
 		if (count < maxUSers) {
@@ -36,6 +38,8 @@ MongoClient.connect(url, function (err, client) {
 				const surname = faker.name.lastName();
 				let gender = faker.random.arrayElement(genders);
 				let oriantation = faker.random.arrayElement(oriantations);
+				let age = Math.floor(Math.random() * (max - min + 1)) + min;
+				let rating = Math.floor(Math.random() * (5)) + 1; // random from 1-5
 				password = "!!11QQqq";
 
 
@@ -47,15 +51,17 @@ MongoClient.connect(url, function (err, client) {
 					usr_psswd: passwordHash.generate(password), // to be encrypted
 					login_time: '',
 					profile: '/images/ionicons.designerpack/md-person.svg',
-					age: null,
+					age,
 					gender,
 					oriantation,
-					rating: '',
+					rating,
 					bio: '',
 					intrests: [],
 					gps: '',
 					viewd: [],
 					liked: [],
+					friends:[],
+					blocked:[],
 					verified: 1,
 					confirm_code: Math.random() // to be encrypted
 				};
