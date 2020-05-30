@@ -14,13 +14,13 @@ const dbName = 'mk_matcha';					// Database Name
 var page_name = 'home';
 
 let fn_render_index = (req, res, next, msg, matches) => {
-	
+
 	console.log('req.session.uid ', req.session.uid);
 	// var res_arr = matches;
-	var res_arr = helper.sort_locate(matches, req.session.gps.country);
-	
+
 	// console.log('\n\n\n________fn_render_indexn________\n');
 	if (req.session.uid) {
+		var res_arr = helper.sort_locate(matches, req.session.gps.country);
 		(req.session.oriantation == '') ? req.session.oriantation = 'bisexual' : 0;
 
 		var msg_arr = [];
@@ -64,6 +64,7 @@ var fn_getMatches = (req, res, next, msg) => {
 		var find_user = [];
 		var user_matches = [];
 		var match_criteria = {};
+		let match_criteria2 = {};
 		const collection = db.collection('users');
 
 		console.log('\n\t\t2. msg: ', msg, '\n\n');
@@ -91,40 +92,37 @@ var fn_getMatches = (req, res, next, msg) => {
 				case 'bisexual':
 					if (req.session.gender == 'male') {
 						match_criteria = { gender: "male", exception: "hetrosexual" };
-						match_criteria = { gender: "female", exception: "homosexual" };
+						match_criteria2 = { gender: "female", exception: "homosexual" };
 						console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
 					} else if (req.session.gender == 'female') {
-						usr_match_criteriadata = { gender: "female", exception: "homosexual" };
-						match_criteria = { gender: "male", exception: "hetrosexual" };
+						match_criteria = { gender: "male", exception: "homosexual" };
+						match_criteria2 = { gender: "female", exception: "hetrosexual" };
 						console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
 					}
 					break;
 				default:
 					console.log('Please make sure your gender and oriantation is specified');
 					break;
-			}
-			// console.log(doc.oriantation, " ", match_criteria.exception, "\n");
-			console.log(match_criteria);
-			console.log("oriantation: ", match_criteria.oriantation);
-			console.log("gender: ", match_criteria.gender);
-			
-			// collection.find({gender: "male"}).forEach(function (doc, err) {
-			collection.find({gender: match_criteria.gender}).forEach(function (doc, err) {
+			};
+			console.log('A ', req.session.oriantation, ' ', req.session.gender);
+			collection.find().forEach(function (doc, err) {
 				assert.equal(null, err);
-				if (doc.oriantation != match_criteria.exception && doc._id != req.session.uid) {
+				if (doc._id != req.session.uid) {
 					(!doc.profile) ? doc.profile = "/images/ionicons.designerpack/md-person.svg" : 0;
-					user_matches.push(doc);
-					console.log("Found a ", doc.oriantation, " ", doc.gender, " named ", doc.usr_user);
-				} else {
-					console.log("\t", doc.oriantation, " ", doc.gender, " named ", doc.usr_user, " Rejected");
+					if ((match_criteria && doc.gender == match_criteria.gender && doc.oriantation != match_criteria.exception) || (match_criteria2 && doc.gender == match_criteria2.gender && doc.oriantation != match_criteria2.exception)) {
+						user_matches.push(doc);
+						console.log("Found a ", doc.oriantation, " ", doc.gender, " named ", doc.usr_user);
+					} else {
+						console.log("\t", doc.oriantation, " ", doc.gender, " named ", doc.usr_user, " Rejected");
+					}
 				}
 			})
 		})(), (() => {
 			client.close();
 			setTimeout(() => {
 				console.log('\n\t\t3. msg: ', msg, '\n\num  ++', user_matches.length);
-						fn_render_index(req, res, next, msg, user_matches);
-					}, 1500);
+				fn_render_index(req, res, next, msg, user_matches);
+			}, 1500);
 		})()
 	});
 }
@@ -139,9 +137,9 @@ router.get('/', (req, res, next) => {
 
 // // HANDLE Error or success messages.
 router.get('/:redirect_msg', function (req, res, next) {
-		// fn_render_index(req, res, next, '', matches)
+	// fn_render_index(req, res, next, '', matches)
 	console.log('0. req.params.redirect_msg ', req.params.redirect_msg);
-	
+
 	fn_getMatches(req, res, next, req.params.redirect_msg);
 	// fn_getMatches(req, res, next, message);
 	// fn_render_index(req, res, next, req.params.redirect_msg, matches)
