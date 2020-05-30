@@ -3,7 +3,7 @@ var router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const objectId = require('mongodb').ObjectID;
 const assert = require('assert');
-// var helper = require('./helper_functions'); // Helper functions Mk
+var helper = require('./helper_functions'); // Helper functions Mk
 
 const url = 'mongodb://localhost:27017';	// Database Address
 const dbName = 'mk_matcha';					// Database Name
@@ -12,32 +12,33 @@ const dbName = 'mk_matcha';					// Database Name
 
 var page_name = 'messages';
 
+let render_messages = (res, res_arr, find_user, msg_arr) => {
+	console.log("find_user.length: ", find_user.length);
+	console.log("res_arr.length: ", res_arr.length);
+	if (find_user.length > 0) {
+		console.log('res_arr: ');
+		// client.close();
+		console.log('find_user: ');
+
+		console.log('Rendering messages');
+		res.render(page_name, {
+			title: page_name,
+			er: pass_er,
+			suc: pass_suc,
+			msg_arr,
+			match_list: find_user
+		});
+	} else {
+		res.redirect('/index/' + 'pass_errYou dont have any messages yet');
+	}
+}
+
 fn_render_messages = (req, res, next, msg) => {
 	console.log('\n\n\nfn_render_messages\n');
 	var session_variable = req.session.uid;	// Variable for user session
 	if (session_variable) {
 		console.log('session_variable: ' + session_variable);
 
-		let render_messages = (res_arr, find_user, msg_arr) => {
-			console.log("find_user.length: ", find_user.length);
-			console.log("res_arr.length: ", res_arr.length);
-			if (find_user.length > 0) {
-				console.log('res_arr: ');
-				// client.close();
-				console.log('find_user: ');
-
-				console.log('Rendering messages');
-				res.render(page_name, {
-					title: page_name,
-					er: pass_er,
-					suc: pass_suc,
-					msg_arr,
-					match_list: find_user
-				});
-			} else {
-				res.redirect('/index/' + 'pass_errYou dont have any messages yet');
-			}
-		}
 		MongoClient.connect(url, function (err, client) {
 			assert.equal(null, err);
 
@@ -72,13 +73,13 @@ fn_render_messages = (req, res, next, msg) => {
 							}
 						});
 					}
+					render_messages(res,res_arr, find_user, msg_arr);
 				} else {
 					console.log('No mesasages, redirecting to home');
 					res.redirect('/index/' + 'pass_errYou dont have any messages yet');
 				}
-				setTimeout(() => {
-					render_messages(res_arr, find_user, msg_arr);
-				}, 1000);
+				// setTimeout(() => {
+				// }, 1000);
 			});
 		});
 	} else {
