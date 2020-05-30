@@ -113,7 +113,14 @@ router.get('/:user', function (req, res, next) {
 		}, () => {
 			console.log("closing client and proceding to render page");
 			client.close();
-			renderPage(res, req, user, friend, texts);
+			if (
+				(find_user[0] && find_user[0].friends && find_user[0].friends.includes(chatFriendId)) && 
+				(find_friend[0] && find_friend[0].friends && find_friend[0].friends.includes(req.session.uid))
+			) {
+				renderPage(res, req, user, friend, texts);
+			} else {
+				res.redirect('/index/' + 'pass_errYou can only send messages to friends');
+			}
 		});
 	});
 });

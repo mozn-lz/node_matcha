@@ -29,7 +29,7 @@ let renderProfile = (res, data) => {
 		data.login_time = '-';
 		console.log('data.login_time; ', data.login_time);
 	}
-	data.history = data.history.reverse()
+	(data.history) ? data.history = data.history.reverse() : 0;
 	res.render(page_name, {
 		title: page_name,
 		id: data._id,
@@ -109,6 +109,9 @@ router.get('/:reqId', (req, res, next) => {
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
 	}
+});
+router.get('/', (req, res, next) => {
+	res.redirect('/index/');
 });
 
 module.exports = router;

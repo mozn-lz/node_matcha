@@ -16,8 +16,7 @@ let search = '';
 let search_extra = {};
 
 function is_empty(str) {
-	ret = str.trim();
-	if (ret.length == 0) {
+	if (!str && str.trim().length == 0) {
 		return (true);
 	}
 	return (false);
@@ -114,7 +113,7 @@ var fn_getMatches = (req, res, next, msg) => {
 		const collection = db.collection('users');
 		console.log(search_criteria);
 
-		collection.find({ $or: search_criteria }, search_extra).forEach(function (doc, err) {
+		collection.find({ $or: search_criteria }, {search_extra}).forEach(function (doc, err) {
 			if (search) {
 				assert.equal(null, err);
 				user_matches.push(doc);
@@ -141,18 +140,10 @@ router.post('/', function (req, res, next) {
 
 	if (check_fame(req.body.fame) || check_age(req.body.age) || check_intrests(req.body.intrests) || check_location(req.body.location)) {
 		// store data to JSON array, to store in mongo
-		if (check_fame(req.body.fame)) {
-			search_extra = {fame: req.body.fame};
-		}
-		if (check_age(req.body.age)) {
-			search_extra = {age: req.body.age};
-		}
-		if (check_intrests(req.body.intrests)) {
-			search_extra = {intrests: req.body.intrests};
-		}
-		if (check_location(req.body.location)) {
-			search_extra = {gps: req.body.location};
-		}
+		(check_fame(req.body.fame)) ? search_extra.fame = req.body.fame : 0;
+		(check_age(req.body.age)) ? search_extra.age = req.body.age : 0;
+		(check_intrests(req.body.intrests)) ? search_extra.intrests = req.body.intrests : 0;
+		(check_location(req.body.location)) ? search_extra.gps = req.body.location : 0;
 	}
 	console.log("\t\t\t\tHello: ", search);
 
