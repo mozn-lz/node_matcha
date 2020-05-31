@@ -10,9 +10,9 @@ const url = 'mongodb://localhost:27017';	// Database Address
 const dbName = 'mk_matcha';					// Database Name
 
 module.exports = {
-	fn_getMatches: (req, res, next, msg, callback) => {
+	fn_getMatches: (req, res, callback) => {
 
-		console.log('\n\t\t1. msg: ', msg, '\n\n');
+		console.log('PING ifconfig ');
 		MongoClient.connect(url, function (err, client) {
 			assert.equal(null, err);
 
@@ -22,7 +22,6 @@ module.exports = {
 			let match_criteria2 = {};
 			const collection = db.collection('users');
 
-			console.log('\n\t\t2. msg: ', msg, '\n\n');
 			(() => {
 				switch (req.session.oriantation) {
 					case 'hetrosexual':
@@ -75,8 +74,8 @@ module.exports = {
 			})(), (() => {
 				client.close();
 				setTimeout(() => {
-					console.log('\n\t\t3. msg: ', msg, '\n\num  ++', user_matches.length);
-					callback(req, res, next, msg, user_matches);
+					console.log('\t\tfound ' + user_matches.length);
+					callback(user_matches);
 				}, 1500);
 			})()
 		});
@@ -100,19 +99,19 @@ module.exports = {
 		});
 	},
 
-	logTme: () => {
-		MongoClient.connect(url, function (err, client) {
-			assert.equal(null, err);
-			client.db(dbName).collection('users').updateOne({ '_id': objectId(req.session.uid) }, {
-				$set: { 'login_time': Date.now() }
-			}, () => {
-				assert.equal(null, err);
-				client.close();
-				console.log('Time');
-			});
-		});
+	// logTme: () => {
+	// 	MongoClient.connect(url, function (err, client) {
+	// 		assert.equal(null, err);
+	// 		client.db(dbName).collection('users').updateOne({ '_id': objectId(req.session.uid) }, {
+	// 			$set: { 'login_time': Date.now() }
+	// 		}, () => {
+	// 			assert.equal(null, err);
+	// 			client.close();
+	// 			console.log('Time');
+	// 		});
+	// 	});
 
-	},
+	// },
 
 	sendMail: (from, to, subject, message, callback) => {
 		//email Sender
@@ -175,6 +174,7 @@ module.exports = {
 				toSort = sortFame(toSort);
 			}
 		}
+		return (toSort);
 	},
 	sort_age: (toSort) => {
 		let sortAge = (age_arr) => {
@@ -198,17 +198,18 @@ module.exports = {
 	sort_tags: (matches, tags) => {
 		let sorted = [];
 		for (let i = 0; i < tags.length; i++) {
-			for (let j = 0; j < matches.length; j++) {
+			// iterte through user tag array
+			for (let j = 0; j < matches.length; j++) {	// itterate through users
 				(!matches[j].score) ? matches[j].score = 0 : 0;
 				if (matches[j].intrests.includes(tags[i])) {
-					matches[j].score++;
+					matches[j].score++;	// if user's tags includes tag increase user score
 				}
 			}
 		}
-		for (let i = 7; i >= 0; i--) {
+		for (let i = 7; i >= 0; i--) {	// i = max tags
 			for (let j = 0; j < matches.length; j++) {
 				if (matches[j].score == j) {
-					sorted.push(matches[j]);
+					sorted.push(matches[j]);	// push users inso 'sorted' by max score
 				}
 			}
 		}
@@ -218,22 +219,20 @@ module.exports = {
 		let sorted = [];
 		console.info('locate__', matches.length);
 		for (let i = 0; i < matches.length; i++) {
-			if (matches[i].gps.city == location) {
-				sorted.push(matches[i]);
-			}
-			// console.info('oinfo , city');
-		}
-		for (let i = 0; i < matches.length; i++) {
-			if ((matches[i].gps.country == location) && (matches[i].gps.city != location)) {
+			if ((matches[i].gps.country == location.country) && (matches[i].gps.city == location.city)) {
 				sorted.push(matches[i]);
 			}
 		}
 		for (let i = 0; i < matches.length; i++) {
-			if ((matches[i].gps.country != location) && (matches[i].gps.city != location)) {
+			if ((matches[i].gps.country == location.country) && (matches[i].gps.city != location.city)) {
 				sorted.push(matches[i]);
 			}
 		}
-		// (sorted.length == 0) ? sorted = matches : 0;
+		for (let i = 0; i < matches.length; i++) {
+			if ((matches[i].gps.country != location.country) && (matches[i].gps.city != location.city)) {
+				sorted.push(matches[i]);
+			}
+		}
 		return (sorted);
 	},
 	//	END SORTING FUNCTIONS
@@ -241,39 +240,64 @@ module.exports = {
 	//	START FILTERING FUNCTIONS
 	filter_fame: (filter_arr, begin, range) => {
 		let result = [];
+		begin = Number(begin);
+		range = Number(range);
+		console.log('begin: ' + begin);
+		console.log('range: ' + range);
 		for (let i = 0; i < filter_arr.length; i++) {
-			if ((filter_arr[i] <= (begin + range)) &&
-				(filter_arr[i] >= (begin[i] - range))) {
-				result.push(filter_arr);
+			if ((filter_arr[i].rating <= (begin + range)) &&
+				(filter_arr[i].rating >= (begin - range))) {
+				console.log(`A: ${filter_arr[i].usr_name} : ${filter_arr[i].rating}`);
+				result.push(filter_arr[i]);
+			} else {
+				console.log(`R: ${filter_arr[i].usr_name} : ${filter_arr[i].rating}`);
 			}
 		}
 		return (result);
 	},
 	filter_age: (age_arr, begin, range) => {
+		console.log("\n\n______filter_age______");
 		let result = [];
+		begin = Number(begin);
+		range = Number(range);
+		console.log("age_arr.length:", age_arr.length);
 		for (var i = 0; i < age_arr.length; i++) {
-			if ((age_arr[i] <= (begin + range)) &&
-				(age_arr[i] >= (age_arr[i] - range))) {
-				result.push(age_arr);
+			if ((age_arr[i].age <= (begin + range)) &&
+				(age_arr[i].age >= (begin - range))) {
+				console.log(`A: ${age_arr[i].usr_name} : ${age_arr[i].age}`);
+				result.push(age_arr[i]);
+			} else {
+				console.log(`R: ${age_arr[i].usr_name} : ${age_arr[i].age}`);
 			}
 		}
 		return (result);
 	},
 	filter_tags: (matches, tags) => {
+		console.log('\n\n_____filter_tags_____');
 		let result = [];
+
+		(typeof(tags) == "string") ? tags = [tags] : 0;	//	convert string to object
+
 		for (let i = 0; i < tags.length; i++) {
 			for (let j = 0; j < matches.length; j++) {
 				(!matches[j].score) ? matches[j].score = 0 : 0;
-				if (matches[j].intrests.includes(tags[i])) {
-					matches[j].score++;
+				for (const tag in matches[j].intrests) {
+					matches[j].intrests[tag];
+					if (matches[j].intrests[tag] == (tags[i])) {
+						matches[j].score++;
+						// console.log(i, `> ${matches[j].usr_user} : ${matches[j].score}`);
+					}
 				}
 			}
 		}
-		for (let i = 7; i >= 0; i--) {
+		for (let i = 7; i > 0; i--) {
 			for (let j = 0; j < matches.length; j++) {
-				if (matches[j].score == j) {
+				if (matches[j].score == i) {
 					result.push(matches[j]);
 				}
+			}
+			if (result.length > 0) {
+				return (result);
 			}
 		}
 		return (result);

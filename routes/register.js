@@ -185,46 +185,10 @@ router.post('/', function (req, res, next) {
 							client.close();
 							// helper.sendMail(to, from, subject, message);
 /*
-							//email Sender
-							var transporter = nodemailer.createTransport({
-								service: 'gmail',
-								auth: {
 									user: 'unathinkomo16@gmail.com',
 									pass: '0786324448'
-								}
-							});
-							// Sending email to recipiant
-							const message = () => {
-								var l1 = 'Your verification Code is ';
-								var code = confirm_code;
-								var l3 = ', Please Click On ';
-								var link = `<a href="http://localhost:5000/verify?email=${email}&code=${code}">this link</a>`;//{}&code=">this link</a>';
-								var l4 = ' to activate your account.';
-								return l1 + code + l3 + link + l4;
-							}
+*/	
 
-							var mailOptions = {
-								from: 'auth@matcha.com',
-								to: email,
-								subject: 'Matcha Verification',
-								html: message()
-							};
-							transporter.sendMail(mailOptions, (error, info) => {
-								if (error) {
-									console.log(error);
-								} else {
-									console.log('Email sent: ' + info.response);
-								}
-							});
-							*/
-
-							// const message = () => {
-							// 	return (
-							// 		`<b>Welcome to Matcha ${usr_user}</b>\n
-							// 		Please click on the button below to verify your email address\n
-							// 		<a href="http://localhost:3000/verify?email=${email}&code=${code}"><button>Verify</button></a>
-							// 		`);
-							// }
 							const to = email;
 							const from = '';
 							const subject = 'Matcha Email Verification';

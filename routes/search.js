@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
-const objectId = require('mongodb').ObjectID;
 const assert = require('assert');
 var helper = require('./helper_functions'); // Helper functions Mk
 var helper_index = require('./helper_index'); // Helper functions Mk
@@ -13,10 +12,10 @@ const dbName = 'mk_matcha';					// Database Name
 
 var page_name = 'search';
 let search = '';
-let search_extra = {};
+let search_extra, search_intrests = {};
 
 function is_empty(str) {
-	if (!str && str.trim().length == 0) {
+	if (!str || str.length == 0) {
 		return (true);
 	}
 	return (false);
@@ -42,27 +41,40 @@ function check_age(chk_age) {
 	}
 }
 
-function check_intrests(chk_intrests) {
-	console.log('chk_intrests ', chk_intrests);
+
+function chk_intrests(chk_intrests) {
 	if (chk_intrests) {
-		(chk_intrests.includes('tatoo'))	 ? req.body.intrests.tatoo = 'tatoo'	  : console.log('Tatoo not foud');
-		(chk_intrests.includes('smoke'))	 ? req.body.intrests.smoke = 'smoke'	  : console.log('Smoke not foud');
-		(chk_intrests.includes('alcohol'))	 ? req.body.intrests.alcohol = 'alcohol'	  : console.log('Alcohol not foud');
-		(chk_intrests.includes('travel'))	 ? req.body.intrests.travel = 'travel'	  : console.log('Travel not foud');
-		(chk_intrests.includes('party'))	 ? req.body.intrests.party = 'party'	  : console.log('Party not foud');
-		(chk_intrests.includes('social'))	 ? req.body.intrests.social = 'social'	  : console.log('Social not foud');
-		(chk_intrests.includes('introvert')) ? req.body.intrests.introvert = 'introvert' : console.log('introvert not foud');
-		(chk_intrests.includes('excersise')) ? req.body.intrests.excersise = 'excersise' : console.log('Excersise not foud');
-		(chk_intrests.includes('sports'))	 ? req.body.intrests.sports = 'sports'	  : console.log('Sports not foud');
+		console.log('chk_intrests ', chk_intrests);
+		console.log('chk_intrests ', chk_intrests.length);
+		(chk_intrests.includes('tatoo'))	 ? search_intrests.tatoo = 'tatoo'	  : console.log('Tatoo not foud');
+		(chk_intrests.includes('smoke'))	 ? search_intrests.smoke = 'smoke'	  : console.log('Smoke not foud');
+		(chk_intrests.includes('alcohol'))	 ? search_intrests.alcohol = 'alcohol'	  : console.log('Alcohol not foud');
+		(chk_intrests.includes('travel'))	 ? search_intrests.travel = 'travel'	  : console.log('Travel not foud');
+		(chk_intrests.includes('party'))	 ? search_intrests.party = 'party'	  : console.log('Party not foud');
+		(chk_intrests.includes('social'))	 ? search_intrests.social = 'social'	  : console.log('Social not foud');
+		(chk_intrests.includes('introvert')) ? search_intrests.introvert = 'introvert' : console.log('introvert not foud');
+		(chk_intrests.includes('excersise')) ? search_intrests.excersise = 'excersise' : console.log('Excersise not foud');
+		(chk_intrests.includes('sports'))	 ? search_intrests.sports = 'sports'	  : console.log('Sports not foud');
+		return (true);
+	} else {
+		return (false);
+	}
+}
+function check_location(chk_location) {
+	if (is_empty(check_location)) {
+		return (false);
+	} else {
+		return (false);
 	}
 }
 
 let fn_render_search = (req, res, next, msg, matches) => {
 
 	console.log('req.session.uid ', req.session.uid);
-	var res_arr = matches;
-	// console.log('\n\n\n________fn_render_search________\n');
+	console.log('\n\n\n________fn_render_search (',matches.length,')________\n');
 	if (req.session.uid) {
+		// var res_arr = matches;
+		let res_arr = helper.sort_locate(matches, req.session.gps);
 		(req.session.oriantation == '') ? req.session.oriantation = 'bisexual' : 0;
 
 		var msg_arr = [];
@@ -73,14 +85,15 @@ let fn_render_search = (req, res, next, msg, matches) => {
 		if (msg_arr == '') {
 			if (res_arr > 0) {
 				res_arr == null;
-				res.redirect('/index/' + "pass_errThere aren't any matches");
+				res.redirect(page_name + "pass_errThere aren't any matches");
 			} else if (res_arr == null) {
 				res_arr == null;
-				res.redirect('/index/' + 'pass_errYou broke our matching AI, give it a few days to find you a match');
+				res.redirect('/index/' + 'pass_errYou broke our matching AI, give it a few minutes to find you a match');
 			} else {
 				res_arr == null;
 			}
 		}
+
 		res.render(page_name, {
 			match_list: res_arr,
 			msg_arr,
@@ -105,6 +118,8 @@ var fn_getMatches = (req, res, next, msg) => {
 		var user_matches = [];
 
 		let search_criteria = [
+			{'gps.city' : new RegExp(search)},
+			{'gps.country' : new RegExp(search)},
 			{usr_user : new RegExp(search)},
 			{usr_name : new RegExp(search)},
 			{usr_surname : new RegExp(search)}
@@ -117,12 +132,20 @@ var fn_getMatches = (req, res, next, msg) => {
 			if (search) {
 				assert.equal(null, err);
 				user_matches.push(doc);
-				// console.log(doc);
+				console.log(doc);
 			}
 		}), (() => {
 			client.close();
-			console.log('\n\t\t3. msg: ', msg, '\n\n');
-			fn_render_search(req, res, next, msg, user_matches);
+			console.log('\n\t\t3. msg(',user_matches.length,'): ', msg, '\n\n');
+			if (user_matches.length == 0) {
+				helper.fn_getMatches(req,res, (result) =>{
+					console.log('search failed');
+					fn_render_search(req, res, next, msg, user_matches)
+				});
+			} else {
+				console.log('USers found');
+				fn_render_search(req, res, next, msg, user_matches);
+			}
 		})()
 	});
 }
@@ -135,23 +158,39 @@ router.get('/', (req, res, next) => {
 	}
 });
 
-router.post('/', function (req, res, next) {
+router.post('/', (req, res, next) => {
+	(!req.session.uid) ? res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ') : 0;
 	search = req.body.search;
 
-	if (check_fame(req.body.fame) || check_age(req.body.age) || check_intrests(req.body.intrests) || check_location(req.body.location)) {
+	if (check_fame(req.body.fame) || check_age(req.body.age) || chk_intrests(req.body.intrests) || check_location(req.body.location)) {
 		// store data to JSON array, to store in mongo
-		(check_fame(req.body.fame)) ? search_extra.fame = req.body.fame : 0;
-		(check_age(req.body.age)) ? search_extra.age = req.body.age : 0;
-		(check_intrests(req.body.intrests)) ? search_extra.intrests = req.body.intrests : 0;
-		(check_location(req.body.location)) ? search_extra.gps = req.body.location : 0;
+		helper.fn_getMatches(req, res, (user_matches) => {
+			console.log('\t\t***', user_matches.length)
+			if (check_fame(req.body.fame)) {	// fame gap
+				if (req.body.fame <= 5 && req.body.fame >= 0)
+					user_matches = helper.filter_fame(user_matches, req.session.rating, req.body.fame);
+			}
+			if (check_age(req.body.age)) {	// age gap
+				if (req.body.age <= 10 && req.body.age >= 0)
+					user_matches = helper.filter_age(user_matches, req.session.age, req.body.age);
+			}
+			if (chk_intrests(req.body.intrests)) {
+				user_matches = helper.filter_tags(user_matches, req.body.intrests);
+			}
+			if (check_location(req.body.location)) {
+				user_matches = helper.filter_locate(user_matches, req.body.location);
+			}
+			fn_render_search(req, res, next, '', user_matches);
+		});
+	} else {
+		fn_getMatches(req, res, next, '');
 	}
 	console.log("\t\t\t\tHello: ", search);
-
-	fn_getMatches(req, res, next, '');
 });
 
 // // HANDLE Error or success messages.
 router.get('/:redirect_msg', function (req, res, next) {
+	(!req.session.uid) ? res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ') : 0;
 	console.log('0. req.params.redirect_msg ', req.params.redirect_msg);
 	fn_getMatches(req, res, next, req.params.redirect_msg);
 });

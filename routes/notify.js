@@ -49,12 +49,18 @@ router.post('/', (req, res) => {
 		location.country = data.country;
 		location.city = data.city;
 		location.timezone = data.timezone;
+		console.log('\t\t Location* ',location);
+		req.session.gps = location;
 		MongoClient.connect(url, (err, client) => {
 			assert.equal(null, err);
-			client.db(dbName).collection('users').updateOne({'_id': objectId(req.session.uid)}, {$set: {
-				'gps': location
-			}})
-		})
+			client.db(dbName).collection('users').updateOne({
+				'_id': objectId(req.session.uid)
+			}, {
+				$set: {
+					'gps': location
+				}
+			})
+		});
 	} else
 		console.log('body not found');
 });

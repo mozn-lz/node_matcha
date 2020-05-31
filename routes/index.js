@@ -15,7 +15,7 @@ let fn_render_index = (req, res, next, msg, matches) => {
 	// var res_arr = matches;
 	// console.log('\n\n\n________fn_render_indexn________\n');
 	if (req.session.uid) {
-		var res_arr = helper.sort_locate(matches, req.session.gps.country);
+		var res_arr = helper.sort_locate(matches, req.session.gps);
 		(req.session.oriantation == '') ? req.session.oriantation = 'bisexual' : 0;
 
 		var msg_arr = [];
@@ -50,7 +50,9 @@ router.get('/', (req, res, next) => {
 	console.log('\t\t____SAO');
 	if (req.session.uid) {
 		console.log('\t\t____SAO');
-		helper.fn_getMatches(req, res, next, '', fn_render_index);
+		helper.fn_getMatches(req, res, (user_matches) => {
+			fn_render_index(req, res, next, '', user_matches);
+		});
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
 	}
@@ -58,10 +60,15 @@ router.get('/', (req, res, next) => {
 
 // // HANDLE Error or success messages.
 router.get('/:redirect_msg', function (req, res, next) {
-	// fn_render_index(req, res, next, '', matches)
-	console.log('0. req.params.redirect_msg ', req.params.redirect_msg);
+	if (req.session.uid) {
+		let msg  = req.params.redirect_msg;
 
-	helper.fn_getMatches(req, res, next, req.params.redirect_msg, fn_render_index);
+		helper.fn_getMatches(req, res, (user_matches) => {
+			fn_render_index(req, res, next, msg, user_matches);
+		});
+	} else {
+		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
+	}
 });
 
 module.exports = router;
