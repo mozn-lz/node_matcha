@@ -85,18 +85,18 @@ function fn_getNotifications(req, res, notification, msg) {
 							if (notification[i].type == 'friend request') {
 								notification[i].request = 'friend request';
 								notification.num_req = num_req++;
-								// notification[i].request = true;
-								console.log('\t\tnotification.request: ', notification[i].request);
 							} else if (notification[i].type == 'send message') {
 								notification[i].message = 'send message';
 								notification.num_req = num_msg++;
-								// notification[i].message = true;
-								console.log('\t\tnotification.message: ', notification[i].message);
 							} else if (notification[i].type == 'view profile') {
-								// notification[i].profile = true;
 								notification[i].profile = 'view profile';
 								notification.num_req = num_view++;
-								console.log('\t\tnotification.profile: ', notification[i].profile);
+							} else if (notification[i].type == 'friend reject') {
+								notification[i].reject = 'friend reject';
+								notification.num_req = num_view++;
+							} else if (notification[i].type == 'like back') {
+								notification[i].like_back = 'like back';
+								notification.num_req = num_view++;
 							}
 						});
 					}
@@ -214,6 +214,15 @@ router.post('/', (req, res, next) => {
 						'friends': req.session.uid
 					}
 				});
+				let notification = {	// notification object
+					from: req.session.uid,
+					type: 'like back'
+				}
+				collection.updateOne({ '_id': objectId(friendId) }, { 	// send norification to 'friend'
+					$addToSet: {
+						notifications: notification
+					}
+				});
 			});
 			remove_notification('/view_profile/' + friendId, fn_redirect)
 		}
@@ -225,6 +234,10 @@ router.post('/', (req, res, next) => {
 		} else if (req.body.type == 'friend request') {
 			accept_friend(remove_notification);
 		} else if (req.body.type == 'remove') {
+			remove_notification('/notifications/', fn_redirect);
+		} else if (req.body.type == 'like back') {
+			remove_notification('/notifications/', fn_redirect);
+		} else if (req.body.type == 'friend reject') {
 			remove_notification('/notifications/', fn_redirect);
 		} else {
 			console.log('false\n');
