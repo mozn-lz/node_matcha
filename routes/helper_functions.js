@@ -90,10 +90,10 @@ module.exports = {
 			client.db(dbName).collection('users').find({ '_id': objectId(user_id) }).forEach(function (doc, err) {
 				assert.equal(null, err);
 				user.push(doc);
-				console.log("RESULT: Name: " + doc.usr_name);
+				console.log("\nRESULT Name: " + doc.usr_name);
 			}, function () {
 				client.close();
-				console.log("\nfn_Helper : db search complete. " + user.length + " matches found\n");
+				console.log("fn_Helper : db search complete. " + user.length + " matches found\n");
 				callback(user[0]);
 			});
 		});
