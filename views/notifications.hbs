@@ -18,6 +18,16 @@
 				aria-controls="profile_view" aria-selected="false">Profile Views &nbsp<span
 					class="badge badge-light">{{notifications.num_view}}</span></a>
 		</li>
+		<li class="nav-item">
+			<a class="nav-link" id="unfriended-tab" data-toggle="tab" href="#unfriended" role="tab"
+				aria-controls="unfriended" aria-selected="false">unfriended &nbsp<span
+					class="badge badge-light">{{notifications.num_view}}</span></a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" id="like_back-tab" data-toggle="tab" href="#like_back" role="tab"
+				aria-controls="like_back" aria-selected="false">like_back &nbsp<span
+					class="badge badge-light">{{notifications.num_view}}</span></a>
+		</li>
 	</ul>
 
 	<div class="tab-content">
@@ -61,19 +71,49 @@
 		<div class="tab-pane" id="profile_view" role="tabpanel" aria-labelledby="profile_view-tab">
 			<h5 class="text-center">Profile Views</h5>
 			{{#each notifications}}
-			{{#if this.profile}}
-			<form action="/notifications" method="post">
-				<button type="submit" name="type" value="view profile" class="btn">x</button>
-				<div>
-					<img src="{{this.pic}}" width="150px" height="150px" alt="">
-					<input type="hidden" name="user" value={{this.from}}>
-					<div class="">{{this.name}}</div>
-				</div>
-				<div>
-					<button type="submit" name="type" value="view profile" class="btn btn-success">View</button>
-				</div>
-			</form>
-			{{/if}}
+				{{#if this.profile}}
+					<form action="/notifications" method="post">
+						<button type="submit" name="type" value="view profile" class="btn">x</button>
+						<div>
+							<img src="{{this.pic}}" width="150px" height="150px" alt="">
+							<input type="hidden" name="user" value={{this.from}}>
+							<div class="">{{this.name}}</div>
+						</div>
+						<div>
+							<button type="submit" name="type" value="view profile" class="btn btn-success">View</button>
+						</div>
+					</form>
+				{{/if}}
+			{{/each}}
+		</div>
+		<div class="tab-pane" id="unfriended" role="tabpanel" aria-labelledby="unfriended-tab">
+			<h5 class="text-center">Unfriended</h5>
+			{{#each notifications}}
+				{{#if this.reject}}
+					<form action="/notifications" method="post">
+						<button type="submit" name="type" value="unfriended" class="btn">x</button>
+						<div>
+							<img src="{{this.pic}}" width="150px" height="150px" alt="">
+							<input type="hidden" name="user" value={{this.from}}>
+							<div class="">{{this.name}}</div>
+						</div>
+					</form>
+				{{/if}}
+			{{/each}}
+		</div>
+		<div class="tab-pane" id="like_back" role="tabpanel" aria-labelledby="like_back-tab">
+			<h5 class="text-center">People who like you back</h5>
+			{{#each notifications}}
+				{{#if this.like_back}}
+					<form action="/notifications" method="post">
+						<button type="submit" name="type" value="like_back" class="btn">x</button>
+						<div>
+							<img src="{{this.pic}}" width="150px" height="150px" alt="">
+							<input type="hidden" name="user" value={{this.from}}>
+							<div class="">{{this.name}}</div>
+						</div>
+					</form>
+				{{/if}}
 			{{/each}}
 		</div>
 	</div>
