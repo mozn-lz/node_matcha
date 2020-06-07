@@ -27,6 +27,7 @@ var searchRouter = require('./routes/search');
 var friendsRouter = require('./routes/friends');
 var notificationsRouter = require('./routes/notifications');
 var notifyRouter = require('./routes/notify');
+var view_message_service = require('./routes/view_message_service');
 
 var app = express();
 
@@ -64,6 +65,7 @@ app.use('/search', searchRouter);
 app.use('/friends', friendsRouter);
 app.use('/notifications', notificationsRouter);
 app.use('/notify', notifyRouter);
+app.use('/view_message_service', view_message_service);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

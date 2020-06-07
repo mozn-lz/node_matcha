@@ -1,173 +1,18 @@
 <link rel='stylesheet' href='/stylesheets/view_messages.css' />
 
 <div id="chat">
-	<div>
-		{{!-- {{chat_data.usr_user}}
-		{{chat_data.usr_email}}
-		{{chat_data.usr_name}}
-		{{chat_data.usr_surname}}
-		{{chat_data.usr_psswd}}
-		{{chat_data.login_time}}
-		{{chat_data.pic}}
-		{{chat_data.age}}
-		{{chat_data.gender}}
-		{{chat_data.oriantation}}
-		{{chat_data.rating}}
-		{{chat_data.bio}}
-		{{chat_data.intrests}}
-		{{chat_data.gps}}
-		{{chat_data.liked}} --}}
-		{{!-- <div>
-		<div>
-			page: {{page}}
-		</div>
-		<div>
-			<h2>user</h2>
-			<div>{{user._id}}</div>
-			<div>{{user.usr_user}}</div>
-			<div>{{user.usr_email}}</div>
-			<div>{{user.usr_name}}</div>
-			<div>{{user.usr_surname}}</div>
-			<div>{{user.usr_psswd}}</div>
-			<div>{{user.login_time}}</div>
-			<div>{{user.pic}}</div>
-			<div>{{user.age}}</div>
-			<div>{{user.gender}}</div>
-			<div>{{user.oriantation}}</div>
-			<div>{{user.rating}}</div>
-			<div>{{user.bio}}</div>
-			<div>{{user.intrests}}</div>
-			<div>{{user.gps}}</div>
-			<div>{{user.liked}}</div>
-		</div>
-		<div>
-			<h2>friend</h2>
-			<div>{{friend._id}}</div>
-			<div>{{friend.usr_user}}</div>
-			<div>{{friend.usr_email}}</div>
-			<div>{{friend.usr_name}}</div>
-			<div>{{friend.usr_surname}}</div>
-			<div>{{friend.usr_psswd}}</div>
-			<div>{{friend.login_time}}</div>
-			<div>{{friend.pic}}</div>
-			<div>{{friend.age}}</div>
-			<div>{{friend.gender}}</div>
-			<div>{{friend.oriantation}}</div>
-			<div>{{friend.rating}}</div>
-			<div>{{friend.bio}}</div>
-			<div>{{friend.intrests}}</div>
-			<div>{{friend.gps}}</div>
-			<div>{{friend.liked}}</div>
-		</div>
-		<div>
-			<h2>texts</h2>
-			{{text.message}}
-		</div>
-	</div> --}}
-	</div>
-
 	<div id="display-chat">
 
 		<div id="title">
 			<h2>{{friend.usr_user}}</h2>
 		</div>
-		<div id="message-body">
-			{{#each texts.message}}
-			{{#if this.me}}
-			<div class="message-container">
-				<div class="message">
-					{{message}}
-				</div>
-				<div class="about">
-					<div class="sender d-inline text-muted"><b>{{this.from}}</b> at </div>
-					<div class="message_time d-inline text-muted">{{this.time}}</div>
-				</div>
-			</div>
-			{{else}}
-			<div class="message-container right">
-				<div class="message">
-					{{message}}
-				</div>
-				<div class="about">
-					<div class="sender d-inline text-muted"><b>{{this.from}}</b> at </div>
-					<div class="message_time d-inline text-muted">{{this.time}}</div>
-				</div>
-			</div>
-			{{/if}}
-			{{user.usr_user}}
-			{{friend.usr_user}}
-			{{/each}}
-		</div>
-		{{!-- <div class="message-container right">
-			<div class="message">
-				{{message}}
-			</div>
-			<div class="about">
-				<div class="sender d-inline text-muted"><b>friend{{sender}}</b> at </div>
-				<div class="message_time d-inline text-muted">08:15{{time}}</div>
-			</div>
-		</div>
-		<div class="message-container">
-			<div class="message">
-				{{message}}
-			</div>
-			<div class="about">
-				<div class="sender d-inline text-muted"><b>you{{sender}}</b> at </div>
-				<div class="message_time d-inline text-muted">08:35{{this.time}}</div>
-			</div>
-		</div> --}}
-
-
-		{{!-- <div class="message-container right">
-			<div class="message">
-				Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat, veritatis. Cupiditate maxime eum
-				accusantium eligendi, odio officia unde soluta? Laudantium eum, deleniti ea sed voluptatum quae aperiam
-				veritatis neque accusantium.
-			</div>
-			<div class="about">
-				<div class="sender d-inline text-muted"><b>{{chat_data.usr_user}}</b> at </div>
-				<div class="message_time d-inline text-muted">08:15</div>
-			</div>
-		</div>
-		<div class="message-container">
-			<div class="message">
-				Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat, veritatis. Cupiditate maxime eum
-				accusantium eligendi, odio officia unde soluta? Laudantium eum, deleniti ea sed voluptatum quae aperiam
-				veritatis neque accusantium.
-			</div>
-			<div class="about">
-				<div class="sender d-inline text-muted"><b>you</b> at </div>
-				<div class="message_time d-inline text-muted">08:35</div>
-			</div>
-		</div> --}}
-		{{!-- <div class="message-container right">
-			<div class="message">
-				Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat, veritatis. Cupiditate maxime eum
-				accusantium eligendi, odio officia unde soluta? Laudantium eum, deleniti ea sed voluptatum quae aperiam
-				veritatis neque accusantium.
-			</div>
-			<div class="about">
-				<div class="sender d-inline text-muted"><b>{{chat_data.usr_user}}</b> at </div>
-				<div class="message_time d-inline text-muted">08:15</div>
-			</div>
-		</div>
-		<div class="message-container right">
-			<div class="message">
-				Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate optio voluptatibus quam eius nemo
-				praesentium nulla reiciendis minus quia repudiandae sequi non nobis quas, exercitationem aut saepe
-				consequatur repellat repellendus?
-			</div>
-			<div class="about">
-				<div class="sender d-inline text-muted"><b>{{chat_data.usr_user}}</b> at </div>
-				<div class="message_time d-inline text-muted">08:15</div>
-			</div>
-		</div> --}}
+		<div id="message-body"></div>	
 		<div class="panel-footer">
 			<a href="/view_profile/{{this._id}}">
 			</a>
 			<form action="/sendMessage" method="post">
 				<div class="input-group">
-					<input type="hidden" name="dest" value="{{friend._id}}">
+					<input type="hidden" name="dest" id="chat_friend"value="{{friend._id}}">
 					<input id="btn-input" type="text" name="text" class="form-control input-sm chat_input"
 						placeholder="Write your message here..." />
 					<span class="input-group-btn">

@@ -8,8 +8,6 @@ var helper = require('./helper_functions'); // Helper functions Mk
 const url = 'mongodb://localhost:27017';	// Database Address
 const dbName = 'mk_matcha';					// Database Name
 
-// (req.session.uid) ? helper.logTme : 0;	//	update last online
-
 var page_name = 'messages';
 
 let render_messages = (res, res_arr, find_user, msg_arr) => {
@@ -17,7 +15,6 @@ let render_messages = (res, res_arr, find_user, msg_arr) => {
 	console.log("res_arr.length: ", res_arr.length);
 	if (find_user.length > 0) {
 		console.log('res_arr: ');
-		// client.close();
 		console.log('find_user: ');
 
 		console.log('Rendering messages');
@@ -58,10 +55,9 @@ fn_render_messages = (req, res, next, msg) => {
 				console.log(doc, "\n");
 
 				console.log("\t\t Partner ID: ", doc.partner);
-			}, (callback) => {
-				// user_data = res_arr;
+			}, () => {
 				let user_data = [res_arr.length];
-				console.log('Number of conversations: ', res_arr.length, '\n');
+				console.log('Number of conversations: ', res_arr.length, `res_arr.length > 0: ${res_arr.length > 0}`, '\n');
 				if (res_arr.length > 0) {
 					console.log('\tConversations found');
 					for (let i = 0; i < res_arr.length; i++) {
@@ -69,17 +65,18 @@ fn_render_messages = (req, res, next, msg) => {
 							assert.equal(null, err);
 							if (docs.usr_user && docs._id) {
 								find_user.push(docs);
-								console.log(i, `. doc.push: `, docs.usr_user, `(ID: `, docs._id, `)`);
+								console.log(`${i} doc.push:  ${docs.usr_user} (ID:  ${docs._id} )`);
 							}
 						});
 					}
-					render_messages(res,res_arr, find_user, msg_arr);
+					setTimeout(() => {
+						client.close();
+						render_messages(res, res_arr, find_user, msg_arr);
+					}, 1000);
 				} else {
-					console.log('No mesasages, redirecting to home');
+					console.log(`No mesasages (${res_arr.length}), redirecting to home`);
 					res.redirect('/index/' + 'pass_errYou dont have any messages yet');
 				}
-				// setTimeout(() => {
-				// }, 1000);
 			});
 		});
 	} else {

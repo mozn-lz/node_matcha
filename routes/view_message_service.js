@@ -8,69 +8,65 @@ var helper = require('./helper_functions'); // Helper functions Mk
 
 const url = 'mongodb://localhost:27017';	// Database(mongo) url
 const dbName = 'mk_matcha';		// Database Name
-const page_name = 'View Messages';		// page name
+const page_name = 'View_Message_Service';		// page name
 
 let chatFriendId = null;
 
-renderPage = (res, req, user, friend, data) => {
+let send_chat_messages = (res, req, user, friend, chat_messages) => {
 	console.log('\n\t________ Rendering Page ________\n');
 
-	if (req.session.uid) {
-		(user == null) ? console.log('\t\tuser not found\n') : console.log('\t\tRen.user found\n');
-		(friend == null) ? console.log('\t\tfrnd not found\n') : console.log('\t\tRen.frnd found\n');
-		(data == null) ? console.log('\t\tdata not found\n') : console.log('\t\tRen.data found\n');
-		if (user != null && friend != null) {
-			console.log('friend ', friend.usr_user);
-			if (data) {
-				for (let i = 0; i < data.message.length; i++) {
-					if (data.message[i].from == req.session.uid) {
-						data.message[i].me = true;
-						data.message[i].from = user.usr_user;
-					} else {
-						data.message[i].me = false;
-						data.message[i].from = friend.usr_user;
-					}
-					console.log('dt1: ', data.message[i].time);
-					console.log('dt2: ', (new Date(data.message[i].time).getHours()).toString(), ':', (new Date(data.message[i].time).getMinutes()).toString(), ' ', (new Date(data.message[i].time).getDate()).toString(), '/', (new Date(data.message[i].time).getMonth()).toString(), '/', (new Date(data.message[i].time).getFullYear()).toString());
-					// data.message[i].time = (new Date(data.message[i].time).getHours()).toString() + ':' + (new Date(data.message[i].time).getMinutes()).toString() + ' ', + (new Date(data.message[i].time).getDate()).toString() + '/', + (new Date(data.message[i].time).getMonth()).toString() + '/' + (new Date(data.message[i].time).getFullYear()).toString();
-					data.message[i].time = new Date(data.message[i].time);
+	(user == null) ? console.log('\t\tuser not found\n') : console.log('\t\tRen.user found\n');
+	(friend == null) ? console.log('\t\tfrnd not found\n') : console.log('\t\tRen.frnd found\n');
+	(chat_messages == null) ? console.log('\t\tdata not found\n') : console.log('\t\tRen.data found\n');
+	if (user != null && friend != null) {
+		console.log('friend ', friend.usr_user);
+		if (chat_messages) {
+			for (let i = 0; i < chat_messages.message.length; i++) {
+				if (chat_messages.message[i].from == req.session.uid) {
+					chat_messages.message[i].me = true;
+					chat_messages.message[i].from = user.usr_user;
+				} else {
+					chat_messages.message[i].me = false;
+					chat_messages.message[i].from = friend.usr_user;
 				}
+				console.log('dt1: ', chat_messages.message[i].time);
+				console.log('dt2: ', (new Date(chat_messages.message[i].time).getHours()).toString(), ':', (new Date(chat_messages.message[i].time).getMinutes()).toString(), ' ', (new Date(chat_messages.message[i].time).getDate()).toString(), '/', (new Date(chat_messages.message[i].time).getMonth()).toString(), '/', (new Date(chat_messages.message[i].time).getFullYear()).toString());
+				chat_messages.message[i].time = new Date(chat_messages.message[i].time);
 			}
-			res.render('view_messages', {
-				page: 'View Messages',
-				user: user,
-				friend: friend,
-				texts: data
-			});
-		} else {
-			console.log("user or (and) friend are empty");
-			res.redirect('/view_messages/' + chatFriendId);		//	self dos attack
 		}
+		// console.log('chat_messages ', chat_messages);
+		setTimeout(() => {
+			console.log('sending chat_messages');
+			res.send(chat_messages);
+		}, 1000);
 	} else {
-		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
+		console.log("user or (and) friend are empty");
+		// res.redirect('/view_messages/' + chatFriendId);		//	self dos attack
 	}
 }
 
-/* GET view_messages listing. */
-router.get('/', function (req, res, next) {
-	res.redirect('/index/' + 'pass_errPlease select someone to send a message to');
-	// renderPage(res, req, '', '', '');
-});
-
-router.get('/:user', function (req, res, next) {
-	chatFriendId = req.params.user;
+router.get('/:friend', function (req, res, next) {
+	chatFriendId = req.params.friend;
 	console.log('\n\n\n\n\n\n\t\t\tWelcome to ', page_name, '\n\n\n');
-
+	console.log ('friend: ', req.params.friend);
 	if (req.session.uid) {
 		MongoClient.connect(url, function (err, client) {
 			assert.equal(null, err);
 			const db = client.db(dbName);
-	
+
 			let user, friend, texts;
-	
+
 			console.log("0. user ", req.session.uid);
 			console.log("0. fridend ", chatFriendId);
-	
+
+			// Remove notification
+// const collection = client.db(dbName).collection('users');
+// collection.updateOne({ '_id': objectId(req.session.uid) }, {
+// 	$pull: {		//	remove 'this' notification
+// 		'notifications': { 'from': chatFriendId, 'type': 'send message' }
+// 	}
+// });
+
 			let get_chat = db.collection('chats').find({ 'user_id': req.session.uid, 'partner': chatFriendId }).forEach(function (doc, err) {
 				assert.equal(null, err);
 				texts = doc;
@@ -85,16 +81,16 @@ router.get('/:user', function (req, res, next) {
 					console.log('user: ', user.friends.includes(friend._id));
 					console.log('friend: ', friend.friends.includes(user._id));
 					if (
-						(user != null && (user.friends.includes(chatFriendId) )) &&
-						(friend != null && (friend.friends.includes(req.session.uid) ))
+						(user != null && (user.friends.includes(chatFriendId))) &&
+						(friend != null && (friend.friends.includes(req.session.uid)))
 					) {
-						renderPage(res, req, user, friend, texts);
+						send_chat_messages(res, req, user, friend, texts);
 					} else {
 						res.redirect('/index/' + 'pass_errYou can only send messages to friends');
 					}
 				}, 1500);
 			});
-	
+
 			let get_friend = helper.findUserById(chatFriendId, (find_friend) => {
 				console.log('2. GET FRIEND ');
 				if (find_friend) {
@@ -106,7 +102,7 @@ router.get('/:user', function (req, res, next) {
 					friend = null;
 				}
 			}, get_chat);
-	
+
 			let get_user = helper.findUserById(req.session.uid, (find_user) => {
 				console.log('1. GET USER');
 				if (find_user) {

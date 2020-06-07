@@ -27,7 +27,8 @@ router.post('/', function (req, res, next) {
 	let message_details = {
 		from: senderId,
 		time: Date.now(),
-		message: text
+		message: text,
+		me : true
 	};
 
 	console.log("\n\n\t************Send Message(N/A)************\n\n");
@@ -52,7 +53,6 @@ router.post('/', function (req, res, next) {
 			if (senderId && recipiantId) {
 				helper.findUserById(recipiantId, (isfriend) => {
 					if (isfriend.friends.includes(senderId) && !isfriend.blocked.includes(senderId)) {
-						message_details.me = true;
 						(() => {
 							usersCollection.updateOne({ '_id': objectId(recipiantId) }, {	// send norification to 'friend'
 								$addToSet: {
@@ -65,7 +65,12 @@ router.post('/', function (req, res, next) {
 							'partner': recipiantId
 						}, {
 							$addToSet: {
-								'message': message_details
+								'message': {
+									from: senderId,
+									time: Date.now(),
+									message: text,
+									me : true
+								}
 							}
 						}, {
 							upsert: true
@@ -83,7 +88,12 @@ router.post('/', function (req, res, next) {
 							'partner': senderId
 						}, {
 							$addToSet: {
-								'message': message_details
+								'message': {
+									from: senderId,
+									time: Date.now(),
+									message: text,
+									me : false
+								}
 							}
 						}, {
 							upsert: true
