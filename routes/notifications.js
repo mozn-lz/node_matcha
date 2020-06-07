@@ -228,7 +228,7 @@ router.post('/', (req, res, next) => {
 		}
 
 		if (req.body.type == 'view profile') {
-			remove_notification('/view_profile/' + friendId, fn_redirect);
+			remove_notification('/notifications/', fn_redirect);
 		} else if (req.body.type == 'send message') {
 			remove_notification('/view_messages/' + friendId, fn_redirect)
 		} else if (req.body.type == 'friend request') {
