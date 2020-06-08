@@ -48,7 +48,7 @@ let send_chat_messages = (res, req, user, friend, chat_messages) => {
 router.get('/:friend', function (req, res, next) {
 	chatFriendId = req.params.friend;
 	console.log('\n\n\n\n\n\n\t\t\tWelcome to ', page_name, '\n\n\n');
-	console.log ('friend: ', req.params.friend);
+	console.log('friend: ', req.params.friend);
 	if (req.session.uid) {
 		MongoClient.connect(url, function (err, client) {
 			assert.equal(null, err);
@@ -60,12 +60,12 @@ router.get('/:friend', function (req, res, next) {
 			console.log("0. fridend ", chatFriendId);
 
 			// Remove notification
-// const collection = client.db(dbName).collection('users');
-// collection.updateOne({ '_id': objectId(req.session.uid) }, {
-// 	$pull: {		//	remove 'this' notification
-// 		'notifications': { 'from': chatFriendId, 'type': 'send message' }
-// 	}
-// });
+			const collection = client.db(dbName).collection('users');
+			collection.updateOne({ '_id': objectId(req.session.uid) }, {
+				$pull: {		//	remove 'this' notification
+					'notifications': { 'from': chatFriendId, 'type': 'send message' }
+				}
+			});
 
 			let get_chat = db.collection('chats').find({ 'user_id': req.session.uid, 'partner': chatFriendId }).forEach(function (doc, err) {
 				assert.equal(null, err);
