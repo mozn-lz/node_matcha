@@ -73,7 +73,7 @@
 			{{#each notifications}}
 				{{#if this.profile}}
 					<form action="/notifications" method="post">
-						<button type="submit" name="type" value="view profile" class="btn">x</button>
+						<button type="submit" name="type" value="view_profile" class="btn">x</button>
 						<div>
 							<img src="{{this.pic}}" width="150px" height="150px" alt="">
 							<input type="hidden" name="user" value={{this.from}}>
@@ -106,7 +106,7 @@
 			{{#each notifications}}
 				{{#if this.like_back}}
 					<form action="/notifications" method="post">
-						<button type="submit" name="type" value="like_back" class="btn">x</button>
+						<button type="submit" name="type" value="like back" class="btn">x</button>
 						<div>
 							<img src="{{this.pic}}" width="150px" height="150px" alt="">
 							<input type="hidden" name="user" value={{this.from}}>

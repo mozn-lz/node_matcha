@@ -15,26 +15,24 @@
 	{{#if friends}}
 	{{#each friends}}
 	<a href="/view_profile/{{this._id}}">
-	<form action="/friends" method="post">
-	<input type="hidden" name="friend" value="{{this._id}}">
-	<button type="submit">x</button>
-	</form>
-		<div class="users row" onclick="goViewProfile(`{{this._id}}`)">
-			<div class="left "><img
-					src={{this.profile}}
-					alt="Profile Picture" width="150px" height="150px"></div>
-			<div class="card" style="width: 18rem;">
-				<div class="card-body">
-					<h5 class="card-title">{{this.usr_user}}</h5>
-					<h6 class="card-subtitle mb-2 text-muted">{{this.usr_name}} &nbsp; {{this.usr_surname}}</h6>
-					<p class="card-text">
-						Bio: {{this.bio}}
-					</p>
-					<a href="/view_messages/{{this._id}}" class="card-link btn btn-info">Send Message</a>
+		<form action="/friends" method="post">
+			<input type="hidden" name="friend" value="{{this._id}}">
+			<button type="submit" value="remove_friend">x</button>
+			<div class="users row" onclick="goViewProfile(`{{this._id}}`)">
+				<div class="left "><img src={{this.profile}} alt="Profile Picture" width="150px" height="150px"></div>
+				<div class="card" style="width: 18rem;">
+					<div class="card-body">
+						<h5 class="card-title">{{this.usr_user}}</h5>
+						<h6 class="card-subtitle mb-2 text-muted">{{this.usr_name}} &nbsp; {{this.usr_surname}}</h6>
+						<p class="card-text">
+							Bio: {{this.bio}}
+						</p>
+						<a href="/view_messages/{{this._id}}" class="card-link btn btn-info">Send Message</a>
+					</div>
 				</div>
+				<div class="right ">{{this.rating}}/5</div>
 			</div>
-			<div class="right ">4{{this.rating}}/5</div>
-		</div>
+		</form>
 	</a>
 	{{/each}}
 	{{else}}
