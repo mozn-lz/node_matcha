@@ -114,20 +114,14 @@ module.exports = {
 	// },
 
 	sendMail: (from, to, subject, message, callback) => {
-		//email Sender
-		// var transporter = nodemailer.createTransport({
-		// 	service: 'gmail',
-		// 	auth: {
-		// 		user: 'unathinkomo16@gmail.com',
-		// 		pass: '0786324448'
-		// 	}
-		// });
+		let email ='unathinkomo16@gmail.com';
+		let pass ='0786324448';
 
 		const mailCredentials = {
-			user: 'mozn.lozn2000@gmail.com',
-			pass: 'm0zzy10zzy'
+			user: email,
+			pass: pass
 		}
-		if (from === '') from = 'mozn.lozn2000@gmail.com';
+		if (from === '') from = email;
 
 		console.log('___fn_Mail___\nfrom: ', from, '\nto: ', to, '\nsubject:', subject, '\nmessage: ', message);
 
@@ -276,7 +270,7 @@ module.exports = {
 		console.log('\n\n_____filter_tags_____');
 		let result = [];
 
-		(typeof(tags) == "string") ? tags = [tags] : 0;	//	convert string to object
+		(typeof (tags) == "string") ? tags = [tags] : 0;	//	convert string to object
 
 		for (let i = 0; i < tags.length; i++) {
 			for (let j = 0; j < matches.length; j++) {

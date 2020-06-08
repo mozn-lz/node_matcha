@@ -5,7 +5,6 @@ const objectId = require('mongodb').ObjectID;
 const assert = require('assert');
 
 const helper = require('./helper_functions'); // Helper functions Mk
-const message_helper = require('./Helper_messages');
 
 const url = 'mongodb://localhost:27017';	// Database Address
 const dbName = 'mk_matcha';;					// Database Name
