@@ -1,13 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
-const objectId = require('mongodb').ObjectID;
-const assert = require('assert');
+let objectId = require('mongodb').ObjectID;
 
 const helper = require('./helper_functions'); // Helper functions Mk
+const helper_db = require('./helper_db'); // Helper functions Mk
 
-const url = 'mongodb://localhost:27017';	// Database Address
-const dbName = 'mk_matcha';;					// Database Name
 
 router.get('/', function (req, res) {
 	let page_name = 'notify';
@@ -15,14 +12,8 @@ router.get('/', function (req, res) {
 		let notifications = '';
 		usersArray = [];
 
-		MongoClient.connect(url, (err, client) => {
-			const collection = client.db(dbName).collection('users');
-			assert.equal(err, null);
-			let time = Date.now();
-			collection.updateOne({ '_id': objectId(usersArray._id) }, {
-				$set: { login_time: time }
-			}, () => client.close());
-		});
+		let time = Date.now();
+		helper_db.db_update('', 'users', { '_id': objectId(usersArray._id) }, { $set: { login_time: time } }, () => {});
 
 		helper.findUserById(req.session.uid, (usersArray) => {
 			if (usersArray) {
@@ -50,16 +41,8 @@ router.post('/', (req, res) => {
 		location.timezone = data.timezone;
 		console.log('\t\t Location* ', location);
 		req.session.gps = location;
-		MongoClient.connect(url, (err, client) => {
-			assert.equal(null, err);
-			client.db(dbName).collection('users').updateOne({
-				'_id': objectId(req.session.uid)
-			}, {
-				$set: {
-					'gps': location
-				}
-			})
-		});
+
+		helper_db.db_update('', 'users', { '_id': objectId(req.session.uid) }, { $set: { 'gps': location } }, () => { });
 	} else
 		console.log('body not found');
 });

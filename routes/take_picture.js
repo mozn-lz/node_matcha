@@ -1,11 +1,10 @@
-var express = require('express');
-var router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
-const objectId = require('mongodb').ObjectID;
-const assert = require('assert');
+const express = require('express');
+const router = express.Router();
+let objectId = require('mongodb').ObjectID;
 
-const url = 'mongodb://localhost:27017';
-const dbName = 'mk_matcha';
+var helper = require('./helper_functions'); // Helper functions Mk
+var helper_db = require('./helper_db'); // Helper functions Mk
+
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
@@ -19,27 +18,16 @@ router.get('/', function (req, res, next) {
 	let result = [];
 
 	if (req.session.uid) {
-		MongoClient.connect(url, (err, client) => {
+		helper_db.db_read('', 'users', { '_id': objectId(req.session.uid) }, result => {
+			if (result.length == 1) {
+				// console.log(result[0].picture);
 
-			const db = client.db(dbName);
-			const collection = db.collection('users');
-			assert.equal(null, err);
-			collection.find({ '_id': objectId(req.session.uid) }).forEach((doc, err) => {
-				assert.equal(null, err);
-				result.push(doc);
-				// console.log(doc);
-			}, () => {
-				if (result.length == 1) {
-					client.close();
-					// console.log(result[0].picture);
-
-					res.render('take_picture', {
-						page: page_name,
-						pic: result[0].picture,
-						profile: result[0].profile
-					});
-				}
-			});
+				res.render('take_picture', {
+					page: page_name,
+					pic: result[0].picture,
+					profile: result[0].profile
+				});
+			}
 		});
 	} else {
 		res.redirect('/login/pass_errYou have to be logged in to take or upload pictures');
@@ -61,73 +49,48 @@ router.post('/', upload.single('profilePciture'), (req, res, next) => {
 		console.log('req.body.change: ', req.body.change);
 		console.log('req.body.delete: ', req.body.delete);
 		console.log('req.body.cancel: ', req.body.cancel);
-		MongoClient.connect(url, (err, client) => {
-			const db = client.db(dbName);
-			assert.equal(null, err);
-			console.log('\n\t\t3\n');
-			const collection = db.collection('users');
+		console.log('\n\t\t3\n');
 
-			let userObj = [];
-			let picNum = 0;
-			collection.find({ '_id': objectId(req.session.uid) }).forEach((doc, err) => {
-				userObj.push(doc);
-			}, () => {
-				(userObj[0].picture) ? picNum = userObj[0].picture.length : 0;
-				// setTimeout(() => {
-					if (req.body.save == 'save') {
-						console.log('picNum: ', picNum);
-						
-						if (picNum < 5) {
-							console.log('\n\t\t4. Saving new picture\n');
-							collection.updateOne({ '_id': objectId(req.session.uid) }, {
-								$addToSet: { 'picture': pic }
-							}, () => {
-								assert.equal(null, err);
-								client.close();
-								console.log('redirecting to profile page');
-								res.redirect('/take_picture');
-							});
-						} else {
-							console.log('Too many pictures');
-							res.redirect('/take_picture');
-						}
-					} else if (req.body.change == 'change') {
-						if (pic.length > 20) {
-							console.log('\t\tpic: ', pic)
-							console.log('\n\t\t4. Changing profile picture\n');
-							collection.updateOne({
-								'_id': objectId(req.session.uid)
-							}, {
-								$set: { 'profile': pic }
-							}, () => {
-								assert.equal(null, err);
-								client.close();
-								res.redirect('/take_picture');
-								// res.redirect('/profile');
-							});
-						} else {
-							console.log('\t\tNo picture\n');
-							res.redirect('/take_picture');
-						}
-					} else if (req.body.delete == 'delete') {
-						console.log('\n\t\t4. Deleting Picture\n');
-						collection.updateOne({
-							'_id': objectId(req.session.uid)
-						}, {
-							$pull:
-								{ 'picture': pic }
-						}, () => {
-							assert.equal(null, err);
-							client.close();
-							res.redirect('/take_picture');
-							// res.redirect('/profile');
-						});
-					} else if (req.body.cancel == 'cancel') {
-						console.log('\n\t\t5\n');
+		let picNum = 0;
+		helper_db.db_read('', 'users', { '_id': objectId(req.session.uid) }, user => {
+			(user[0].picture) ? picNum = user[0].picture.length : 0;
+			// setTimeout(() => {
+			if (req.body.save == 'save') {
+				console.log('picNum: ', picNum);
+
+				if (picNum < 5) {
+					console.log('\n\t\t4. Saving new picture\n');
+					helper_db.db_update('', 'users', { '_id': objectId(req.session.uid) }, { $addToSet: { 'picture': pic } }, () => {
+						console.log('redirecting to profile page');
 						res.redirect('/take_picture');
-					}
-				// }, 1000);
-			});
+					});
+				} else {
+					console.log('Too many pictures');
+					res.redirect('/take_picture');
+				}
+			} else if (req.body.change == 'change') {
+				if (pic.length > 20) {
+					console.log('\t\tpic: ', pic)
+					console.log('\n\t\t4. Changing profile picture\n');
+					helper_db.db_update('', 'users', { '_id': objectId(req.session.uid) }, { $set: { 'profile': pic } }, () => {
+						res.redirect('/take_picture');
+						// res.redirect('/profile');
+					});
+				} else {
+					console.log('\t\tNo picture\n');
+					res.redirect('/take_picture');
+				}
+			} else if (req.body.delete == 'delete') {
+				console.log('\n\t\t4. Deleting Picture\n');
+				helper_db.db_update('', 'users', { '_id': objectId(req.session.uid) }, { $pull: { 'picture': pic } }, () => {
+					res.redirect('/take_picture');
+					// res.redirect('/profile');
+				});
+			} else if (req.body.cancel == 'cancel') {
+				console.log('\n\t\t5\n');
+				res.redirect('/take_picture');
+			}
+			// }, 1000);
 
 		});
 	} else {

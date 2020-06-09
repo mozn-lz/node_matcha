@@ -1,12 +1,9 @@
-var express = require('express');
-var router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
-const objectId = require('mongodb').ObjectID;
-const assert = require('assert');
-var helper = require('./helper_functions'); // Helper functions Mk
+const express = require('express');
+const router = express.Router();
+let objectId = require('mongodb').ObjectID;
 
-const url = 'mongodb://localhost:27017';	// Database Address
-const dbName = 'mk_matcha';					// Database Name
+const helper = require('./helper_functions'); // Helper functions Mk
+const helper_db = require('./helper_db'); // Helper functions Mk
 
 var page_name = 'messages';
 
@@ -35,49 +32,37 @@ fn_render_messages = (req, res, next, msg) => {
 	var session_variable = req.session.uid;	// Variable for user session
 	if (session_variable) {
 		console.log('session_variable: ' + session_variable);
+		var res_arr = [];
+		let find_user = [];
 
-		MongoClient.connect(url, function (err, client) {
-			assert.equal(null, err);
+		var msg_arr = [];
+		(msg.search('pass_err') == 0) ? pass_er = "danger" : pass_er = '';
+		(msg.search('pass_suc') == 0) ? pass_suc = "success" : pass_suc = '';
+		msg_arr = msg.slice(8).split(",");
+		console.log('msg_arr: ' + msg_arr);
 
-			const db = client.db(dbName);
-			var res_arr = [];
-			let find_user = [];
-
-			var msg_arr = [];
-			(msg.search('pass_err') == 0) ? pass_er = "danger" : pass_er = '';
-			(msg.search('pass_suc') == 0) ? pass_suc = "success" : pass_suc = '';
-			msg_arr = msg.slice(8).split(",");
-			console.log('msg_arr: ' + msg_arr);
-
-			db.collection('chats').find({ 'user_id': req.session.uid }).forEach(function (doc, err) {
-				assert.equal(null, err);
-				res_arr.push(doc);
-				console.log(doc, "\n");
-
-				console.log("\t\t Partner ID: ", doc.partner);
-			}, () => {
-				let user_data = [res_arr.length];
-				console.log('Number of conversations: ', res_arr.length, `res_arr.length > 0: ${res_arr.length > 0}`, '\n');
-				if (res_arr.length > 0) {
-					console.log('\tConversations found');
-					for (let i = 0; i < res_arr.length; i++) {
-						db.collection('users').find({ '_id': objectId(res_arr[i].partner) }).forEach(function (docs, err) {
-							assert.equal(null, err);
-							if (docs.usr_user && docs._id) {
-								find_user.push(docs);
-								console.log(`${i} doc.push:  ${docs.usr_user} (ID:  ${docs._id} )`);
-							}
-						});
-					}
-					setTimeout(() => {
-						client.close();
-						render_messages(res, res_arr, find_user, msg_arr);
-					}, 1000);
-				} else {
-					console.log(`No mesasages (${res_arr.length}), redirecting to home`);
-					res.redirect('/index/' + 'pass_errYou dont have any messages yet');
+		helper_db.db_read('', 'chats', { 'user_id': req.session.uid }, user => {
+			console.log('Number of conversations: ', user.length, `res_arr.length > 0: ${user.length > 0}`, '\n');
+			if (user.length > 0) {
+				console.log('\tConversations found');
+				for (let i = 0; i < user.length; i++) {
+					helper_db.db_read('', 'users', { '_id': objectId(user[i].partner) }, docs => {
+						// docs = find_user;
+						if (docs.length == 1) {
+							find_user.push(docs[0]);
+							console.log(`${i} doc.push:  ${docs[0].usr_user} (ID:  ${docs[0]._id} )`);
+						}
+					});
 				}
-			});
+				setTimeout(() => {
+					console.log('58: find_user: ', find_user.length);
+					console.log('59: res_arr: ', user.length);
+					render_messages(res, user, find_user, msg_arr);
+				}, 1000);
+			} else {
+				console.log(`No mesasages (${user.length}), redirecting to home`);
+				res.redirect('/index/' + 'pass_errYou dont have any messages yet');
+			}
 		});
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');

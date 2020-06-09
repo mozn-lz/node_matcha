@@ -1,14 +1,9 @@
-var express = require('express');
-var router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
+const express = require('express');
+const router = express.Router();
+
 var helper = require('./helper_functions'); // Helper functions Mk
-var helper_index = require('./helper_index'); // Helper functions Mk
+var helper_db = require('./helper_db'); // Helper functions Mk
 
-const url = 'mongodb://localhost:27017';	// Database Address
-const dbName = 'mk_matcha';					// Database Name
-
-// (req.session.uid) ? helper.logTme : 0;	//	update last online
 
 var page_name = 'search';
 let search = '';
@@ -46,15 +41,15 @@ function chk_intrests(chk_intrests) {
 	if (chk_intrests) {
 		console.log('chk_intrests ', chk_intrests);
 		console.log('chk_intrests ', chk_intrests.length);
-		(chk_intrests.includes('tatoo'))	 ? search_intrests.tatoo = 'tatoo'	  : console.log('Tatoo not foud');
-		(chk_intrests.includes('smoke'))	 ? search_intrests.smoke = 'smoke'	  : console.log('Smoke not foud');
-		(chk_intrests.includes('alcohol'))	 ? search_intrests.alcohol = 'alcohol'	  : console.log('Alcohol not foud');
-		(chk_intrests.includes('travel'))	 ? search_intrests.travel = 'travel'	  : console.log('Travel not foud');
-		(chk_intrests.includes('party'))	 ? search_intrests.party = 'party'	  : console.log('Party not foud');
-		(chk_intrests.includes('social'))	 ? search_intrests.social = 'social'	  : console.log('Social not foud');
+		(chk_intrests.includes('tatoo')) ? search_intrests.tatoo = 'tatoo' : console.log('Tatoo not foud');
+		(chk_intrests.includes('smoke')) ? search_intrests.smoke = 'smoke' : console.log('Smoke not foud');
+		(chk_intrests.includes('alcohol')) ? search_intrests.alcohol = 'alcohol' : console.log('Alcohol not foud');
+		(chk_intrests.includes('travel')) ? search_intrests.travel = 'travel' : console.log('Travel not foud');
+		(chk_intrests.includes('party')) ? search_intrests.party = 'party' : console.log('Party not foud');
+		(chk_intrests.includes('social')) ? search_intrests.social = 'social' : console.log('Social not foud');
 		(chk_intrests.includes('introvert')) ? search_intrests.introvert = 'introvert' : console.log('introvert not foud');
 		(chk_intrests.includes('excersise')) ? search_intrests.excersise = 'excersise' : console.log('Excersise not foud');
-		(chk_intrests.includes('sports'))	 ? search_intrests.sports = 'sports'	  : console.log('Sports not foud');
+		(chk_intrests.includes('sports')) ? search_intrests.sports = 'sports' : console.log('Sports not foud');
 		return (true);
 	} else {
 		return (false);
@@ -71,7 +66,7 @@ function check_location(chk_location) {
 let fn_render_search = (req, res, next, msg, matches) => {
 
 	console.log('req.session.uid ', req.session.uid);
-	console.log('\n\n\n________fn_render_search (',matches.length,')________\n');
+	console.log('\n\n\n________fn_render_search (', matches.length, ')________\n');
 	if (req.session.uid) {
 		// var res_arr = matches;
 		let res_arr = helper.sort_locate(matches, req.session.gps);
@@ -110,44 +105,39 @@ let fn_render_search = (req, res, next, msg, matches) => {
 var fn_getMatches = (req, res, next, msg) => {
 
 	console.log('\n\t\t1. msg: ', msg, '\n\n');
-	MongoClient.connect(url, function (err, client) {
-		assert.equal(null, err);
+	var find_user = [];
+	var user_matches = [];
 
-		const db = client.db(dbName);
-		var find_user = [];
-		var user_matches = [];
+	let search_criteria = [
+		{ 'gps.city': new RegExp(search) },
+		{ 'gps.country': new RegExp(search) },
+		{ usr_user: new RegExp(search) },
+		{ usr_name: new RegExp(search) },
+		{ usr_surname: new RegExp(search) }
+	];
 
-		let search_criteria = [
-			{'gps.city' : new RegExp(search)},
-			{'gps.country' : new RegExp(search)},
-			{usr_user : new RegExp(search)},
-			{usr_name : new RegExp(search)},
-			{usr_surname : new RegExp(search)}
-		];
-		
-		const collection = db.collection('users');
-		console.log(search_criteria);
+	console.log(search_criteria);
 
-		collection.find({ $or: search_criteria }, {search_extra}).forEach(function (doc, err) {
+	helper_db.db_read('', 'users', { $or: search_criteria, search_extra }, doc => {
+		for (let i = 0; i < doc.length; i++) {
 			if (search) {
 				assert.equal(null, err);
 				user_matches.push(doc);
 				console.log(doc);
 			}
-		}), (() => {
-			client.close();
-			console.log('\n\t\t3. msg(',user_matches.length,'): ', msg, '\n\n');
-			if (user_matches.length == 0) {
-				helper.fn_getMatches(req,res, (result) =>{
-					console.log('search failed');
-					fn_render_search(req, res, next, msg, user_matches)
-				});
-			} else {
-				console.log('USers found');
-				fn_render_search(req, res, next, msg, user_matches);
-			}
-		})()
-	});
+		}
+	}), (() => {
+		console.log('\n\t\t3. msg(', user_matches.length, '): ', msg, '\n\n');
+		if (user_matches.length == 0) {
+			helper.fn_getMatches(req, res, (result) => {
+				console.log('search failed');
+				fn_render_search(req, res, next, msg, user_matches)
+			});
+		} else {
+			console.log('USers found');
+			fn_render_search(req, res, next, msg, user_matches);
+		}
+	})()
 }
 
 router.get('/', (req, res, next) => {

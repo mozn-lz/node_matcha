@@ -1,15 +1,10 @@
-var express = require('express');
-var router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
+const express = require('express');
+const router = express.Router();
+
+const helper = require('./helper_functions'); // Helper functions Mk
+const helper_db = require('./helper_db'); // Helper functions Mk
+
 const passwordHash = require('password-hash');
-
-var helper = require('./helper_functions'); // Helper functions Mk
-
-const url = 'mongodb://localhost:27017';
-
-// Database Name
-const dbName = 'mk_matcha';
 
 // function is_empty(str) {
 // 	var ret = str.trim();
@@ -165,45 +160,30 @@ router.post('/', function (req, res, next) {
 		};
 
 		// Connect and save data to mongodb
-		MongoClient.connect(url, function (err, client) {
-			console.log('saving to data to database');
-			assert.equal(null, err);
-			console.log("Connected to server and mongo connected Successfully");
-			const db = client.db(dbName);
-			const collection = db.collection('users');
 
-			collection.count({ usr_email: email })
-				.then((count) => {
-					if (count > 0) {
-						console.log('Username exists.');
-						res.redirect('/login/' + 'pass_errEmail ' + email + ' is alreday associated with an account.');
-					} else {
-						console.log('Username does not exist.');
-						collection.insertOne(usr_data, function (err, result) {
-							assert.equal(null, err);
-							console.log("Documents added to database: " + dbName);
-							client.close();
-							// helper.sendMail(to, from, subject, message);
-/*
-									user: 'unathinkomo16@gmail.com',
-									pass: '0786324448'
-*/	
+		helper_db.db_read('', 'users', { usr_email: email }, (count) => {
+			if (count.length > 0) {
+				console.log('Username exists.');
+				res.redirect('/login/' + 'pass_errEmail ' + email + ' is alreday associated with an account.');
+			} else {
+				console.log('Username does not exist.');
+				helper_db.db_create('', 'users', usr_data, () => {
+					console.log("Documents added to database: " + dbName);
 
-							const to = email;
-							const from = '';
-							const subject = 'Matcha Email Verification';
-							const message = `<br>Welcome to Matcha ${usr_data.usr_user }<br>
+					const to = email;
+					const from = '';
+					const subject = 'Matcha Email Verification';
+					const message = `<br>Welcome to Matcha ${usr_data.usr_user}<br>
 							Please click on the button below to verify your email address<br>
 							<a href="http://localhost:3000/verify?email=${usr_data.usr_email}&code=${usr_data.confirm_code}"><button>Verify</button></a>
 							`;
 
-							helper.sendMail(from, to, subject, message, ()=>{res.redirect('/login/' + 'pass_suc' + user + ' created successfully. Please check your emial to verity your account');});
-							//	end email
+					helper.sendMail(from, to, subject, message, () => { res.redirect('/login/' + 'pass_suc' + user + ' created successfully. Please check your emial to verity your account'); });
+					//	end email
 
-							
-						});
-					}
+
 				});
+			}
 		});
 	} else {
 		console.log('Error coint' + error_log.length);

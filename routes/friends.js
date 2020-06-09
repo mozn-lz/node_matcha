@@ -1,15 +1,9 @@
-var express = require('express');
-var router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
-const objectId = require('mongodb').ObjectID;
-const assert = require('assert');
+const express = require('express');
+const router = express.Router();
+let objectId = require('mongodb').ObjectID;
+
 var helper = require('./helper_functions'); // Helper functions Mk
-var helper_index = require('./helper_index'); // Helper functions Mk
-
-const url = 'mongodb://localhost:27017';	// Database Address
-const dbName = 'mk_matcha';					// Database Name
-
-// (req.session.uid) ? helper.logTme : 0;	//	update last online
+var helper_db = require('./helper_db'); // Helper functions Mk
 
 var page_name = 'friends';
 
@@ -38,40 +32,21 @@ let fn_render_friends = (req, res, next, msg, matches) => {
 var fn_getFriends = (req, res, next, msg) => {
 
 	console.log('\n\t\t1. msg: ', msg, '\n\n');
-	MongoClient.connect(url, function (err, client) {
-		assert.equal(null, err);
 
-		const db = client.db(dbName);
-		var find_user = [];
-		const collection = db.collection('users');
-
-		let find_friends = () => {
-			let friends = [];
-			if (find_user[0].friends) {
-				for (let i = 0; i < find_user[0].friends.length; i++) {
-					collection.find({ '_id': objectId(find_user[0].friends[i]) }).forEach((doc, err) => {
-						assert.equal(null, err);
-						console.log('5. Friend: ', doc.usr_email, ' ', doc.usr_user);
-						friends.push(doc);
-					});
-				}
-			} else {
-				console.log('4. you do not have friends right now');
+	console.log('0. Finding friends\n');
+	helper_db.db_read('', 'users', { '_id': objectId(req.session.uid) }, find_user => {
+		let friends = [];
+		if (find_user[0].friends) {
+			for (let i = 0; i < find_user[0].friends.length; i++) {
+				helper_db.db_read('', 'users', { '_id': objectId(find_user[0].friends[i]) }, doc => friends.push(doc[0]))
 			}
-			setTimeout(() => {
-				console.log('6. Sendin ot trnder');
-				fn_render_friends(req, res, next, '', friends);
-			}, 1000);
-
+		} else {
+			console.log('4. you do not have friends right now');
 		}
-
-		(() => {
-			console.log('0. Finding friends\n');
-			collection.find({ '_id': objectId(req.session.uid) }).forEach((docs, err) => {
-				console.log('1. docs: ', docs.usr_email, 'friend array: ', docs.friends);
-				find_user.push(docs);
-			}, () => { find_friends() });
-		})()
+		setTimeout(() => {
+			console.log('6. Sendin ot trnder');
+			fn_render_friends(req, res, next, '', friends);
+		}, 1000);
 	});
 }
 
@@ -80,29 +55,16 @@ router.post('/', (req, res, next) => {
 		let friendId = req.body.friend;
 
 		console.log('removinge ', friendId, '\n');
-		MongoClient.connect(url, (err, client) => {
-			assert.equal(null, err);
-
-			const collection = client.db(dbName).collection('users');
-			collection.updateOne({ '_id': objectId(friendId) }, {
-				$pull: {		//	remove 'this' notification
-					'friends': friendId
-				}
-			}, () => {
-				usersCollection.updateOne({ '_id': objectId(recipiantId) }, {	// send norification to 'fromer friend'
-					$addToSet: {
-						notifications: {	// notification object
-							from: req.session.uid,
-							type: 'friend reject'
-						}
-					}
-				});
-				console.log('');
+		const collection = client.db(dbName).collection('users');
+		//	remove 'this' notification
+		helper_db.db_update('', 'users', { '_id': objectId(friendId) }, { $pull: { 'friends': friendId } }, () => {
+			// send norification to 'fromer friend'
+			helper_db.db_update('', 'users', { '_id': objectId(recipiantId) }, { $addToSet: { notifications: { from: req.session.uid, type: 'friend reject' } } }, () => {
+				res.redirect('/friends');
 			});
 		});
-		res.redirect('/friends');
 		// fn_redirect(location)
-		fn_getFriends(req, res, next, '');
+		// fn_getFriends(req, res, next, '');
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
 	}

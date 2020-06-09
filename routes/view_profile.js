@@ -1,27 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
 let objectId = require('mongodb').ObjectID;
-const assert = require('assert');
+
 var helper = require('./helper_functions'); // Helper functions Mk
-var helper_index = require('./helper_index'); // Helper functions Mk
+var helper_db = require('./helper_db'); // Helper functions Mk
 
-const url = 'mongodb://localhost:27017';	// Database Address
-const dbName = 'mk_matcha';					// Database Name
-
-// (req.session.uid) ? helper.logTme : 0;	//	update last online
 
 var page_name = 'view_profile';
 
 let renderProfile = (res, data) => {
-	let time  = Date.now();
+	let time = Date.now();
 	if (data.login_time) {
 		// console.log('(time - 300000) <= data.login_time = ', (time - 300000) <= data.login_time);
 		if ((time - 300000) <= data.login_time) {
 			data.login_time = 'online';
 			console.log('t', time);
 			console.log('Login time: ', data.login_time);
-		} else  {
+		} else {
 			data.login_time = new Date(data.login_time);
 		}
 	} else {
@@ -63,48 +58,26 @@ router.get('/:reqId', (req, res, next) => {
 			type: 'view profile'
 		}
 
-		MongoClient.connect(url, (err, client) => {
-			assert.equal(null, err);
-			const db = client.db(dbName);
-			var find_user = [];
-			const collection = db.collection('users');
-			
-			collection.find({ '_id': objectId(friendId) }).forEach((doc, err) => {
-				assert.equal(null, err);
-				find_user.push(doc);
-				console.log('\t\t doc: ' + doc);
-			}, () => {
-				console.log('find_user.blocked.includes(req.session.uid): ' + find_user[0].blocked.includes(req.session.uid));
-				if (!find_user[0].blocked.includes(req.session.uid)) {
-					collection.updateOne({ '_id': objectId(req.session.uid) }, { 	// Add to visit history
-						$addToSet: {
-							history: {
-								id: find_user[0]._id,
-								name: find_user[0].usr_name,
-								surname: find_user[0].usr_surname,
-								date: new Date(Date.now())
-							}
-						}
+		helper_db.db_read('', 'users', { '_id': objectId(friendId) }, find_user => {
+			console.log('find_user.blocked.includes(req.session.uid): ' + find_user[0].blocked.includes(req.session.uid));
+			if (!find_user[0].blocked.includes(req.session.uid)) {
+				// Add to visit history
+				helper_db.db_update('', 'users', { '_id': objectId(req.session.uid) },
+					{ $addToSet: { history: { id: find_user[0]._id, name: find_user[0].usr_name, surname: find_user[0].usr_surname, date: new Date(Date.now()) } } }, () => {
+					}, () => {});
+				// send norification to 'friend'
+				helper_db.db_update('', 'users', { '_id': objectId(friendId) }, { $addToSet: { notifications: notification } }, () => {});
+				let message = '';
+				if (find_user.length == 1) {
+					helper.findUserById(req.session.uid, user => {
+						find_user[0].history = user.history;	// bad code #quickfix
+						renderProfile(res, find_user[0]);
 					});
-					collection.updateOne({ '_id': objectId(friendId) }, 	// send norification to 'friend'
-						{
-							$addToSet: {
-								notifications: notification
-							}
-						});
-					client.close();
-					let message = '';
-					if (find_user.length == 1) {
-						helper.findUserById(req.session.uid, (user) => {
-							find_user[0].history = user.history;	// bad code #quickfix
-							renderProfile(res, find_user[0]);
-						});
-					} else {
-						message = "pass_errError: friend requiest unsuccessfill, please try again";
-						res.redirect('/index');
-					}
+				} else {
+					message = "pass_errError: friend requiest unsuccessfill, please try again";
+					res.redirect('/index');
 				}
-			});
+			}
 		});
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');

@@ -1,15 +1,10 @@
-var express = require('express');
-var router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
-const objectId = require('mongodb').ObjectID;
-const assert = require('assert');
+const express = require('express');
+const router = express.Router();
+
+let objectId = require('mongodb').ObjectID;
 var helper = require('./helper_functions'); // Helper functions Mk
-var helper_index = require('./helper_index'); // Helper functions Mk
+var helper_db = require('./helper_db'); // Helper functions Mk
 
-const url = 'mongodb://localhost:27017';	// Database Address
-const dbName = 'mk_matcha';					// Database Name
-
-// (req.session.uid) ? helper.logTme : 0;	//	update last online
 
 var page_name = 'Send Message';
 
@@ -54,27 +49,16 @@ router.post('/', function (req, res, next) {
 				helper.findUserById(recipiantId, (isfriend) => {
 					if (isfriend.friends.includes(senderId) && !isfriend.blocked.includes(senderId)) {
 						(() => {
-							usersCollection.updateOne({ '_id': objectId(recipiantId) }, {	// send norification to 'friend'
-								$addToSet: {
-									notifications: notification
-								}
-							});
+								// send norification to 'friend'
+							helper_db.db_update('', 'users', { '_id': objectId(recipiantId) }, { $addToSet: { notifications: notification } }, )
 						})();
-						messagesCollection.updateOne({	//	update sender messages
-							'user_id': senderId,
-							'partner': recipiantId
-						}, {
-							$addToSet: {
-								'message': {
-									from: senderId,
-									time: Date.now(),
-									message: text,
-									me : true
-								}
-							}
-						}, {
-							upsert: true
-						}, (err, result) => {
+							//	update sender messages
+						// helper_db.db_update('', 'chats', )
+						messagesCollection.updateOne(
+							{ 'user_id': senderId, 'partner': recipiantId }, 
+							{ $addToSet: { 'message': { from: senderId, time: Date.now(), message: text, me : true } } }, 
+							{ upsert: true }
+							, (err, result) => {
 							if (err) {
 								console.log("Error ", err);
 							} else {
@@ -83,21 +67,13 @@ router.post('/', function (req, res, next) {
 							}
 						});
 
-						messagesCollection.updateOne({	//	update recipiant messages
-							'user_id': recipiantId,
-							'partner': senderId
-						}, {
-							$addToSet: {
-								'message': {
-									from: senderId,
-									time: Date.now(),
-									message: text,
-									me : false
-								}
-							}
-						}, {
-							upsert: true
-						}, (err, result) => {
+	//	update recipiant messages
+						// helper_db.db_update('', 'chats', )
+						messagesCollection.updateOne(
+						{ 'user_id': recipiantId, 'partner': senderId }, 
+						{ $addToSet: { 'message': { from: senderId, time: Date.now(), message: text, me : false } } }, 
+						{upsert: true}, 
+						(err, result) => {
 							client.close();
 							if (err) {
 								console.log("Error ", err);
