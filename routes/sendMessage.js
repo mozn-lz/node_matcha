@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-let objectId = require('mongodb').ObjectID;
+
 var helper = require('./helper_functions'); // Helper functions Mk
 var helper_db = require('./helper_db'); // Helper functions Mk
 
@@ -46,14 +46,16 @@ router.post('/', function (req, res, next) {
 				type: 'send message'
 			}
 			if (senderId && recipiantId) {
-				helper.findUserById(recipiantId, (isfriend) => {
+				helper_db.db_read('sql', 'users', {'_id': recipiantId}, isfriend => {
+					isfriend = isfriend[0];
+				// helper.findUserById(recipiantId, (isfriend) => {
 					if (isfriend.friends.includes(senderId) && !isfriend.blocked.includes(senderId)) {
 						(() => {
 								// send norification to 'friend'
-							helper_db.db_update('', 'users', { '_id': objectId(recipiantId) }, { $addToSet: { notifications: notification } }, )
+							helper_db.db_update('sql', 'users', { '_id': (recipiantId) }, { $addToSet: { notifications: notification } }, )
 						})();
 							//	update sender messages
-						// helper_db.db_update('', 'chats', )
+						// helper_db.db_update('sql', 'chats', )
 						messagesCollection.updateOne(
 							{ 'user_id': senderId, 'partner': recipiantId }, 
 							{ $addToSet: { 'message': { from: senderId, time: Date.now(), message: text, me : true } } }, 
@@ -68,7 +70,7 @@ router.post('/', function (req, res, next) {
 						});
 
 	//	update recipiant messages
-						// helper_db.db_update('', 'chats', )
+						// helper_db.db_update('sql', 'chats', )
 						messagesCollection.updateOne(
 						{ 'user_id': recipiantId, 'partner': senderId }, 
 						{ $addToSet: { 'message': { from: senderId, time: Date.now(), message: text, me : false } } }, 
@@ -121,7 +123,7 @@ router.get('/:reqId/:message', (req, res, next) => {
 		// 		const db = client.db(dbName);
 		// 		const collection = db.collection('users');
 		// 		collection.updateOne({
-		// 			'_id': objectId(friendReqId)
+		// 			'_id': (friendReqId)
 		// 		}, { 
 		// 			$addToSet: {
 		// 				time	: Date.now(),

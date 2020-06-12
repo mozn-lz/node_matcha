@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-let objectId = require('mongodb').ObjectID;
 
 const helper = require('./helper_functions'); // Helper functions Mk
 const helper_db = require('./helper_db'); // Helper functions Mk
@@ -41,12 +40,12 @@ fn_render_messages = (req, res, next, msg) => {
 		msg_arr = msg.slice(8).split(",");
 		console.log('msg_arr: ' + msg_arr);
 
-		helper_db.db_read('', 'chats', { 'user_id': req.session.uid }, user => {
+		helper_db.db_read('sql', 'chats', { 'user_id': req.session.uid }, user => {
 			console.log('Number of conversations: ', user.length, `res_arr.length > 0: ${user.length > 0}`, '\n');
 			if (user.length > 0) {
 				console.log('\tConversations found');
 				for (let i = 0; i < user.length; i++) {
-					helper_db.db_read('', 'users', { '_id': objectId(user[i].partner) }, docs => {
+					helper_db.db_read('sql', 'users', { '_id': (user[i].partner) }, docs => {
 						// docs = find_user;
 						if (docs.length == 1) {
 							find_user.push(docs[0]);

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-let objectId = require('mongodb').ObjectID;
+
 
 var helper = require('./helper_functions'); // Helper functions Mk
 var helper_db = require('./helper_db'); // Helper functions Mk
@@ -58,18 +58,20 @@ router.get('/:reqId', (req, res, next) => {
 			type: 'view profile'
 		}
 
-		helper_db.db_read('', 'users', { '_id': objectId(friendId) }, find_user => {
+		helper_db.db_read('sql', 'users', { '_id': (friendId) }, find_user => {
 			console.log('find_user.blocked.includes(req.session.uid): ' + find_user[0].blocked.includes(req.session.uid));
 			if (!find_user[0].blocked.includes(req.session.uid)) {
 				// Add to visit history
-				helper_db.db_update('', 'users', { '_id': objectId(req.session.uid) },
+				helper_db.db_update('sql', 'users', { '_id': (req.session.uid) },
 					{ $addToSet: { history: { id: find_user[0]._id, name: find_user[0].usr_name, surname: find_user[0].usr_surname, date: new Date(Date.now()) } } }, () => {
 					}, () => {});
 				// send norification to 'friend'
-				helper_db.db_update('', 'users', { '_id': objectId(friendId) }, { $addToSet: { notifications: notification } }, () => {});
+				helper_db.db_update('sql', 'users', { '_id': (friendId) }, { $addToSet: { notifications: notification } }, () => {});
 				let message = '';
 				if (find_user.length == 1) {
-					helper.findUserById(req.session.uid, user => {
+					helper_db.db_read('sql', 'users', {'_id': req.session.uid}, user => {
+						user = user[0];
+					// helper.findUserById(req.session.uid, user => {
 						find_user[0].history = user.history;	// bad code #quickfix
 						renderProfile(res, find_user[0]);
 					});

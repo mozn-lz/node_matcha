@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-let objectId = require('mongodb').ObjectID;
 
 var helper = require('./helper_functions'); // Helper functions Mk
 var helper_db = require('./helper_db'); // Helper functions Mk
@@ -34,11 +33,11 @@ var fn_getFriends = (req, res, next, msg) => {
 	console.log('\n\t\t1. msg: ', msg, '\n\n');
 
 	console.log('0. Finding friends\n');
-	helper_db.db_read('', 'users', { '_id': objectId(req.session.uid) }, find_user => {
+	helper_db.db_read('sql', 'users', { '_id': (req.session.uid) }, find_user => {
 		let friends = [];
 		if (find_user[0].friends) {
 			for (let i = 0; i < find_user[0].friends.length; i++) {
-				helper_db.db_read('', 'users', { '_id': objectId(find_user[0].friends[i]) }, doc => friends.push(doc[0]))
+				helper_db.db_read('sql', 'users', { '_id': (find_user[0].friends[i]) }, doc => friends.push(doc[0]))
 			}
 		} else {
 			console.log('4. you do not have friends right now');
@@ -57,9 +56,9 @@ router.post('/', (req, res, next) => {
 		console.log('removinge ', friendId, '\n');
 		const collection = client.db(dbName).collection('users');
 		//	remove 'this' notification
-		helper_db.db_update('', 'users', { '_id': objectId(friendId) }, { $pull: { 'friends': friendId } }, () => {
+		helper_db.db_update('sql', 'users', { '_id': (friendId) }, { $pull: { 'friends': friendId } }, () => {
 			// send norification to 'fromer friend'
-			helper_db.db_update('', 'users', { '_id': objectId(recipiantId) }, { $addToSet: { notifications: { from: req.session.uid, type: 'friend reject' } } }, () => {
+			helper_db.db_update('sql', 'users', { '_id': (recipiantId) }, { $addToSet: { notifications: { from: req.session.uid, type: 'friend reject' } } }, () => {
 				res.redirect('/friends');
 			});
 		});

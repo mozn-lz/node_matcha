@@ -1,12 +1,9 @@
 var express = require('express');
 var router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
-const objectId = require('mongodb').ObjectID;
 const assert = require('assert');
 var helper = require('./helper_functions'); // Helper functions Mk
 // var helper_index = require('./helper_index'); // Helper functions Mk
 
-// (req.session.uid) ? helper.logTme : 0;	//	update last online
 
 var page_name = 'home';
 
@@ -15,6 +12,7 @@ let fn_render_index = (req, res, next, msg, matches) => {
 	// var res_arr = matches;
 	// console.log('\n\n\n________fn_render_indexn________\n');
 	if (req.session.uid) {
+		console.log('sorting');
 		var res_arr = helper.sort_locate(matches, req.session.gps);
 		(req.session.oriantation == '') ? req.session.oriantation = 'bisexual' : 0;
 
@@ -34,6 +32,7 @@ let fn_render_index = (req, res, next, msg, matches) => {
 				res_arr == null;
 			}
 		}
+		console.log('render');
 		res.render('index', {
 			match_list: res_arr,
 			msg_arr,
@@ -50,7 +49,7 @@ router.get('/', (req, res, next) => {
 	console.log('\t\t____SAO');
 	if (req.session.uid) {
 		console.log('\t\t____SAO');
-		helper.fn_getMatches(req, res, (user_matches) => {
+		helper.fn_getMatches(req, res, user_matches => {
 			fn_render_index(req, res, next, '', user_matches);
 		});
 	} else {

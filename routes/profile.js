@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-let objectId = require('mongodb').ObjectID;
 
 const helper = require('./helper_functions'); // Helper functions Mk
 const helper_db = require('./helper_db'); // Helper functions Mk
@@ -21,7 +20,7 @@ function fn_render_profile(req, res, next, msg) {
 		console.log('req.session.uid: ' + req.session.uid);
 
 		var usr_data = {
-			'_id': objectId(req.session.uid)
+			'_id': (req.session.uid)
 		};
 
 		var msg_arr = [];
@@ -30,7 +29,7 @@ function fn_render_profile(req, res, next, msg) {
 		msg_arr = msg.slice(8).split(",");
 		console.log('msg_arr: ' + msg_arr);
 
-		helper_db.db_read('', 'users', usr_data, res_arr => {
+		helper_db.db_read('sql', 'users', usr_data, res_arr => {
 			if (res_arr.length == 1) {
 				// if user is found get their details from database
 				res_arr[0].gender == 'male' ? male = 'male' : male = '';
@@ -257,7 +256,7 @@ router.post('/', function (req, res, next) {
 		};
 
 		console.log('profile_intrests[0]:  ', profile_intrests);
-		helper_db.db_update('', 'users', { '_id': objectId(req.session.uid) }, {
+		helper_db.db_update('sql', 'users', { '_id': (req.session.uid) }, {
 			$set: {
 				usr_user: profile_username,
 				usr_email: profile_email,

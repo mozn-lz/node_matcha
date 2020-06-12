@@ -17,13 +17,16 @@ const page_name = 'login';		// page name
 
 let users = [];
 
-// users.push(doc);
+let table = 'users';
+
 let maxUSers = 20;
-let min = 18;
-let max = 50;
-helper_db.db_read('', 'users', {}, count => {
-	console.log("users", count.length);
-	if (count.length < maxUSers) {
+let minAge = 18;
+let maxAge = 50;
+let data = 1;
+
+helper_db.db_read('sql', 'users', 1, (count) => {
+	console.log(count.length);
+	if (count.length < 20) {
 		for (let i = 0; i < maxUSers; i++) {
 			const genders = ['male', 'female'];
 			const oriantations = ['hetrosexual', 'homosexual', 'bisexual'];
@@ -31,17 +34,16 @@ helper_db.db_read('', 'users', {}, count => {
 			const surname = faker.name.lastName();
 			let gender = faker.random.arrayElement(genders);
 			let oriantation = faker.random.arrayElement(oriantations);
-			let age = Math.floor(Math.random() * (max - min + 1)) + min;
+			let age = Math.floor(Math.random() * (maxAge - minAge + 1)) + minAge;
 			let rating = Math.floor(Math.random() * (5)) + 1; // random from 1-5
 			password = "!!11QQqq";
-
 
 			let newUser = {
 				usr_user: name,
 				usr_email: faker.internet.email(name, surname),
 				usr_name: name,
 				usr_surname: surname,
-				usr_psswd: passwordHash.generate(password), // to be encrypted
+				usr_psswd: passwordHash.generate(password),
 				login_time: '',
 				profile: '/images/ionicons.designerpack/md-person.svg',
 				age,
@@ -49,33 +51,25 @@ helper_db.db_read('', 'users', {}, count => {
 				oriantation,
 				rating,
 				bio: '',
-				intrests: [],
 				gps: '',
-				viewd: [],
-				liked: [],
-				friends: [],
-				blocked: [],
 				verified: 1,
-				confirm_code: Math.random() // to be encrypted
+				confirm_code: Math.random(),
+				intrests: '',
+				blocked: '',
+				friends: '',
+				notifications: '',
+				picture: '',
+				history: ''
 			};
 			users.push(newUser);
-
-			// visual feedback always feels nice!
-			console.log(newUser.usr_email);
 		}
-		// let images = faker.image.avatar();
-		// for (let i = 0; i < images.length; i++) {
-
-		// }
-
-		for (let i = 0; i < users.length; i++) {
-			helper_db.db_create('', 'users', users[i], () => { console.log('\t\t', maxUSers, ' users created\n') });
-			if (err) throw err;
+		for (let i = users.length; i < maxUSers; i++) {
+			helper_db.db_create('sql', 'users', users[i], () => { console.log('\t\t', maxUSers, ' users created\n') });
+			// console.log(`${i + 1}.${users[i].usr_user} ${users[i].usr_email}`);
 		}
 	} else {
-		console.log('\t\tUsers past ', maxUSers, '\n');
+		console.log(`Users past ${maxUSers}`)
 	}
-
 });
 
 
@@ -106,7 +100,7 @@ router.post('/', function (req, res, next) {
 
 	// Connect and save data to mongodbreq.params.user
 	req.params.user
-	helper_db.db_read('', 'users', { 'usr_email': email }, find_user => {
+	helper_db.db_read('sql', 'users', { 'usr_email': email }, find_user => {
 		if (find_user.length == 1 && passwordHash.verify(psswd, find_user[0].usr_psswd)) {
 			if (find_user[0].verified == 0) {
 				res.redirect('/login/' + 'pass_errPlease check your email address to VERIFY your account');

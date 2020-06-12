@@ -1,13 +1,11 @@
 const express = require('express');
 const router = express.Router();
-let objectId = require('mongodb').ObjectID;
 
 var helper = require('./helper_functions'); // Helper functions Mk
 var helper_db = require('./helper_db'); // Helper functions Mk
 
 var page_name = 'friend request';
 
-// (req.session.uid) ? helper.logTme : 0;	//	update last online
 
 /* GET view_profile listing. */
 router.get('/', function (req, res, next) {
@@ -38,9 +36,9 @@ router.post('/', (req, res, next) => {
 			res.redirect('/friendRequest/' + friendReqId);
 		} else if (submit === 'block') {
 			notification.type = 'block';
-			helper_db.db_update('', 'users', { '_id': objectId(req.session.uid) }, { $addToSet: { blocked: friendReqId } }, (() => {
+			helper_db.db_update('sql', 'users', { '_id': (req.session.uid) }, { $addToSet: { blocked: friendReqId } }, (() => {
 				console.log('Sending notification');
-				// collection.updateOne({ '_id': objectId(friendReqId) }, { 	// send norification to 'friend'
+				// collection.updateOne({ '_id': (friendReqId) }, { 	// send norification to 'friend'
 				// 	$addToSet: {
 				// 		notifications: notification
 				// 	}
@@ -53,9 +51,9 @@ router.post('/', (req, res, next) => {
 			});
 		} else if (submit === 'fake') {
 			console.log('fake account');
-			helper_db.db_update('', 'users', { '_id': objectId(friendReqId) }, { $set: { verified: 2 } }, (() => {
+			helper_db.db_update('sql', 'users', { '_id': (friendReqId) }, { $set: { verified: 2 } }, (() => {
 				console.log('Sending notification to ', friendReqId, 'from');
-				helper_db.db_update('', 'users', { '_id': objectId(friendReqId) }, { $addToSet: { notifications: notification } })
+				helper_db.db_update('sql', 'users', { '_id': (friendReqId) }, { $addToSet: { notifications: notification } })
 			})(), (err, result) => {
 				console.log('<<< shit is fake in this mother >>>');
 				console.log('Hahahah, notifications are fucking up');
@@ -66,7 +64,6 @@ router.post('/', (req, res, next) => {
 		} else {
 			res.redirect('/index');
 		}
-		// helper.findUserById(req.body.friendId, ())
 	}
 });
 
@@ -75,7 +72,8 @@ router.get('/:reqId', (req, res, next) => {
 
 	let message = null;
 	if (req.session.uid) {
-		helper.findUserById(req.session.uid, (user) => {
+		helper_db.db_read('sql', 'users', {'_id': req.session.uid}, user => {
+			user = user[0];
 			// if (user.picture)
 			if (user.picture && user.picture.length >= 1) {
 				let friendReqId = req.params.reqId
@@ -91,9 +89,9 @@ router.get('/:reqId', (req, res, next) => {
 
 				console.log('friendReqId ', friendReqId);
 
-				helper_db.db_update('', 'users', { '_id': objectId(friendReqId) }, { $addToSet: { request: req.session.uid } }, (() => {
+				helper_db.db_update('sql', 'users', { '_id': (friendReqId) }, { $addToSet: { request: req.session.uid } }, (() => {
 					console.log('Sending notification');
-					helper_db.db_update('', 'users', { '_id': objectId(friendReqId) }, { $addToSet: { notifications: notification } }, () =>{});
+					helper_db.db_update('sql', 'users', { '_id': (friendReqId) }, { $addToSet: { notifications: notification } }, () =>{});
 				})(), (err, result) => {
 					console.log('Hahahah, notifications are fucking up');
 					message = 'pass_sucFriend request has been made';

@@ -1,26 +1,17 @@
-
-const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
-let objectId = require('mongodb').ObjectID;
 let nodemailer = require('nodemailer');
 // var helper = require('./helper_functions'); // Helper functions Mk
 var helper_index = require('./helper_index'); // Helper functions Mk
-
-const url = 'mongodb://localhost:27017';	// Database Address
-const dbName = 'mk_matcha';					// Database Name
+var helper_db = require('./helper_db'); // Helper functions Mk
 
 module.exports = {
 	fn_getMatches: (req, res, callback) => {
 
 		console.log('PING ifconfig ');
-		MongoClient.connect(url, function (err, client) {
-			assert.equal(null, err);
 
-			const db = client.db(dbName);
 			var user_matches = [];
 			var match_criteria = {};
 			let match_criteria2 = {};
-			const collection = db.collection('users');
 
 			(() => {
 				switch (req.session.oriantation) {
@@ -28,7 +19,6 @@ module.exports = {
 						if (req.session.gender == 'male') {
 							match_criteria = { gender: "female", exception: "homosexual" };
 							console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
-							// user_matches = helper.search_DB(usr_data.gender, usr_data.exception);
 						} else {
 							match_criteria = { gender: "male", exception: "homosexual" };
 							console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
@@ -59,63 +49,62 @@ module.exports = {
 						break;
 				};
 				console.log('A ', req.session.oriantation, ' ', req.session.gender);
-				collection.find().forEach(function (doc, err) {
-					assert.equal(null, err);
-					if (doc._id != req.session.uid) {
-						(!doc.profile) ? doc.profile = "/images/ionicons.designerpack/md-person.svg" : 0;
-						if ((match_criteria && doc.gender == match_criteria.gender && doc.oriantation != match_criteria.exception) || (match_criteria2 && doc.gender == match_criteria2.gender && doc.oriantation != match_criteria2.exception)) {
-							user_matches.push(doc);
-							console.log("Found a ", doc.oriantation, " ", doc.gender, " named ", doc.usr_user);
-						} else {
-							console.log("\t", doc.oriantation, " ", doc.gender, " named ", doc.usr_user, " Rejected");
+
+				helper_db.db_read('sql', 'users', 1, doc => {
+					for (let i = 0; i < doc.length; i++) {
+						if (doc[i]._id != req.session.uid) {
+							(!doc[i].profile) ? doc[i].profile = "/images/ionicons.designerpack/md-person.svg" : 0;
+							if ((match_criteria && doc[i].gender == match_criteria.gender && doc[i].oriantation != match_criteria.exception) || (match_criteria2 && doc[i].gender == match_criteria2.gender && doc[i].oriantation != match_criteria2.exception)) {
+								user_matches.push(doc[i]);
+								console.log("Found a ", doc[i].oriantation, " ", doc[i].gender, " named ", doc[i].usr_user);
+							} else {
+								console.log("\t", doc[i].oriantation, " ", doc[i].gender, " named ", doc[i].usr_user, " Rejected");
+							}
 						}
 					}
-				})
+					// callback(doc[i][0]);
+				});
+
+				// collection.find().forEach((doc, err) => {
+				// 	assert.equal(null, err);
+				// 	if (doc._id != req.session.uid) {
+				// 		(!doc.profile) ? doc.profile = "/images/ionicons.designerpack/md-person.svg" : 0;
+				// 		if ((match_criteria && doc.gender == match_criteria.gender && doc.oriantation != match_criteria.exception) || (match_criteria2 && doc.gender == match_criteria2.gender && doc.oriantation != match_criteria2.exception)) {
+				// 			user_matches.push(doc);
+				// 			console.log("Found a ", doc.oriantation, " ", doc.gender, " named ", doc.usr_user);
+				// 		} else {
+				// 			console.log("\t", doc.oriantation, " ", doc.gender, " named ", doc.usr_user, " Rejected");
+				// 		}
+				// 	}
+				// })
 			})(), (() => {
-				client.close();
 				setTimeout(() => {
 					console.log('\t\tfound ' + user_matches.length);
 					callback(user_matches);
 				}, 1500);
 			})()
-		});
 	},
 	findUserById: (user_id, callback) => {
 
-		MongoClient.connect(url, function (err, client) {
-			assert.equal(null, err);
+		// MongoClient.connect(url, function (err, client) {
+		// 	assert.equal(null, err);
 
-			var user = [];
+		// 	var user = [];
 
-			client.db(dbName).collection('users').find({ '_id': objectId(user_id) }).forEach(function (doc, err) {
-				assert.equal(null, err);
-				user.push(doc);
-				console.log("\nRESULT Name: " + doc.usr_name);
-			}, function () {
-				client.close();
-				console.log("fn_Helper : db search complete. " + user.length + " matches found\n");
-				callback(user[0]);
-			});
-		});
+		// 	client.db(dbName).collection('users').find({ '_id': (user_id) }).forEach(function (doc, err) {
+		// 		assert.equal(null, err);
+		// 		user.push(doc);
+		// 		console.log("\nRESULT Name: " + doc.usr_name);
+		// 	}, function () {
+		// 		client.close();
+		// 		console.log("fn_Helper : db search complete. " + user.length + " matches found\n");
+		// 		callback(user[0]);
+		// 	});
+		// });
 	},
-
-	// logTme: () => {
-	// 	MongoClient.connect(url, function (err, client) {
-	// 		assert.equal(null, err);
-	// 		client.db(dbName).collection('users').updateOne({ '_id': objectId(req.session.uid) }, {
-	// 			$set: { 'login_time': Date.now() }
-	// 		}, () => {
-	// 			assert.equal(null, err);
-	// 			client.close();
-	// 			console.log('Time');
-	// 		});
-	// 	});
-
-	// },
-
 	sendMail: (from, to, subject, message, callback) => {
-		let email ='unathinkomo16@gmail.com';
-		let pass ='0786324448';
+		let email = 'unathinkomo16@gmail.com';
+		let pass = '0786324448';
 
 		const mailCredentials = {
 			user: email,
@@ -141,7 +130,6 @@ module.exports = {
 		transporter.sendMail(mailOptions, (error, info) => {
 			if (error) {
 				console.log(error);
-
 			} else {
 				console.log('\t\tEmail sent: ' + info.response);
 			}

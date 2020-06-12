@@ -1,13 +1,10 @@
 const express = require('express');
 const router = express.Router();
-let objectId = require('mongodb').ObjectID;
 
 const helper = require('./helper_functions'); // Helper functions Mk
 const helper_db = require('./helper_db'); // Helper functions Mk
 
 let page_name = 'notifications';
-
-// (req.session.uid) ? helper.logTme : 0;	//	update last online
 
 let fn_render_notifications = (req, res, msg, matches) => {
 
@@ -67,7 +64,7 @@ function fn_getNotifications(req, res, notification, msg) {
 
 			for (let i = 0; i <= notification.length; i++) {
 				if (i < notification.length) {
-					helper_db.db_read('', 'users', { '_id': objectId(notification[i].from) }, (doc) => {
+					helper_db.db_read('sql', 'users', { '_id': (notification[i].from) }, (doc) => {
 						// user_matches[i].push(doc);
 						// console.log(doc);
 						// 	from: req.session.uid,
@@ -144,7 +141,7 @@ function fn_getNotifications(req, res, notification, msg) {
 let fn_getFriends = (req, res, next, msg) => {
 
 	let notifications = '';
-	helper_db.db_read('', 'users', { '_id': objectId(req.session.uid) }, user => {
+	helper_db.db_read('sql', 'users', { '_id': (req.session.uid) }, user => {
 		(user[0].notifications) ? notifications = user[0].notifications : notifications = null;
 		fn_getNotifications(req, res, notifications, msg);
 	});
@@ -163,7 +160,7 @@ router.post('/', (req, res, next) => {
 		remove_notification = (location) => {
 			console.log('removinge ', notify, ' from: ', friendId, '\n');
 			//	remove 'this' notification
-			helper_db.db_update('', users, { '_id': objectId(req.session.uid) }, { $pull: { 'notifications': { 'from': friendId, 'type': notify } } }, () => {
+			helper_db.db_update('', users, { '_id': (req.session.uid) }, { $pull: { 'notifications': { 'from': friendId, 'type': notify } } }, () => {
 				fn_redirect(location);
 			});
 		}
@@ -171,13 +168,13 @@ router.post('/', (req, res, next) => {
 		accept_friend = (callback) => {
 			// accept query
 			console.log('hxdf ', friendId);
-				helper_db.db_update('', 'users', {'_id': objectId(req.session.uid) }, { $addToSet: { 'friends': friendId } }, () => {
-					helper_db.db_update('', 'users', { '_id': objectId(friendId) }, { $addToSet: { 'friends': req.session.uid } }, () => {
+				helper_db.db_update('sql', 'users', {'_id': (req.session.uid) }, { $addToSet: { 'friends': friendId } }, () => {
+					helper_db.db_update('sql', 'users', { '_id': (friendId) }, { $addToSet: { 'friends': req.session.uid } }, () => {
 						let notification = {	// notification object
 							from: req.session.uid,
 							type: 'like back'
 						}
-						helper_db.db_update('', 'users', { '_id': objectId(friendId) }, { $addToSet: { notifications: notification } }, () => {
+						helper_db.db_update('sql', 'users', { '_id': (friendId) }, { $addToSet: { notifications: notification } }, () => {
 							remove_notification('/view_profile/' + friendId)
 						});
 					});

@@ -61,7 +61,7 @@ router.get('/:friend', function (req, res, next) {
 
 			// Remove notification
 			const collection = client.db(dbName).collection('users');
-			collection.updateOne({ '_id': objectId(req.session.uid) }, {
+			collection.updateOne({ '_id': (req.session.uid) }, {
 				$pull: {		//	remove 'this' notification
 					'notifications': { 'from': chatFriendId, 'type': 'send message' }
 				}
@@ -91,7 +91,9 @@ router.get('/:friend', function (req, res, next) {
 				}, 1500);
 			});
 
-			let get_friend = helper.findUserById(chatFriendId, (find_friend) => {
+			helper_db.db_read('sql', 'users', {'_id': chatFriendId}, find_friend => {
+				find_friend = find_friend[0];
+			// let get_friend = helper.findUserById(chatFriendId, (find_friend) => {
 				console.log('2. GET FRIEND ');
 				if (find_friend) {
 					console.log('4. User "', find_friend._id, '(', find_friend.usr_user, ')" found');
@@ -103,7 +105,9 @@ router.get('/:friend', function (req, res, next) {
 				}
 			}, get_chat);
 
-			let get_user = helper.findUserById(req.session.uid, (find_user) => {
+			helper_db.db_read('sql', 'users', {'_id': req.session.uid}, find_user => {
+				find_user = find_user[0];
+			// let get_user = helper.findUserById(req.session.uid, (find_user) => {
 				console.log('1. GET USER');
 				if (find_user) {
 					console.log('3. User "', find_user._id, '(', find_user.usr_user, ')" found');

@@ -40,7 +40,7 @@ router.post('/', function (req, res, next) {
 		'usr_email': email, 'confirm_code': code
 	};
 
-	helper_db.db_read('', 'users', { 'usr_email': email }, user => {
+	helper_db.db_read('sql', 'users', { 'usr_email': email }, user => {
 		if (user.length === 1 && user[0].confirm_code === parseFloat(code)) {
 			console.log('______user found___________________');
 			if (password === confirm_password) {

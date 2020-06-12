@@ -118,7 +118,7 @@ var fn_getMatches = (req, res, next, msg) => {
 
 	console.log(search_criteria);
 
-	helper_db.db_read('', 'users', { $or: search_criteria, search_extra }, doc => {
+	helper_db.db_read('sql', 'users', { $or: search_criteria, search_extra }, doc => {
 		for (let i = 0; i < doc.length; i++) {
 			if (search) {
 				assert.equal(null, err);

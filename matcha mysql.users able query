@@ -1,0 +1,65 @@
+CREATE TABLE `matcha`.`users` ( 
+	`_id` INT(6) NOT NULL AUTO_INCREMENT , 
+	`usr_user` VARCHAR(30) NOT NULL , 
+	`usr_email` VARCHAR(50) NOT NULL , 
+	`usr_name` VARCHAR(30) NOT NULL , 
+	`usr_surname` VARCHAR(30) NOT NULL , 
+	`usr_psswd` VARCHAR(255) NOT NULL , 
+	`login_time` VARCHAR(50) NOT NULL , 
+	`profile` VARCHAR(255) NOT NULL , 
+	`age` INT(3) NOT NULL , 
+	`gender` VARCHAR(10) NOT NULL , 
+	`oriantation` VARCHAR(20) NOT NULL , 
+	`rating` INT(1) NOT NULL , 
+	`bio` VARCHAR(255) NOT NULL , 
+	`gps` VARCHAR(255) NOT NULL , 
+	`virified` INT(1) NOT NULL , 
+	`confirm_code` VARCHAR(255) NOT NULL , 
+	`intrests` VARCHAR(255) NOT NULL , 
+	`blocked` INT(255) NOT NULL , 
+	`friends` INT(255) NOT NULL , 
+	`notifications` VARCHAR(255) NOT NULL , 
+	`picture` BLOB NOT NULL , 
+	`history` VARCHAR(255) NOT NULL , 
+	PRIMARY KEY (`_id`)
+) ENGINE = InnoDB;
+
+CREATE TABLE `matcha`.`users` ( `_id` INT(6) NOT NULL AUTO_INCREMENT , PRIMARY KEY (`_id`))
+'mk_matcha' : {
+    'users': 
+	[
+        `_id` INT(6) NOT NULL AUTO_INCREMENT , PRIMARY KEY (`_id`
+        `_id` INT(6) NOT NULL AUTO_INCREMENT, PRIMARY KEY,
+        `usr_user` VARCHAR(20) NOT NULL ,
+        `usr_email` VARCHAR(50) NOT NULL ,
+        `usr_name` VARCHAR(20) NOT NULL ,
+        `usr_surname` VARCHAR(20) NOT NULL ,
+        `usr_psswd` VARCHAR(255) NOT NULL ,
+        `login_time` VARCHAR(20) NOT NULL ,
+        `profile` VARCHAR(255) NOT NULL ,
+        `age` INT(2) NOT NULL ,
+        `gender` VARCHAR(20) NOT NULL ,
+        `oriantation` VARCHAR(20) NOT NULL ,
+        `rating` INT(1) NULL ,
+        `bio` VARCHAR(20) NOT NULL ,
+        `gps`  VARCHAR(20) NOT NULL ,
+        `verified` TINYINT(1) NOT NULL ,
+        `confirm_code` VARCHAR(20) NOT NULL ,
+        `intrests` [],
+        `blocked` VARCHAR(20) NOT NULL ,
+        `friends` VARCHAR(255) NOT NULL ,
+        `notifications` [{type,from}],
+        `viewd` VARCHAR(255) NOT NULL ,
+        `picture` [{data:imagepng;base64}],
+        `history` [{ID,time}]
+    ]
+	,
+    'chats':
+	[
+        {
+            partner:'',
+            user_id:'',
+            message : [{text, time, from}]
+        }
+    ]
+}

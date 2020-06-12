@@ -161,13 +161,13 @@ router.post('/', function (req, res, next) {
 
 		// Connect and save data to mongodb
 
-		helper_db.db_read('', 'users', { usr_email: email }, (count) => {
+		helper_db.db_read('sql', 'users', { usr_email: email }, (count) => {
 			if (count.length > 0) {
 				console.log('Username exists.');
 				res.redirect('/login/' + 'pass_errEmail ' + email + ' is alreday associated with an account.');
 			} else {
 				console.log('Username does not exist.');
-				helper_db.db_create('', 'users', usr_data, () => {
+				helper_db.db_create('sql', 'users', usr_data, () => {
 					console.log("Documents added to database: " + dbName);
 
 					const to = email;

@@ -1,14 +1,11 @@
 const express = require('express');
 const router = express.Router();
-let objectId = require('mongodb').ObjectID;
 
 var helper = require('./helper_functions'); // Helper functions Mk
 var helper_db = require('./helper_db'); // Helper functions Mk
 
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
-
-// (req.session.uid) ? helper.logTme : 0;	//	update last online
 
 let page_name = 'take picture';
 
@@ -18,7 +15,7 @@ router.get('/', function (req, res, next) {
 	let result = [];
 
 	if (req.session.uid) {
-		helper_db.db_read('', 'users', { '_id': objectId(req.session.uid) }, result => {
+		helper_db.db_read('sql', 'users', { '_id': (req.session.uid) }, result => {
 			if (result.length == 1) {
 				// console.log(result[0].picture);
 
@@ -52,7 +49,7 @@ router.post('/', upload.single('profilePciture'), (req, res, next) => {
 		console.log('\n\t\t3\n');
 
 		let picNum = 0;
-		helper_db.db_read('', 'users', { '_id': objectId(req.session.uid) }, user => {
+		helper_db.db_read('sql', 'users', { '_id': (req.session.uid) }, user => {
 			(user[0].picture) ? picNum = user[0].picture.length : 0;
 			// setTimeout(() => {
 			if (req.body.save == 'save') {
@@ -60,7 +57,7 @@ router.post('/', upload.single('profilePciture'), (req, res, next) => {
 
 				if (picNum < 5) {
 					console.log('\n\t\t4. Saving new picture\n');
-					helper_db.db_update('', 'users', { '_id': objectId(req.session.uid) }, { $addToSet: { 'picture': pic } }, () => {
+					helper_db.db_update('sql', 'users', { '_id': (req.session.uid) }, { $addToSet: { 'picture': pic } }, () => {
 						console.log('redirecting to profile page');
 						res.redirect('/take_picture');
 					});
@@ -72,7 +69,7 @@ router.post('/', upload.single('profilePciture'), (req, res, next) => {
 				if (pic.length > 20) {
 					console.log('\t\tpic: ', pic)
 					console.log('\n\t\t4. Changing profile picture\n');
-					helper_db.db_update('', 'users', { '_id': objectId(req.session.uid) }, { $set: { 'profile': pic } }, () => {
+					helper_db.db_update('sql', 'users', { '_id': (req.session.uid) }, { $set: { 'profile': pic } }, () => {
 						res.redirect('/take_picture');
 						// res.redirect('/profile');
 					});
@@ -82,7 +79,7 @@ router.post('/', upload.single('profilePciture'), (req, res, next) => {
 				}
 			} else if (req.body.delete == 'delete') {
 				console.log('\n\t\t4. Deleting Picture\n');
-				helper_db.db_update('', 'users', { '_id': objectId(req.session.uid) }, { $pull: { 'picture': pic } }, () => {
+				helper_db.db_update('sql', 'users', { '_id': (req.session.uid) }, { $pull: { 'picture': pic } }, () => {
 					res.redirect('/take_picture');
 					// res.redirect('/profile');
 				});

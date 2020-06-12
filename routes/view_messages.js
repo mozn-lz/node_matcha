@@ -38,12 +38,16 @@ router.get('/:user', function (req, res, next) {
 		console.log("0. user ", req.session.uid);
 		console.log("0. fridend ", chatFriendId);
 
-		helper_db.db_read('', 'chats', { 'user_id': req.session.uid, 'partner': chatFriendId }, conversation => {
+		helper_db.db_read('sql', 'chats', { 'user_id': req.session.uid, 'partner': chatFriendId }, conversation => {
 			conversation = conversation[0];
 			console.log(`1. GET CONVERSTATION: ${conversation.length}`);
-			helper.findUserById(req.session.uid, user => {
+			helper_db.db_read('sql', 'users', {'_id': req.session.uid}, user => {
+				user = user[0];
+			// helper.findUserById(req.session.uid, user => {
 				console.log(`2. GET user: ${user.usr_user} (${user._id})`);
-				helper.findUserById(chatFriendId, friend => {
+				helper_db.db_read('sql', 'users', {'_id': chatFriendId}, friend => {
+					friend = friend[0];
+				// helper.findUserById(chatFriendId, friend => {
 					console.log(`3. GET FRIEND ${friend.usr_user} (${friend._id})`);
 					console.log('fuk')
 					// console.log('fuCk')
