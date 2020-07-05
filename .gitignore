@@ -102,3 +102,7 @@ public
 
 # Mac System dir file
 DS_Store
+
+uploads/
+views/test.hbs
+routes/test.js
