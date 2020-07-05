@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+var htmlencode = require('htmlencode');
 
 const helper = require('./helper_functions'); // Helper functions Mk
 const helper_db = require('./helper_db'); // Helper functions Mk
@@ -29,7 +30,7 @@ function fn_render_profile(req, res, next, msg) {
 		msg_arr = msg.slice(8).split(",");
 		console.log('msg_arr: ' + msg_arr);
 
-		helper_db.db_read('sql', 'users', usr_data, res_arr => {
+		helper_db.db_read('users', usr_data, res_arr => {
 			if (res_arr.length == 1) {
 				// if user is found get their details from database
 				res_arr[0].gender == 'male' ? male = 'male' : male = '';
@@ -37,8 +38,8 @@ function fn_render_profile(req, res, next, msg) {
 				res_arr[0].oriantation == 'hetrosexual' ? hetrosexual = 'hetrosexual' : hetrosexual = '';
 				res_arr[0].oriantation == 'homosexual' ? homosexual = 'homosexual' : homosexual = '';
 				res_arr[0].oriantation == 'bisexual' ? bisexual = 'bisexual' : bisexual = '';
-				res_arr[0].gps == 'show' ? show_location = 'show' : show_location = '';
-				res_arr[0].gps == 'hide' ? hide_location = 'hide' : hide_location = '';
+				res_arr[0].gps_switch == 'show' ? show_location = 'show' : show_location = '';
+				res_arr[0].gps_switch == 'hide' ? hide_location = 'hide' : hide_location = '';
 				res.render('profile', {
 					title: 'Profile',
 					er: pass_er,
@@ -50,7 +51,7 @@ function fn_render_profile(req, res, next, msg) {
 					surname: res_arr[0].usr_surname,
 					login_time: res_arr[0].login_time,
 					pic: res_arr[0].pic,
-					profile: res_arr[0].profile,
+					profile: res_arr[0].profile_pic,
 					age: res_arr[0].age,
 					gender: res_arr[0].gender,
 					oriantation: res_arr[0].oriantation,
@@ -61,8 +62,8 @@ function fn_render_profile(req, res, next, msg) {
 					bisexual,
 					rating: res_arr[0].rating,
 					bio: res_arr[0].bio,
-					intrests: res_arr[0].intrests,
-					gps: res_arr[0].gps,
+					intrests: JSON.parse(res_arr[0].intrests),
+					gps_switch: res_arr[0].gps_switch,
 					show_location,
 					hide_location,
 					viewd: res_arr[0].viewd,
@@ -100,7 +101,7 @@ router.post('/', function (req, res, next) {
 	var profile_gender;
 	var profile_oriantation;
 	var profile_bio;
-	var profile_gps;
+	var profile_gps_switch;
 	var profile_intrests = {};
 
 	function check_usr_user(chk_usr_user) {
@@ -192,11 +193,11 @@ router.post('/', function (req, res, next) {
 		}
 	}
 
-	function check_gps(chk_gps) {
-		if (chk_gps == 'hide') {
-			profile_gps = 'hide';
+	function check_gps_switch(chk_gps_switch) {
+		if (chk_gps_switch == 'hide') {
+			profile_gps_switch = 'hide';
 		} else {
-			profile_gps = 'show';
+			profile_gps_switch = 'show';
 		}
 		return (true);
 	}
@@ -226,7 +227,7 @@ router.post('/', function (req, res, next) {
 	console.log('\t\t gender: ' + req.body.gender);
 	console.log('\t\t orientation: ' + req.body.orientation);
 	console.log('\t\t bio: ' + req.body.bio);
-	console.log('\t\t gps: ' + req.body.gps);
+	console.log('\t\t gps_switch: ' + req.body.gps_switch);
 	console.log('\t\t intrests[]: ' + req.body.intrests);
 	check_usr_user(req.body.username);
 	check_usr_email(req.body.email);
@@ -236,12 +237,14 @@ router.post('/', function (req, res, next) {
 	check_gender(req.body.gender);
 	check_oriantation(req.body.orientation);
 	check_bio(req.body.bio);
-	check_gps(req.body.gps);
+	check_gps_switch(req.body.gps_switch);
 	chk_intrests(req.body.intrests);
 
-	if (check_usr_user(req.body.username) && check_usr_email(req.body.email) && check_usr_name(req.body.fname) && check_usr_surname(req.body.lname) && check_age(req.body.age) && check_gender(req.body.gender) && check_oriantation(req.body.orientation) && check_bio(req.body.bio) && check_gps(req.body.gps)) {
+	if (check_usr_user(req.body.username) && check_usr_email(req.body.email) && check_usr_name(req.body.fname) && check_usr_surname(req.body.lname) && check_age(req.body.age) && check_gender(req.body.gender) && check_oriantation(req.body.orientation) && check_bio(req.body.bio) && check_gps_switch(req.body.gps_switch)) {
 		// store data to JSON array, to store in mongo
 		console.log('\tNo errors found');
+		console.log(req.body.intrests);
+		
 		var usr_data = {
 			usr_user: profile_username,
 			usr_email: profile_email,
@@ -251,24 +254,22 @@ router.post('/', function (req, res, next) {
 			gender: profile_gender,
 			oriantation: profile_oriantation,
 			bio: profile_bio,
-			gps: profile_gps,
+			gps_switch: profile_gps_switch,
 			intrests: profile_intrests
 		};
 
 		console.log('profile_intrests[0]:  ', profile_intrests);
-		helper_db.db_update('sql', 'users', { '_id': (req.session.uid) }, {
-			$set: {
-				usr_user: profile_username,
-				usr_email: profile_email,
-				usr_name: profile_name,
-				usr_surname: profile_surname,
-				age: profile_age,
-				gender: profile_gender,
-				oriantation: profile_oriantation,
-				bio: profile_bio,
-				gps: profile_gps,
-				intrests: profile_intrests
-			}
+		helper_db.db_update('users', { '_id': (req.session.uid) }, {
+				'usr_user': htmlencode.htmlEncode(profile_username),
+				'usr_email': htmlencode.htmlEncode(profile_email),
+				'usr_name': htmlencode.htmlEncode(profile_name),
+				'usr_surname': htmlencode.htmlEncode(profile_surname),
+				'age': htmlencode.htmlEncode(profile_age),
+				'gender': htmlencode.htmlEncode(profile_gender),
+				'oriantation': htmlencode.htmlEncode(profile_oriantation),
+				'bio': htmlencode.htmlEncode(profile_bio),
+				'gps_switch': htmlencode.htmlEncode(profile_gps_switch),
+				'intrests': JSON.stringify((profile_intrests))
 		}, () => {
 			req.session.username = profile_username;
 			req.session.email = profile_email;
@@ -278,7 +279,7 @@ router.post('/', function (req, res, next) {
 			req.session.gender = profile_gender;
 			req.session.oriantation = profile_oriantation;
 			req.session.bio = profile_bio;
-			req.session.gps = profile_gps;
+			req.session.gps_switch = profile_gps_switch;
 			req.session.intrests = profile_intrests;
 			console.log('profile_intrests[1]:  ', profile_intrests);
 

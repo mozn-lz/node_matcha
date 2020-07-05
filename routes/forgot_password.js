@@ -23,7 +23,7 @@ router.get('/:message', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
 
-	helper_db.db_read('sql', 'users', { 'usr_email': email }, (find_user) => {
+	helper_db.db_read('users', { 'usr_email': email }, (find_user) => {
 		console.log('user length:', find_user.length)
 		// console.log('user length:', find_user)
 		// console.log(user[0].usr_user, '\n', user[0].usr_name, '\n', user[0].usr_surname)

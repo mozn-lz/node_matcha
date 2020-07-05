@@ -11,6 +11,9 @@ let chatFriendId = null;
 renderPage = (res, req, user, friend, chat) => {
 	console.log('\n\t________ Rendering Page ________\n');
 
+	// console.log(user);
+	// console.log(friend);
+	// console.log(chat);
 	if (req.session.uid) {
 		res.render('view_messages', {
 			page: 'View Messages',
@@ -26,7 +29,6 @@ renderPage = (res, req, user, friend, chat) => {
 /* GET view_messages listing. */
 router.get('/', function (req, res, next) {
 	res.redirect('/index/' + 'pass_errPlease select someone to send a message to');
-	// renderPage(res, req, '', '', '');
 });
 
 router.get('/:user', function (req, res, next) {
@@ -38,16 +40,20 @@ router.get('/:user', function (req, res, next) {
 		console.log("0. user ", req.session.uid);
 		console.log("0. fridend ", chatFriendId);
 
-		helper_db.db_read('sql', 'chats', { 'user_id': req.session.uid, 'partner': chatFriendId }, conversation => {
+
+		helper_db.find_chat([{ 'user_id': req.session.uid }, { 'partner': chatFriendId }], req.session.uid, conversation => {
 			conversation = conversation[0];
+			console.log(`conversation: ` + conversation);
+			console.log(`conversation[0]: ` + conversation[0]);
 			console.log(`1. GET CONVERSTATION: ${conversation.length}`);
-			helper_db.db_read('sql', 'users', {'_id': req.session.uid}, user => {
+			
+			helper_db.db_read('users', { '_id': req.session.uid }, user => {
 				user = user[0];
-			// helper.findUserById(req.session.uid, user => {
+				// helper.findUserById(req.session.uid, user => {
 				console.log(`2. GET user: ${user.usr_user} (${user._id})`);
-				helper_db.db_read('sql', 'users', {'_id': chatFriendId}, friend => {
+				helper_db.db_read('users', { '_id': chatFriendId }, friend => {
 					friend = friend[0];
-				// helper.findUserById(chatFriendId, friend => {
+					// helper.findUserById(chatFriendId, friend => {
 					console.log(`3. GET FRIEND ${friend.usr_user} (${friend._id})`);
 					console.log('fuk')
 					// console.log('fuCk')
@@ -70,21 +76,35 @@ router.get('/:user', function (req, res, next) {
 						(conversation == null || !conversation) ? console.log('\t\tdata not found\n') : console.log('\t\tRen.data found\n');
 						if (user != null && friend != null) {
 							if (conversation) {
-								console.log(`chat:  ${conversation.user_id}`);
-								console.log(`chat:  ${conversation.partner}`);
-								console.log(`chat:  ${conversation.message}`);
-								for (let i = 0; i < conversation.message.length; i++) {
-									if (conversation.message[i].from == req.session.uid) {
-										conversation.message[i].me = true;
-										conversation.message[i].from = user.usr_user;
-									} else {
-										conversation.message[i].me = false;
-										conversation.message[i].from = friend.usr_user;
+								conversation.message = JSON.parse(conversation.message);
+								console.log(`user_id:  ${conversation.user_id}`);
+								console.log(`partner:  ${conversation.partner}`);
+								console.log(`message:  ${conversation.message}`);
+								if (Array.isArray(conversation.message)) {
+									for (let i = 0; i < conversation.message.length; i++) {
+										if (conversation.message[i].from == req.session.uid) {
+											conversation.message[i].me = true;
+											conversation.message[i].from = user.usr_user;
+										} else {
+											conversation.message[i].me = false;
+											conversation.message[i].from = friend.usr_user;
+										}
+										console.log('dt1: ', conversation.message[i].time);
+										console.log('dt2: ', (new Date(conversation.message[i].time).getHours()).toString(), ':', (new Date(conversation.message[i].time).getMinutes()).toString(), ' ', (new Date(conversation.message[i].time).getDate()).toString(), '/', (new Date(conversation.message[i].time).getMonth()).toString(), '/', (new Date(conversation.message[i].time).getFullYear()).toString());
+										// data.message[i].time = (new Date(data.message[i].time).getHours()).toString() + ':' + (new Date(data.message[i].time).getMinutes()).toString() + ' ', + (new Date(data.message[i].time).getDate()).toString() + '/', + (new Date(data.message[i].time).getMonth()).toString() + '/' + (new Date(data.message[i].time).getFullYear()).toString();
+										conversation.message[i].time = new Date(conversation.message[i].time);
 									}
-									console.log('dt1: ', conversation.message[i].time);
-									console.log('dt2: ', (new Date(conversation.message[i].time).getHours()).toString(), ':', (new Date(conversation.message[i].time).getMinutes()).toString(), ' ', (new Date(conversation.message[i].time).getDate()).toString(), '/', (new Date(conversation.message[i].time).getMonth()).toString(), '/', (new Date(conversation.message[i].time).getFullYear()).toString());
-									// data.message[i].time = (new Date(data.message[i].time).getHours()).toString() + ':' + (new Date(data.message[i].time).getMinutes()).toString() + ' ', + (new Date(data.message[i].time).getDate()).toString() + '/', + (new Date(data.message[i].time).getMonth()).toString() + '/' + (new Date(data.message[i].time).getFullYear()).toString();
-									conversation.message[i].time = new Date(conversation.message[i].time);
+								} else {
+									if (conversation.message.from == req.session.uid) {
+										conversation.message.me = true;
+										conversation.message.from = user.usr_user;
+									} else {
+										conversation.message.me = false;
+										conversation.message.from = friend.usr_user;
+									}
+									console.log('dt1: ', conversation.message.time);
+									console.log('dt2: ', (new Date(conversation.message.time).getHours()).toString(), ':', (new Date(conversation.message.time).getMinutes()).toString(), ' ', (new Date(conversation.message.time).getDate()).toString(), '/', (new Date(conversation.message.time).getMonth()).toString(), '/', (new Date(conversation.message.time).getFullYear()).toString());
+									conversation.message.time = new Date(conversation.message.time);
 								}
 								setTimeout(() => {
 									renderPage(res, req, user, friend, conversation);

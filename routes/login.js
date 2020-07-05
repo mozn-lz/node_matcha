@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+var htmlencode = require('htmlencode');
 
 const helper = require('./helper_functions'); // Helper functions Mk
 const helper_db = require('./helper_db'); // Helper functions Mk
@@ -24,7 +25,7 @@ let minAge = 18;
 let maxAge = 50;
 let data = 1;
 
-helper_db.db_read('sql', 'users', 1, (count) => {
+helper_db.db_read('users', 1, (count) => {
 	console.log(count.length);
 	if (count.length < 20) {
 		for (let i = 0; i < maxUSers; i++) {
@@ -45,7 +46,7 @@ helper_db.db_read('sql', 'users', 1, (count) => {
 				usr_surname: surname,
 				usr_psswd: passwordHash.generate(password),
 				login_time: '',
-				profile: '/images/ionicons.designerpack/md-person.svg',
+				profile_pic: '/images/ionicons.designerpack/md-person.svg',
 				age,
 				gender,
 				oriantation,
@@ -64,7 +65,7 @@ helper_db.db_read('sql', 'users', 1, (count) => {
 			users.push(newUser);
 		}
 		for (let i = users.length; i < maxUSers; i++) {
-			helper_db.db_create('sql', 'users', users[i], () => { console.log('\t\t', maxUSers, ' users created\n') });
+			helper_db.db_create('users', users[i], () => { console.log('\t\t', maxUSers, ' users created\n') });
 			// console.log(`${i + 1}.${users[i].usr_user} ${users[i].usr_email}`);
 		}
 	} else {
@@ -94,13 +95,13 @@ router.get('/:user', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-	var email = req.body.email;
-	var psswd = req.body.password;
+	var email = htmlencode.htmlEncode(req.body.email);
+	var psswd = htmlencode.htmlEncode(req.body.password);
 	var usr_data = null;
 
 	// Connect and save data to mongodbreq.params.user
 	req.params.user
-	helper_db.db_read('sql', 'users', { 'usr_email': email }, find_user => {
+	helper_db.db_read('users', { 'usr_email': email }, find_user => {
 		if (find_user.length == 1 && passwordHash.verify(psswd, find_user[0].usr_psswd)) {
 			if (find_user[0].verified == 0) {
 				res.redirect('/login/' + 'pass_errPlease check your email address to VERIFY your account');
@@ -124,9 +125,7 @@ router.post('/', function (req, res, next) {
 				req.session.viewd = find_user[0].viewd;
 				req.session.liked = find_user[0].liked;
 				req.session.verified = find_user[0].verified;
-				req.session.confirm_code = find_user[0].confirm_code;
-				req.session.friends = find_user[0].friends;
-				req.session.notifications = find_user[0].notifications;
+				req.session.blocked = find_user[0].blocked;
 				(() => {
 					res.redirect('/');
 				})()

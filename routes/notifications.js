@@ -4,6 +4,14 @@ const router = express.Router();
 const helper = require('./helper_functions'); // Helper functions Mk
 const helper_db = require('./helper_db'); // Helper functions Mk
 
+const mysql = require('mysql2');
+const conn = mysql.createConnection({
+	host: 'localhost',
+	user: 'root',
+	password: 'admin',
+	database: 'matcha'
+});
+
 let page_name = 'notifications';
 
 let fn_render_notifications = (req, res, msg, matches) => {
@@ -29,9 +37,8 @@ let fn_render_notifications = (req, res, msg, matches) => {
 				res_arr == null;
 			}
 		}
-		// console.log('res Arr: ', res_arr);
+		console.log('res Arr: ', res_arr);
 
-		// if (notification.type )
 		res.render(page_name, {
 			notifications: res_arr,
 
@@ -48,13 +55,12 @@ let fn_render_notifications = (req, res, msg, matches) => {
 // function vis(){
 function fn_getNotifications(req, res, notification, msg) {
 
-	console.log('\n\t\t1. msg: ', msg, '\n\n');
-
-	// var find_user = [];
 	var user_matches = [];
-	console.log('Notifications ', notification);
+	console.log('NotificationsB ', notification);
+	notification = JSON.parse(notification);
+	console.log('\n\t\t1. msg: ', msg, '\n\n');
+	console.log('NotificationsA ', notification);
 
-	// let notification = req.session.notifications;
 
 	if (notification) {
 		let find_user = new Promise((resolve, reject) => {
@@ -62,51 +68,36 @@ function fn_getNotifications(req, res, notification, msg) {
 			let num_msg = 0;
 			let num_view = 0;
 
-			for (let i = 0; i <= notification.length; i++) {
-				if (i < notification.length) {
-					helper_db.db_read('sql', 'users', { '_id': (notification[i].from) }, (doc) => {
-						// user_matches[i].push(doc);
-						// console.log(doc);
-						// 	from: req.session.uid,
-						for (let i = 0; i < doc.length; i++) {
-							notification[i].pic = doc.profile;
-							notification[i].name = doc.usr_user;
-							if (notification[i].type == 'friend request') {
-								notification[i].request = 'friend request';
-								notification.num_req = num_req++;
-							} else if (notification[i].type == 'send message') {
-								notification[i].message = 'send message';
-								notification.num_req = num_msg++;
-							} else if (notification[i].type == 'view profile') {
-								notification[i].profile = 'view profile';
-								notification.num_req = num_view++;
-							} else if (notification[i].type == 'friend reject') {
-								notification[i].reject = 'friend reject';
-								notification.num_req = num_view++;
-							} else if (notification[i].type == 'like back') {
-								notification[i].like_back = 'like back';
-								notification.num_req = num_view++;
-							}
-						}
-					});
-				}
-				else {
-					// console.log('Irh  i: ', i);
+			console.log(' notification.length ', notification.length)
+			for (let i = 0; i < notification.length; i++) {
+				// if (i < notification.length) {
+				console.log(notification.length);
 
-					// console.log('notification: ', notification, " \nnote.");
-					// console.log('notification.length, ', notification.length);
-					// if (i == notification.length) {
-					// 	console.log(notification[0].from, " ", notification[0].type, " R:", notification[0].request, " P:", notification[0].profile, " M:", notification[0].message);
-					// 	console.log(notification[1].from, " ", notification[1].type, " R:", notification[1].request, " P:", notification[1].profile, " M:", notification[1].message);
-					// 	fn_render_notifications(req, res, msg, notification);
-					// 	console.log('\n\t\tClosing database\n\n');
-					// 	client.close();
-					// }
-					console.log('\n\t\t3. msg: ', msg, '\n\n');
-					console.log('\n\t\tClosing database\n\n');
-				}
-
-				// console.log('\titerate: ', i, ' vs ', notification.length);
+				console.log(`${notification[i].from} \nnotification.length ${notification.length}`);
+				helper_db.db_read('users', { '_id': (notification[i].from) }, (doc) => {
+					notification[i].pic = doc[0].profile_pic;
+					notification[i].name = doc[0].usr_user;
+					if (notification[i].type == 'friend request') {
+						notification[i].request = 'friend request';
+						notification.num_req = num_req++;
+					} else if (notification[i].type == 'send message') {
+						notification[i].message = 'send message';
+						notification.num_req = num_msg++;
+					} else if (notification[i].type == 'view profile') {
+						notification[i].profile = 'view profile';
+						notification.num_req = num_view++;
+					} else if (notification[i].type == 'friend reject') {
+						notification[i].reject = 'friend reject';
+						notification.num_req = num_view++;
+					} else if (notification[i].type == 'like back') {
+						notification[i].like_back = 'like back';
+						notification.num_req = num_view++;
+					}
+				});
+				// } else {
+				// 	console.log('\n\t\t3. msg: ', msg, '\n\n');
+				// 	console.log('\n\t\tClosing database\n\n');
+				// }
 				setTimeout(() => {
 					resolve(notification);
 				}, 1000);
@@ -114,19 +105,11 @@ function fn_getNotifications(req, res, notification, msg) {
 		});
 
 		find_user.then((notification) => {
-			// console.log(notification);
-			console.log('\n\n',
-				// notification[0].from, '\t\t', notification[1].from, '\n',
-				// notification[0].name, '\t\t', notification[1].name, '\n',
-				// notification[0].type, '\t\t', notification[1].type, '\nr: ',
-				// notification[0].request, '\t\t', notification[1].request, '\np: ',
-				// notification[0].profile, '\t\t', notification[1].profile, '\nm: ',
-				// notification[0].message, '\t\t', notification[1].message, '\n'
-			);
+
 			for (let i = 0; i < notification.length; i++) {
 				const element = notification[i];
 
-				console.log(notification[i].from, ', ', notification[i].name, ', ',
+				console.log('F:', notification[i].from, ', N:', notification[i].name, ', T:',
 					notification[i].type, ', ', notification[i].request, ', ',
 					notification[i].profile, ', ', notification[i].message, '\n');
 			}
@@ -141,7 +124,7 @@ function fn_getNotifications(req, res, notification, msg) {
 let fn_getFriends = (req, res, next, msg) => {
 
 	let notifications = '';
-	helper_db.db_read('sql', 'users', { '_id': (req.session.uid) }, user => {
+	helper_db.db_read('users', { '_id': (req.session.uid) }, user => {
 		(user[0].notifications) ? notifications = user[0].notifications : notifications = null;
 		fn_getNotifications(req, res, notifications, msg);
 	});
@@ -158,37 +141,69 @@ router.post('/', (req, res, next) => {
 			res.redirect(location);
 		}
 		remove_notification = (location) => {
-			console.log('removinge ', notify, ' from: ', friendId, '\n');
-			//	remove 'this' notification
-			helper_db.db_update('', users, { '_id': (req.session.uid) }, { $pull: { 'notifications': { 'from': friendId, 'type': notify } } }, () => {
-				fn_redirect(location);
+			helper_db.db_read('users', { '_id': (req.session.uid) }, user => {
+				let notifications = user[0].notifications;
+				console.log('\n\n\nbefore notifications:  (', `${(JSON.parse(notifications)).length} ${typeof (notifications)}`, ')', notifications);
+
+				notifications = JSON.parse(notifications);
+
+				if (notify == 'view_profile') {
+					notify = 'view profile';
+					location = '/notifications/';
+				}
+
+				let new_data = { 'from': Number(friendId), 'type': notify };
+				// notifications = JSON.parse('['+ notifications +']');
+				for (let i = 0; i <= notifications.length && notifications.length != 0; i++) {
+					const el = notifications[i];
+					console.log('JSON.stringify(new_data): ', typeof (JSON.stringify(new_data)) + JSON.stringify(new_data));
+					console.log('JSON.stringify(el): ', typeof (JSON.stringify(el)) + JSON.stringify(el));
+					console.log(i, '. nND(' + JSON.stringify(new_data) + ') EL(' + JSON.stringify(el) + ') ' + JSON.stringify(el) == JSON.stringify(new_data));
+					if (JSON.stringify(notifications[i]) == JSON.stringify(new_data)) {
+						console.log('match');
+						notifications.splice(i, 1);
+						i = 0;
+					} else {
+						console.log(i, '. no match');
+					}
+					console.log(`${i} vs ${notifications.length}`);
+				}
+				console.log('After notifications: (', `${notifications.length} ${typeof (notifications)}`, ')', notifications);
+
+				//	remove 'this' notification
+				helper_db.db_update('users', { '_id': req.session.uid }, { 'notifications': JSON.stringify(notifications) }, () => {
+					console.log('\n\n\n');
+					fn_redirect(location);
+				});
 			});
 		}
 
-		accept_friend = (callback) => {
+		accept_friend = () => {
 			// accept query
 			console.log('hxdf ', friendId);
-				helper_db.db_update('sql', 'users', {'_id': (req.session.uid) }, { $addToSet: { 'friends': friendId } }, () => {
-					helper_db.db_update('sql', 'users', { '_id': (friendId) }, { $addToSet: { 'friends': req.session.uid } }, () => {
-						let notification = {	// notification object
-							from: req.session.uid,
-							type: 'like back'
-						}
-						helper_db.db_update('sql', 'users', { '_id': (friendId) }, { $addToSet: { notifications: notification } }, () => {
-							remove_notification('/view_profile/' + friendId)
-						});
+			helper_db.update_plus('users', { '_id': (req.session.uid) }, '$addToSet', 'friends', Number(friendId), () => {
+				helper_db.update_plus('users', { '_id': (friendId) }, '$addToSet', 'friends', Number(req.session.uid), () => {
+					let notification = {	// notification object
+						from: req.session.uid,
+						type: 'like back'
+					}
+					helper_db.update_plus('users', { '_id': (friendId) }, '$addToSet', 'notifications', notification, () => {
+						// helper_db.db_update('users', { '_id': (friendId) }, { $addToS ifications: notification } }, () => {
+						remove_notification('/view_profile/' + friendId)
 					});
 				});
+			});
 		}
 
-		if (req.body.type == 'view_profile') {
-			remove_notification('/notifications/');
-		} else if (req.body.type == 'view profile') {
-			remove_notification('/view_profile/' + friendId)
-		} else if (req.body.type == 'send message') {
+
+		if (req.body.type == 'send message') {
 			remove_notification('/view_messages/' + friendId)
 		} else if (req.body.type == 'friend request') {
-			accept_friend(remove_notification);
+			accept_friend();
+		} else if (req.body.type == 'view_profile') {
+			remove_notification('/notifications/');
+		} else if (req.body.type == 'view profile') {
+			remove_notification('/notifications/');
 		} else if (req.body.type == 'remove') {
 			remove_notification('/notifications/');
 		} else if (req.body.type == 'like back') {
@@ -197,7 +212,8 @@ router.post('/', (req, res, next) => {
 			remove_notification('/notifications/');
 		} else {
 			console.log('false\n');
-			fn_getFriends(req, res, next, '');
+			// fn_getFriends(req, res, next, '');
+			res.redirect('/notifications/');
 		}
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');

@@ -9,80 +9,91 @@ module.exports = {
 
 		console.log('PING ifconfig ');
 
-			var user_matches = [];
-			var match_criteria = {};
-			let match_criteria2 = {};
+		var user_matches = [];
+		var match_criteria = {};
+		let match_criteria2 = {};
 
-			(() => {
-				switch (req.session.oriantation) {
-					case 'hetrosexual':
-						if (req.session.gender == 'male') {
-							match_criteria = { gender: "female", exception: "homosexual" };
-							console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
-						} else {
-							match_criteria = { gender: "male", exception: "homosexual" };
-							console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
-						}
-						break;
-					case 'homosexual':
-						if (req.session.gender == 'male') {
-							match_criteria = { gender: "male", exception: "hetrosexual" };
-							console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
-						} else {
-							match_criteria = { gender: "female", exception: "hetrosexual" };
-							console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
-						}
-						break;
-					case 'bisexual':
-						if (req.session.gender == 'male') {
-							match_criteria = { gender: "male", exception: "hetrosexual" };
-							match_criteria2 = { gender: "female", exception: "homosexual" };
-							console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
-						} else if (req.session.gender == 'female') {
-							match_criteria = { gender: "male", exception: "homosexual" };
-							match_criteria2 = { gender: "female", exception: "hetrosexual" };
-							console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
-						}
-						break;
-					default:
-						console.log('Please make sure your gender and oriantation is specified');
-						break;
-				};
-				console.log('A ', req.session.oriantation, ' ', req.session.gender);
+		switch (req.session.oriantation) {
+			case 'hetrosexual':
+				if (req.session.gender == 'male') {
+					match_criteria = { gender: "female", exception: "homosexual" };
+					console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
+				} else {
+					match_criteria = { gender: "male", exception: "homosexual" };
+					console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
+				}
+				break;
+			case 'homosexual':
+				if (req.session.gender == 'male') {
+					match_criteria = { gender: "male", exception: "hetrosexual" };
+					console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
+				} else {
+					match_criteria = { gender: "female", exception: "hetrosexual" };
+					console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
+				}
+				break;
+			case 'bisexual':
+				if (req.session.gender == 'male') {
+					match_criteria = { gender: "male", exception: "hetrosexual" };
+					match_criteria2 = { gender: "female", exception: "homosexual" };
+					console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
+				} else if (req.session.gender == 'female') {
+					match_criteria = { gender: "male", exception: "homosexual" };
+					match_criteria2 = { gender: "female", exception: "hetrosexual" };
+					console.log("A ", req.session.oriantation, " ", req.session.gender, " looking for a ", match_criteria.gender, ", but one thats not ", match_criteria.exception);
+				}
+				break;
+			default:
+				console.log('Please make sure your gender and oriantation is specified');
+				break;
+		};
+		console.log('A ', req.session.oriantation, ' ', req.session.gender);
 
-				helper_db.db_read('sql', 'users', 1, doc => {
-					for (let i = 0; i < doc.length; i++) {
-						if (doc[i]._id != req.session.uid) {
-							(!doc[i].profile) ? doc[i].profile = "/images/ionicons.designerpack/md-person.svg" : 0;
-							if ((match_criteria && doc[i].gender == match_criteria.gender && doc[i].oriantation != match_criteria.exception) || (match_criteria2 && doc[i].gender == match_criteria2.gender && doc[i].oriantation != match_criteria2.exception)) {
-								user_matches.push(doc[i]);
-								console.log("Found a ", doc[i].oriantation, " ", doc[i].gender, " named ", doc[i].usr_user);
-							} else {
-								console.log("\t", doc[i].oriantation, " ", doc[i].gender, " named ", doc[i].usr_user, " Rejected");
-							}
-						}
+		helper_db.db_read('users', 1, doc => {
+			for (let i = 0; i < doc.length; i++) {
+				if (doc[i]._id != req.session.uid) {
+					(!doc[i].profile_pic) ? doc[i].profile_pic = "/images/ionicons.designerpack/md-person.svg" : 0;
+					if ((match_criteria && doc[i].gender == match_criteria.gender && doc[i].oriantation != match_criteria.exception) ||
+						(match_criteria2 && doc[i].gender == match_criteria2.gender && doc[i].oriantation != match_criteria2.exception) &&
+						req.session.blocked.includes(doc[i]._id)) {
+						user_matches.push( 
+							{_id : doc[i]._id, 
+							usr_user : doc[i].usr_user, 
+							usr_email : doc[i].usr_email, 
+							usr_name : doc[i].usr_name, 
+							usr_surname : doc[i].usr_surname, 
+							profile_pic : doc[i].profile_pic, 
+							age : doc[i].age, 
+							rating : doc[i].rating, 
+							bio : doc[i].bio, 
+							gps : doc[i].gps});
+						console.log("Found a ", doc[i].oriantation, " ", doc[i].gender, " named ", doc[i].usr_user);
+					} else {
+						console.log("\t", doc[i].oriantation, " ", doc[i].gender, " named ", doc[i].usr_user, " Rejected");
 					}
-					// callback(doc[i][0]);
-				});
+				}
+			}
+			// callback(doc[i][0]);
+			setTimeout(() => {
+				console.log('\t\tfound ' + user_matches.length);
+				console.log(user_matches);
+				
+				callback(user_matches);
+			}, 1500);
+		});
 
-				// collection.find().forEach((doc, err) => {
-				// 	assert.equal(null, err);
-				// 	if (doc._id != req.session.uid) {
-				// 		(!doc.profile) ? doc.profile = "/images/ionicons.designerpack/md-person.svg" : 0;
-				// 		if ((match_criteria && doc.gender == match_criteria.gender && doc.oriantation != match_criteria.exception) || (match_criteria2 && doc.gender == match_criteria2.gender && doc.oriantation != match_criteria2.exception)) {
-				// 			user_matches.push(doc);
-				// 			console.log("Found a ", doc.oriantation, " ", doc.gender, " named ", doc.usr_user);
-				// 		} else {
-				// 			console.log("\t", doc.oriantation, " ", doc.gender, " named ", doc.usr_user, " Rejected");
-				// 		}
-				// 	}
-				// })
-			})(), (() => {
-				setTimeout(() => {
-					console.log('\t\tfound ' + user_matches.length);
-					callback(user_matches);
-				}, 1500);
-			})()
+		// collection.find().forEach((doc, err) => {
+		// 	assert.equal(null, err);
+		// 	if (doc._id != req.session.uid) {
+		// 		(!doc.profile_pic) ? doc.profile_pic = "/images/ionicons.designerpack/md-person.svg" : 0;
+		// 		if ((match_criteria && doc.gender == match_criteria.gender && doc.oriantation != match_criteria.exception) || (match_criteria2 && doc.gender == match_criteria2.gender && doc.oriantation != match_criteria2.exception)) {
+		// 			user_matches.push(doc);
+		// 			console.log("Found a ", doc.oriantation, " ", doc.gender, " named ", doc.usr_user);
+		// 		} else {
+		// 			console.log("\t", doc.oriantation, " ", doc.gender, " named ", doc.usr_user, " Rejected");
+		// 		}
+		// 	}
+		// })
 	},
 	findUserById: (user_id, callback) => {
 
@@ -199,36 +210,55 @@ module.exports = {
 	},
 	sort_locate: (matches, location) => {
 		let sorted = [];
+		location = JSON.parse(location);
+		for (let i = 0; i < matches.length; i++) {
+			const element = matches[i];
+			if (element.gps && typeof (element.gps) != 'object') {
+
+				console.log(`${element.usr_user} ${element.gps}`);
+				element.gps = JSON.parse(element.gps)
+			}
+		}
 		console.info('locate__', matches.length);
+		// matches[0].gps = JSON.parse(matches[0].gps);
+		console.log(`${JSON.stringify(location.country)}`);
+		console.log(`${JSON.stringify(location.city)}`);
+		console.log(`${matches[0].usr_name}: ${((matches[0].gps.country))}`);
+		console.log(`${matches[0].usr_name}: ${((matches[0].gps))}`);
 		for (let i = 0; i < matches.length; i++) {
-			if ((matches[i].gps.country == location.country) && (matches[i].gps.city == location.city)) {
+			// matches[i].gps = JSON.parse(matches[i].gps); 
+			if ((JSON.stringify(matches[i].gps.country) == JSON.stringify(location.country)) && (JSON.stringify(matches[i].gps.city) == JSON.stringify(location.city))) {
+				console.log(`\t\t1. ${matches[i].usr_user}`);
 				sorted.push(matches[i]);
 			}
 		}
 		for (let i = 0; i < matches.length; i++) {
-			if ((matches[i].gps.country == location.country) && (matches[i].gps.city != location.city)) {
+			if ((JSON.stringify(matches[i].gps.country) == JSON.stringify(location.country)) && (JSON.stringify(matches[i].gps.city) != JSON.stringify(location.city))) {
+				console.log(`\t\t2. ${matches[i].usr_user}`);
 				sorted.push(matches[i]);
 			}
 		}
 		for (let i = 0; i < matches.length; i++) {
-			if ((matches[i].gps.country != location.country) && (matches[i].gps.city != location.city)) {
+			if ((JSON.stringify(matches[i].gps.country) != JSON.stringify(location.country)) && (JSON.stringify(matches[i].gps.city) != JSON.stringify(location.city))) {
+				console.log(`\t\t3. ${matches[i].usr_user}`);
 				sorted.push(matches[i]);
 			}
 		}
+		// console.log(`sorting ${sorted}`);
 		return (sorted);
 	},
 	//	END SORTING FUNCTIONS
 
 	//	START FILTERING FUNCTIONS
-	filter_fame: (filter_arr, begin, range) => {
+	filter_fame: (filter_arr, begin, end) => {
 		let result = [];
 		begin = Number(begin);
-		range = Number(range);
+		end = Number(end);
 		console.log('begin: ' + begin);
-		console.log('range: ' + range);
+		console.log('range: ' + end);
 		for (let i = 0; i < filter_arr.length; i++) {
-			if ((filter_arr[i].rating <= (begin + range)) &&
-				(filter_arr[i].rating >= (begin - range))) {
+			if ((filter_arr[i].rating <= (end)) &&
+				(filter_arr[i].rating >= (begin))) {
 				console.log(`A: ${filter_arr[i].usr_name} : ${filter_arr[i].rating}`);
 				result.push(filter_arr[i]);
 			} else {
@@ -237,15 +267,15 @@ module.exports = {
 		}
 		return (result);
 	},
-	filter_age: (age_arr, begin, range) => {
+	filter_age: (age_arr, begin, end) => {
 		console.log("\n\n______filter_age______");
 		let result = [];
 		begin = Number(begin);
-		range = Number(range);
+		end = Number(end);
 		console.log("age_arr.length:", age_arr.length);
 		for (var i = 0; i < age_arr.length; i++) {
-			if ((age_arr[i].age <= (begin + range)) &&
-				(age_arr[i].age >= (begin - range))) {
+			if ((age_arr[i].age <= (end)) &&
+				(age_arr[i].age >= (begin))) {
 				console.log(`A: ${age_arr[i].usr_name} : ${age_arr[i].age}`);
 				result.push(age_arr[i]);
 			} else {
@@ -285,23 +315,134 @@ module.exports = {
 		return (result);
 	},
 	filter_locate: (matches, location) => {
+		console.log('filtering location');
 		let result = [];
+
+		// location = JSON.parse(location);
 		for (let i = 0; i < matches.length; i++) {
-			if ((matches[i].gps.country == location.country) && (matches[i].gps.city == location.city)) {
-				result.push(matches[i]);
+			const element = matches[i];
+			if (element.gps && typeof (element.gps) != 'object') {
+				console.log(`${element.usr_user} ${element.gps}`);
+				element.gps = JSON.parse(element.gps)
 			}
 		}
 		for (let i = 0; i < matches.length; i++) {
-			if ((matches[i].gps.country == location.country) && (matches[i].gps.city != location.city)) {
-				result.push(matches[i]);
-			}
-		}
-		for (let i = 0; i < matches.length; i++) {
-			if ((matches[i].gps.country != location.country) && (matches[i].gps.city != location.city)) {
-				result.push(matches[i]);
+			if (matches[i].gps.country && matches[i].gps.city) {
+				if ((matches[i].gps.country.toLowerCase() == location.toLowerCase()) || (matches[i].gps.city.toLowerCase() == location.toLowerCase())) {
+					result.push(matches[i]);
+				}
 			}
 		}
 		return (result);
-	}
+	},
+	filer_name: (search_arr, name) => {
+		let filter_arr = [];
+		console.log('\n\t\tfiltering for age\n');
+		for (let i = 0; i < search_arr.length; i++) {
+			const el = search_arr[i];
+			if (el.usr_user.toLowerCase() == name.toLowerCase() || el.usr_name.toLowerCase() == name.toLowerCase() || el.usr_surname.toLowerCase() == name.toLowerCase()) {
+				filter_arr.push(el);
+				console.log(`\n\tmatch ${el.usr_name}\n`);
+			}
+		}
+		// setTimeout(() => {
+		console.log(`returning ${filter_arr.length}`);
+		console.log(filter_arr);
+		return (filter_arr);
+		// }, 500);
+	},
 	//	END FILTERING FUNCTIONS
+	send_notifications: (find, notification, cb) => {
+		helper_db.update_plus('users', find, '$addToSet', 'notifications', notification, () => {
+			cb;
+		});
+
+	},
+	is_blocked: (id) => {
+		helper_db.db_read('users', { '_id': id }, user => {
+			if (user.blocked && user.blocked.includes(req.session.uid)) {
+				return (true);
+			} else {
+				return (false);
+			}
+		});
+	},
+	calc_fame: (uid) => {
+		console.log(`1********** fame rating **********`);
+		helper_db.db_read('users', { '_id': uid }, user => {
+			let rating = 0;
+			let friends = JSON.parse(user[0].friends)
+			// let get_fame = (na, cb) => {
+			let score = 0;
+			// console.log(`\nuser ${user[0].usr_user}\n`);
+			console.log('_______________friends');
+			setTimeout(() => {
+				if (friends && friends.length > 0) {
+					// console.log(`\nfrends ${friends.length}\n`);
+					for (let i = 0; i < friends.length; i++) {
+						helper_db.find_chat([{ 'user_id': uid }, { 'partner': friends[i] }], uid, conversation => {
+							// console.log(conversation);
+							// console.log(conversation[0].message);
+							let chat = JSON.parse(conversation[0].message);
+							if (chat) {
+								let j = 0;
+								// console.log(chat);
+								while (j < chat.length) {
+									j++;
+								}
+								if (chat[j - 1].time >= (Date.now() - 1000 * 60 * 3600 * 24 * 7)) {
+									score++;
+									console.log('chat time' + chat[j - 1].time);
+									console.log('date  now' + Date.now() - 1000 * 60 * 3600 * 24 * 7);
+								} else {
+									console.log('chat time' + chat[j - 1].time);
+									console.log('date  now' + Date.now() - 1000 * 60 * 3600 * 24 * 7);
+								}
+							}
+						});
+						console.log(`${i}\n`);
+						console.log('score ' + score);
+					}
+				} else {
+					console.log(`@ No Friends \tfame is = ${rating}\tscore is ${score}\t friendslen = ${friends.length}`);
+					rating = 0;
+				}
+
+				// cb(score);
+			}, 500);
+			// }
+			// get_fame('uid', (score) => {
+			setTimeout(() => {
+				console.log('_______________ callback')
+				rating = (score / friends.length) * 5;
+				console.log(`cb rating `, score / friends.length * 5);
+				if (rating == 0) {
+					rating = 0;
+					console.log(`0fame is = ${rating}\tscore is ${score}\t friendslen = ${friends.length}`);
+				} else if (rating > 0 && rating <= 1) {
+					rating = 1;
+					console.log(`1fame is = ${rating}\tscore is ${score}\t friendslen = ${friends.length}`);
+				} else if (rating > 1 && rating <= 2) {
+					rating = 2;
+					console.log(`2fame is = ${rating}\tscore is ${score}\t friendslen = ${friends.length}`);
+				} else if (rating > 2 && rating <= 3) {
+					rating = 3;
+					console.log(`3fame is = ${rating}\tscore is ${score}\t friendslen = ${friends.length}`);
+				} else if (rating > 3 && rating <= 4) {
+					rating = 4;
+					console.log(`4fame is = ${rating}\tscore is ${score}\t friendslen = ${friends.length}`);
+				} else if (rating > 4 && rating <= 5) {
+					rating = 5;
+					console.log(`5fame is = ${rating}\tscore is ${score}\t friendslen = ${friends.length}`);
+				} else {
+					rating = 3;
+					console.log(`@ Else \tfame is = ${rating}\tscore is ${score}\t friendslen = ${friends.length}`);
+				}
+				helper_db.db_update('users', { '_id': uid }, { rating }, () => {
+					console.log(`L fame is = ${rating}\tscore is ${score}\t friendslen = ${friends.length}`);
+				});
+			}, 1000);
+			// });
+		});
+	}
 };

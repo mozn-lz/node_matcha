@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+var htmlencode = require('htmlencode');
 
 const helper = require('./helper_functions'); // Helper functions Mk
 const helper_db = require('./helper_db'); // Helper functions Mk
@@ -139,10 +140,10 @@ router.post('/', function (req, res, next) {
 	if (check_username(req.body.username) && check_email(req.body.email) && check_name(req.body.name) && check_surname(req.body.surname) && check_psswd(req.body.psswd) && check_psswd1(req.body.psswd1) && pass_match(req.body.psswd, req.body.psswd1)) {
 		// store data to JSON array, to store in mongo
 		var usr_data = {
-			usr_user: user,
-			usr_email: email,
-			usr_name: name,
-			usr_surname: surname,
+			usr_user: htmlencode.htmlEncode(user),
+			usr_email: htmlencode.htmlEncode(email),
+			usr_name: htmlencode.htmlEncode(name),
+			usr_surname: htmlencode.htmlEncode(surname),
 			usr_psswd: passwordHash.generate(psswd), // to be encrypted
 			login_time: '',
 			profile: '/images/ionicons.designerpack/md-person.svg',
@@ -153,6 +154,7 @@ router.post('/', function (req, res, next) {
 			bio: '',
 			intrests: [],
 			gps: '',
+			gps_switch: '',
 			viewd: [],
 			liked: [],
 			verified: 0,
@@ -161,13 +163,13 @@ router.post('/', function (req, res, next) {
 
 		// Connect and save data to mongodb
 
-		helper_db.db_read('sql', 'users', { usr_email: email }, (count) => {
+		helper_db.db_read('users', { usr_email: email }, (count) => {
 			if (count.length > 0) {
 				console.log('Username exists.');
 				res.redirect('/login/' + 'pass_errEmail ' + email + ' is alreday associated with an account.');
 			} else {
 				console.log('Username does not exist.');
-				helper_db.db_create('sql', 'users', usr_data, () => {
+				helper_db.db_create('users', usr_data, () => {
 					console.log("Documents added to database: " + dbName);
 
 					const to = email;

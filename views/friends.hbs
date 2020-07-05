@@ -18,8 +18,8 @@
 		<form action="/friends" method="post">
 			<input type="hidden" name="friend" value="{{this._id}}">
 			<button type="submit" value="remove_friend">x</button>
-			<div class="users row" onclick="goViewProfile(`{{this._id}}`)">
-				<div class="left "><img src={{this.profile}} alt="Profile Picture" width="150px" height="150px"></div>
+			<div class="users row">
+				<div class="left "><img src={{this.profile_pic}} alt="Profile Picture" width="150px" height="150px"></div>
 				<div class="card" style="width: 18rem;">
 					<div class="card-body">
 						<h5 class="card-title">{{this.usr_user}}</h5>

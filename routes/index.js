@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const assert = require('assert');
 var helper = require('./helper_functions'); // Helper functions Mk
+const helper_db = require('./helper_db');
 // var helper_index = require('./helper_index'); // Helper functions Mk
 
 
@@ -13,6 +14,7 @@ let fn_render_index = (req, res, next, msg, matches) => {
 	// console.log('\n\n\n________fn_render_indexn________\n');
 	if (req.session.uid) {
 		console.log('sorting');
+		// helper_db.db_read('users', {_id: req.session.uid}, userGp => console.log(userGp));
 		var res_arr = helper.sort_locate(matches, req.session.gps);
 		(req.session.oriantation == '') ? req.session.oriantation = 'bisexual' : 0;
 
@@ -34,7 +36,7 @@ let fn_render_index = (req, res, next, msg, matches) => {
 		}
 		console.log('render');
 		res.render('index', {
-			match_list: res_arr,
+			// match_list: res_arr,
 			msg_arr,
 			er: pass_er,
 			suc: pass_suc,

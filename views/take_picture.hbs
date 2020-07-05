@@ -1,96 +1,40 @@
 <link rel='stylesheet' href='/stylesheets/take_picture.css' />
 
-<div>
-	<ul class="nav nav-pills" id="myTab" role="tablist">
-		<li class="nav-item">
-			<a class="nav-link active" id="take_picture-tab" data-toggle="tab" href="#take_picture" role="tab"
-				aria-controls="take_picture" aria-selected="true">Upload Picture</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" id="choose-profile-tab" data-toggle="tab" href="#choose-profile" role="tab"
-				aria-controls="choose-profile" aria-selected="false">Choose Picture</a>
-		</li>
-	</ul>
-
-	<div class="tab-content">
-		<div class="tab-pane active" id="take_picture" role="tabpanel" aria-labelledby="take_picture-tab">
-			<section class="shadow-lg p-3 mb-5 bg-white " id="main">
-				<h2>Take pic</h2>
-
-				<div class="top-container">
-					<div id="overlay-options">
-						<input type="radio" name="overlay" value="#" id="none" checked="checked"> Ugly face
-						<input type="radio" name="overlay" value="/images/img/mask1.png" id="crazy"> crazy
-						<input type="radio" name="overlay" value="/images/img/mask2.png" id="catface"> catface
-					</div>
-					<div>
-						<input type="checkbox" name="overlay2" value="/images/img/waterDrop.png" id="overlay2"> Rain
-					</div>
-					<div class="">
-						<div class="" id="vid_div">
-							<div>
-								<button id="photo-button" class="btn btn-success">Upload</button>
-								<input type="file" onchange="encodeImageFileAsURL(this)" />
-							</div>
-							<div id="imgVidDiv">
-								<img id="tmpImg" src="" alt="">
-								<img id="tmpImg2" src="" alt="">
-								<video id="video">Stream broken...</video>
-							</div>
-						</div>
-						<div class="float-left padding-400">
-						</div>
-					</div>
-					<div id="photos">
-						<img id="selfie" src="" alt="" style="width:100%;max-width:300px">
-
-						<!-- The Modal -->
-						<div id="myModal" class="modal">
-							<span class="close">&times;</span>
-							<img class="modal-content" name="user_pic" id="img01">
-							<div id="caption"></div>
-							<form id="modify_pics" action="/take_picture" method="post" enctype="multipart/form-data">
-								<input class="hidden" type="text" id="thmb" name="thmb" value="#">
-								<button name="cancel" value="cancel" type="submit">Cancel</button>
-								<button name="save" value="save" type="submit">Save</button>
-						</div>
-					</div>
-				</div>
-				<canvas id="canvas"></canvas>
-			</section>
-		</div>
-		<div class="tab-pane" id="choose-profile" role="tabpanel" aria-labelledby="choose-profile-tab">
-			<h5 class="text-center">Select Profile Picture</h5>
-			<div class="row">
-				<div class="col-6">
-					<img id="profilePic" class="rounded-circle" alt="">
-					<div class="center">
-						<div class="inline"><button type="submit" id="change" class="btn btn-success" name="change"
-								value="change">Change</button></div>
-						<div class="inline"><button type="submit" id="delete" class="btn btn-danger" name="delete"
-								value="delete">Delete</button></div>
-					</div>
-				</div>
-				<div class="col-6">
-					<p>Current Profile Picture</p>
-					<img id="profile_Pic" class="rounded-circle" src="{{profile}}" alt="profile picture">
-				</div>
-			</div>
-			<br>
-			<hr>
-			<fieldset>
-				<legend>Your Picutres</legend>
-				{{#each pic}}
-				{{#if this}}
-				<div class="ppDiv inline">
-					<img class="user_pics" src={{this}} alt="">
-				</div>
-				{{/if}}
-				{{/each}}
-			</fieldset>
-			</form>
+<div class="tab-pane" id="choose-profile" role="tabpanel" aria-labelledby="choose-profile-tab">
+	<h5 class="text-center">Select Profile Picture</h5>
+	<div class="row">
+		<div class="col-6">
+			<p>Current Profile Picture</p>
+			<img id="profile_Pic" class="rounded-circle" src="{{profile_pic}}" alt="profile picture">
 		</div>
 	</div>
+	<br>
+	<hr>
+	<fieldset>
+		<legend>Your Picutres</legend>
+		<form action="/take_picture" enctype="multipart/form-data" method="post">
+			<div class="form-group">
+				<input type="file" class="form-control-file" name="uploaded_file">
+				<button type="submit" class="btn btn-success">upload</button>
+			</div>
+		</form>
+		{{#each pics}}
+			{{#if this}}
+				<div class="ppDiv inline">
+					<img class="user_pics" src="{{this.pic}}" alt="">
+					<form id="modify_pics" action="/take_picture" method="post">
+						<div class="center">
+							<input type="hidden" name="thumb" value="{{this.pic}}">
+							<div class="inline"><button type="submit" id="change" class="btn btn-success" name="change"
+									value="change">Change</button></div>
+							<div class="inline"><button type="submit" id="delete" class="btn btn-danger" name="delete"
+									value="delete">Delete</button></div>
+						</div>
+					</form>
+				</div>
+			{{/if}}
+		{{/each}}
+	</fieldset>
 </div>
 
 <script src="/javascripts/take_pic.js"></script>

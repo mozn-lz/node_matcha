@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+var htmlencode = require('htmlencode');
 
 const helper = require('./helper_functions'); // Helper functions Mk
 const helper_db = require('./helper_db'); // Helper functions Mk
@@ -30,8 +31,8 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', function (req, res, next) {
-	let email = req.body.email;
-	let code = req.body.code;
+	let email = htmlencode.htmlEncode(req.body.email);
+	let code = htmlencode.htmlEncode(req.body.code);
 	let password = req.body.password;
 	let confirm_password = req.body.confirm_password;
 	let user = [];
@@ -40,11 +41,11 @@ router.post('/', function (req, res, next) {
 		'usr_email': email, 'confirm_code': code
 	};
 
-	helper_db.db_read('sql', 'users', { 'usr_email': email }, user => {
+	helper_db.db_read('users', { 'usr_email': email }, user => {
 		if (user.length === 1 && user[0].confirm_code === parseFloat(code)) {
 			console.log('______user found___________________');
 			if (password === confirm_password) {
-				helper_db.db_update({ 'usr_email': email }, { $set: { 'usr_psswd': passwordHash.generate(password), 'confirm_code': Math.random() } }, () => {	//	password change is successfull
+				helper_db.db_update({ 'usr_email': email }, { 'usr_psswd': passwordHash.generate(password), 'confirm_code': Math.random() }, () => {	//	password change is successfull
 					console.log('changed');
 					res.redirect('/login/' + 'pass_sucPassword has succesfully ben changed');
 				});

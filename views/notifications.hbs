@@ -71,49 +71,49 @@
 		<div class="tab-pane" id="profile_view" role="tabpanel" aria-labelledby="profile_view-tab">
 			<h5 class="text-center">Profile Views</h5>
 			{{#each notifications}}
-				{{#if this.profile}}
-					<form action="/notifications" method="post">
-						<button type="submit" name="type" value="view_profile" class="btn">x</button>
-						<div>
-							<img src="{{this.pic}}" width="150px" height="150px" alt="">
-							<input type="hidden" name="user" value={{this.from}}>
-							<div class="">{{this.name}}</div>
-						</div>
-						<div>
-							<button type="submit" name="type" value="view profile" class="btn btn-success">View</button>
-						</div>
-					</form>
-				{{/if}}
+			{{#if this.profile}}
+			<form action="/notifications" method="post">
+				<button type="submit" name="type" value="view profile" class="btn">x</button>
+				<div>
+					<img src="{{this.pic}}" width="150px" height="150px" alt="">
+					<input type="hidden" name="user" value={{this.from}}>
+					<div class="">{{this.name}}</div>
+				</div>
+				<div>
+					<button type="submit" name="type" value="view profile" class="btn btn-success">View</button>
+				</div>
+			</form>
+			{{/if}}
 			{{/each}}
 		</div>
 		<div class="tab-pane" id="unfriended" role="tabpanel" aria-labelledby="unfriended-tab">
 			<h5 class="text-center">Unfriended</h5>
 			{{#each notifications}}
-				{{#if this.reject}}
-					<form action="/notifications" method="post">
-						<button type="submit" name="type" value="unfriended" class="btn">x</button>
-						<div>
-							<img src="{{this.pic}}" width="150px" height="150px" alt="">
-							<input type="hidden" name="user" value={{this.from}}>
-							<div class="">{{this.name}}</div>
-						</div>
-					</form>
-				{{/if}}
+			{{#if this.reject}}
+			<form action="/notifications" method="post">
+				<button type="submit" name="type" value="unfriended" class="btn">x</button>
+				<div>
+					<img src="{{this.pic}}" width="150px" height="150px" alt="">
+					<input type="hidden" name="user" value={{this.from}}>
+					<div class="">{{this.name}}</div>
+				</div>
+			</form>
+			{{/if}}
 			{{/each}}
 		</div>
 		<div class="tab-pane" id="like_back" role="tabpanel" aria-labelledby="like_back-tab">
 			<h5 class="text-center">People who like you back</h5>
 			{{#each notifications}}
-				{{#if this.like_back}}
-					<form action="/notifications" method="post">
-						<button type="submit" name="type" value="like back" class="btn">x</button>
-						<div>
-							<img src="{{this.pic}}" width="150px" height="150px" alt="">
-							<input type="hidden" name="user" value={{this.from}}>
-							<div class="">{{this.name}}</div>
-						</div>
-					</form>
-				{{/if}}
+			{{#if this.like_back}}
+			<form action="/notifications" method="post">
+				<button type="submit" name="type" value="like back" class="btn">x</button>
+				<div>
+					<img src="{{this.pic}}" width="150px" height="150px" alt="">
+					<input type="hidden" name="user" value={{this.from}}>
+					<div class="">{{this.name}}</div>
+				</div>
+			</form>
+			{{/if}}
 			{{/each}}
 		</div>
 	</div>

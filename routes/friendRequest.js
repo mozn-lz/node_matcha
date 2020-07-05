@@ -36,30 +36,30 @@ router.post('/', (req, res, next) => {
 			res.redirect('/friendRequest/' + friendReqId);
 		} else if (submit === 'block') {
 			notification.type = 'block';
-			helper_db.db_update('sql', 'users', { '_id': (req.session.uid) }, { $addToSet: { blocked: friendReqId } }, (() => {
-				console.log('Sending notification');
-				// collection.updateOne({ '_id': (friendReqId) }, { 	// send norification to 'friend'
-				// 	$addToSet: {
-				// 		notifications: notification
-				// 	}
-				// });
-			})(), (err, result) => {
+			helper_db.update_plus('users', { '_id': (req.session.uid) }, '$addToSet', 'blocked', friendReqId, () => {
 				console.log('Hahahah, notifications are fucking up? <<< We are Bolckign in this mother >>>');
-				client.close();
 				message = 'pass_sucUser has been blacked';
 				res.redirect('/index/' + message);
 			});
 		} else if (submit === 'fake') {
 			console.log('fake account');
-			helper_db.db_update('sql', 'users', { '_id': (friendReqId) }, { $set: { verified: 2 } }, (() => {
+			helper_db.db_update('users', { '_id': (friendReqId) }, { verified: 2 }, () => {
 				console.log('Sending notification to ', friendReqId, 'from');
-				helper_db.db_update('sql', 'users', { '_id': (friendReqId) }, { $addToSet: { notifications: notification } })
-			})(), (err, result) => {
-				console.log('<<< shit is fake in this mother >>>');
-				console.log('Hahahah, notifications are fucking up');
-				client.close();
-				message = 'pass_sucFake user reported';
-				res.redirect('/index/' + message);
+
+				const to = 'msefako@student.wethinkcode.co.za';
+				const from = '';
+				const subject = 'Fake Account';
+				const message = `<br>Hay Admin! <b>user id: ${friendReqId} </b> 
+					has been reported as a fake account by user <b>${req.session.uid}</b>.`;
+
+				helper.sendMail(from, to, subject, message, () => { });
+				//	end email
+				helper_db.update_plus('users', { '_id': friendReqId }, '$addToSet', 'notifications', notification, () => {
+					console.log('<<< shit is fake in this mother >>>');
+					console.log('Hahahah, notifications are fucking up');
+					message = 'pass_sucFake user reported';
+					res.redirect('/index/' + message);
+				});
 			});
 		} else {
 			res.redirect('/index');
@@ -72,7 +72,7 @@ router.get('/:reqId', (req, res, next) => {
 
 	let message = null;
 	if (req.session.uid) {
-		helper_db.db_read('sql', 'users', {'_id': req.session.uid}, user => {
+		helper_db.db_read('users', { '_id': req.session.uid }, user => {
 			user = user[0];
 			// if (user.picture)
 			if (user.picture && user.picture.length >= 1) {
@@ -89,17 +89,21 @@ router.get('/:reqId', (req, res, next) => {
 
 				console.log('friendReqId ', friendReqId);
 
-				helper_db.db_update('sql', 'users', { '_id': (friendReqId) }, { $addToSet: { request: req.session.uid } }, (() => {
-					console.log('Sending notification');
-					helper_db.db_update('sql', 'users', { '_id': (friendReqId) }, { $addToSet: { notifications: notification } }, () =>{});
-				})(), (err, result) => {
-					console.log('Hahahah, notifications are fucking up');
-					message = 'pass_sucFriend request has been made';
-					res.redirect('/index/' + message);
-				});
+				// helper_db.update_plus('users', { '_id': friendReqId }, '$addToSet', 'request', req.session.uid, (() => {
+				// // helper_db.db_update('users', { '_id': (friendReqId) }, { $addToSet: { request: req.session.uid } }, (() => {
+				// })());
+				console.log('Sending notification');
+				if (!helper.is_blocked(friendReqId)) {
+					helper_db.update_plus('users', { '_id': (friendReqId) }, '$addToSet', 'notifications', notification, () => {
+						console.log('Hahahah, notifications are fucking up');
+						message = 'pass_sucFriend request has been made';
+						res.redirect('/index/' + message);
+					});
+				} else {
+					res.redirect('index');
+				}
 			} else {
 				console.log(user.picture);
-
 				message = 'pass_errPlease upouad a picture first';
 				res.redirect('/index/' + message);
 			}
