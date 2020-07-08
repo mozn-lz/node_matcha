@@ -1,21 +1,33 @@
+a {
+	text-decoration: none;
+}
+
+/* .users :hover {
+	box-shadow: 0 5px 8px 0 rgba(255, 0, 0, 0.2), 0 6px 20px 0 rgba(255, 0, 0, 0.19);
+	text-decoration: none;
+} */
+
 .users {
-	/* border-radius: 10%; */
-	box-shadow: 30px;
+	border-radius: 10px;
 	padding: 5px;
 	margin: 25px;
-	border-style: solid;
-	border-color: black;
-	border-width: thin;
+	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	width: 500px;
+	text-decoration: none;
+	/* border-style: solid;
+	border-color: silver;
+	border-width: thin; */
 	/* padding: 15px; */
 	/* margin: 15px; */
 }
 
 .left {
-	border-style: solid;
+	/* border-style: solid;
 	border-color: blueviolet;
-	border-width: thin;
+	border-width: thin; */
 	/* border-radius: 25px; */
-	width: 150px
+	width: 150px;
+	text-decoration: none;
 }
 
 .left img {
@@ -23,29 +35,36 @@
 	/* min-width: 100%; */
 	width: 100%;
 	/* min-height: 40%; */
-	border-style: solid;
+	/* border-style: solid;
 	border-color: black;
-	border-width: thin;
+	border-width: thin; */
 	/* background: greenyellow; */
 	/* height: 100%;
 	width: 100%; */
 	/* width: 150px; */
 	/* height: 150px; */
+	text-decoration: none;
 }
-.center{
+
+.center {
 	padding: 5px;
-	border-style: solid;
+	/* border-style: solid;
 	border-color: blue;
-	border-width: thin;
+	border-width: thin; */
+	text-decoration: none;
 }
+
 .card-text {
 	overflow: hidden;
 	max-height: 30px;
+	text-decoration: none;
 }
-.right{
-	border-style: solid;
+
+.right {
+	/* border-style: solid;
 	border-color: red;
-	border-width: thin;
+	border-width: thin; */
+	text-decoration: none;
 }
-.user_data {
-}
+
+.user_data {}

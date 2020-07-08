@@ -34,18 +34,18 @@ function check_age(chk_age) {
 
 function check_num(num) {
 	if (is_empty(num) || Number(num) == NaN) {
-		console.log('num is false');
+		// console.log('num is false');
 		return (false);
 	} else {
-		console.log('num is true');
+		// console.log('num is true');
 		return (true);
 	}
 }
 
 function chk_intrests(chk_intrests) {
 	if (chk_intrests) {
-		console.log('chk_intrests ', chk_intrests);
-		console.log('chk_intrests ', chk_intrests.length);
+		// console.log('chk_intrests ', chk_intrests);
+		// console.log('chk_intrests ', chk_intrests.length);
 		(chk_intrests.includes('tatoo')) ? search_intrests.tatoo = 'tatoo' : console.log('Tatoo not foud');
 		(chk_intrests.includes('smoke')) ? search_intrests.smoke = 'smoke' : console.log('Smoke not foud');
 		(chk_intrests.includes('alcohol')) ? search_intrests.alcohol = 'alcohol' : console.log('Alcohol not foud');
@@ -70,18 +70,18 @@ function check_location(chk_location) {
 
 let fn_render_search = (req, res, next, msg, matches) => {
 
-	console.log('req.session.uid ', req.session.uid);
-	console.log('\n\n\n________fn_render_search (', matches.length, ')________\n');
+	// console.log('req.session.uid ', req.session.uid);
+	// console.log('\n\n\n________fn_render_search (', matches.length, ')________\n');
 	if (req.session.uid) {
-		console.log(`\n\t${matches.length} results\n`)
 		let res_arr = [];
-		(matches.length > 0) ? res_arr = helper.sort_locate(matches, req.session.gps) : res_arr = null;
+		(matches.length > 0 && req.session.gps) ? res_arr = helper.sort_locate(matches, req.session.gps) : res_arr = matches;
 		var msg_arr = [];
 		(msg.search('pass_err') == 0) ? pass_er = "danger" : pass_er = '';
 		(msg.search('pass_suc') == 0) ? pass_suc = "success" : pass_suc = '';
 		msg_arr = msg.slice(8).split(",");
 		// console.log('2. msg_arr: ' + msg_arr + "\n3. res_arr: " + res_arr + '\n');
-
+		
+		// console.log(`\n\t${res_arr.length} results\n`)
 		res.send(res_arr);
 		// res.render(page_name, {
 		// 	// match_list: res_arr,
@@ -108,7 +108,7 @@ router.get('/', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
 	if (req.session.uid) {
-		console.log(req.body);
+		// console.log(req.body);
 		let search = req.body.search;
 		let age_min = req.body.age_min;
 		let fame_min = req.body.fame_min;
@@ -125,29 +125,29 @@ router.post('/', (req, res, next) => {
 		(location) ? console.log(`\n\tlocation: ${location}\n`) : console.log('\n\tlocation not found\n');
 
 			helper.fn_getMatches(req, res, (user_matches) => {
-				console.log('\t\t***', user_matches.length);
+				// console.log('\t\t***', user_matches.length);
 				if (check_num(fame_min) || check_num(fame_max)) {
-					console.log('********** filtering fame **********');
+					// console.log('********** filtering fame **********');
 					(fame_max > 5) ? fame_max = 5 : 0;
 					(fame_min < 0) ? fame_min = 0 : 0;
 					(fame_max < fame_min) ? user_matches = helper.filter_fame(user_matches, fame_max, fame_min) : user_matches = helper.filter_fame(user_matches, fame_min, fame_max);
 				}
 				if (check_num(age_min) || check_num(age_max)) {
-					console.log('********** filtering age **********');
+					// console.log('********** filtering age **********');
 					(age_max > 100) ? age_max = 100 : 0;
 					(age_min < 18) ? age_min = 18 : 0;
 					(age_max < age_min) ? user_matches = helper.filter_age(user_matches, age_max, age_min) : user_matches = helper.filter_age(user_matches, age_min, age_max);
 				}
 				if (chk_intrests(intrests)) {
-					console.log('********** filtering intrests **********');
+					// console.log('********** filtering intrests **********');
 					user_matches = helper.filter_tags(user_matches, intrests);
 				}
 				if (check_location(location)) {
-					console.log('********** filtering location **********');
+					// console.log('********** filtering location **********');
 					user_matches = helper.filter_locate(user_matches, (location));
 				}
 				if (!is_empty(search)) {
-					console.log('\n\t\t********** filtering for name **********\n');
+					// console.log('\n\t\t********** filtering for name **********\n');
 					user_matches = helper.filer_name(user_matches, (search));
 				}
 				// setTimeout(() => {
@@ -156,7 +156,7 @@ router.post('/', (req, res, next) => {
 				// }, 1500);
 			});
 			console.error('parametsers undefined');
-		// 	console.log('parametsers undefined');
+		// 	// console.log('parametsers undefined');
 
 		// 	helper.fn_getMatches(req, res, result => fn_render_search(req, res, next, 'pass_errParametsers undefined', result));
 		// console.log("\t\t\t\tHello: ", search);

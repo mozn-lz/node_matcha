@@ -39,157 +39,123 @@ router.get('/:errors', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
 	var error_log = [];
-	var user;
-	var email;
-	var name;
-	var surname;
-	var psswd;
-	var psswd1;
-
-	function check_username(chk_username) {
-		if (!helper.is_empty(chk_username)) {
-			user = req.body.username;
-			console.log('username stored as [username]');
-			return (true);
-		} else {
-			error_log.push('username is invalid');
-			console.log(error_log);
-			return (false);
-		}
-	}
+	var user = req.body.username;
+	var email = req.body.email;
+	var name = req.body.name;
+	var surname = req.body.surname;
+	var psswd = req.body.psswd;
+	var psswd1 = req.body.psswd1;
 
 	function check_email(chk_email) {
-		if (!helper.is_empty(chk_email)) {
-			email = req.body.email;
-			console.log('email stored as [email]');
-			return (true);
-		} else {
-			error_log.push('email is invalid');
-			console.log(error_log);
-			return (false);
-		}
+		re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		// console.log('email: ' + re.test(chk_email));
+		(!re.test(chk_email)) ? error_log.push(`'${check_email}' is invalid`) : 0;
+		return (re.test(chk_email));
 	}
 
 	function check_name(chk_name) {
-		if (!helper.is_empty(chk_name)) {
-			name = req.body.name;
-			console.log('name stored as [name]');
-			return (true);
-		} else {
-			error_log.push('name is invalid');
-			console.log(error_log);
-			return (false);
-		}
-	}
-
-	function check_surname(chk_surname) {
-		if (!helper.is_empty(chk_surname)) {
-			surname = req.body.surname;
-			console.log('surname stored as [surname]');
-			return (true);
-		} else {
-			error_log.push('surname is invalid');
-			console.log(error_log);
-			return (false);
-		}
+		re = /^[A-Za-z]\w{3,15}/;
+		// console.log('name: ' + re.test(chk_name));
+		(!re.test(chk_name)) ? error_log.push(`'${chk_name}' is invalid`) : 0;
+		return (re.test(chk_name));
 	}
 
 	function check_psswd(chk_psswd) {
-		if (!helper.is_empty(chk_psswd)) {
-			psswd = req.body.psswd;
-			console.log('Password stored as [psswd]');
-			return (true);
-		} else {
-			error_log.push('Confirmed password is invalid');
-			console.log(error_log);
-			return (false);
-		}
-	}
-
-	function check_psswd1(chk_psswd1) {
-		if (!helper.is_empty(chk_psswd1)) {
-			psswd1 = req.body.psswd1;
-			console.log('psswd1 stored as [psswd1]');
-			return (true);
-		} else {
-			error_log.push('psswd1 is invalid');
-			console.log(error_log);
-			return (false);
-		}
+		re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+		// console.log('psswd: ' + re.test(chk_psswd));
+		(!re.test(chk_psswd)) ? error_log.push('Password is invalid') : 0;
+		return (re.test(chk_psswd));
 	}
 
 	function pass_match(chk_pass1, chk_pass2) {
-		if (helper.is_match(chk_pass1, chk_pass2)) {
-			// if passwords don't match or there are errors in the code
-			return (true);
-		} else if (!helper.is_match(chk_pass1, chk_pass2)) {
+		// console.log(`${chk_pass1} === ${chk_pass2}: ` + chk_pass1 === chk_pass2);
+		if (chk_pass1 === chk_pass2) {
+			// console.log('passwords match');
+		} else {
+			// console.log('passwords dontusername match');
 			error_log.push('Passwords do not match');
-			return (false)
 		}
+		return (chk_pass1 === chk_pass2);
 	}
 
-	check_username(req.body.username);
-	check_email(req.body.email);
-	check_name(req.body.name);
-	check_surname(req.body.surname);
-	check_psswd(req.body.psswd);
-	check_psswd1(req.body.psswd1);
-	pass_match(req.body.psswd, req.body.psswd1);
+	// check_username(req.body.username);
+	// check_email(req.body.email);
+	// check_name(req.body.name);
+	// check_surname(req.body.surname);
+	// check_psswd(req.body.psswd);
+	// check_psswd1(req.body.psswd1);
+	// pass_match(req.body.psswd, req.body.psswd1);
 
+	// pass_match(req.body.psswd, req.body.psswd1);
 	/* checks if there are any errors in saving variables from the user and if passwords match	*/
-	if (check_username(req.body.username) && check_email(req.body.email) && check_name(req.body.name) && check_surname(req.body.surname) && check_psswd(req.body.psswd) && check_psswd1(req.body.psswd1) && pass_match(req.body.psswd, req.body.psswd1)) {
+	if (
+		pass_match(req.body.psswd, req.body.psswd1) &&
+		check_name(req.body.username) && check_email(req.body.email) &&
+		check_name(req.body.name) && check_name(req.body.surname) &&
+		check_psswd(req.body.psswd) && check_psswd(req.body.psswd1)
+	) {
 		// store data to JSON array, to store in mongo
+		// console.log(`data is valid`);
 		var usr_data = {
 			usr_user: htmlencode.htmlEncode(user),
-			usr_email: htmlencode.htmlEncode(email),
 			usr_name: htmlencode.htmlEncode(name),
 			usr_surname: htmlencode.htmlEncode(surname),
-			usr_psswd: passwordHash.generate(psswd), // to be encrypted
+			usr_email: htmlencode.htmlEncode(email),
+			usr_psswd: passwordHash.generate(psswd),
 			login_time: '',
-			profile: '/images/ionicons.designerpack/md-person.svg',
-			age: null,
+			profile_pic: '/images/ionicons.designerpack/md-person.svg',
+			age: '',
 			gender: '',
 			oriantation: '',
 			rating: '',
 			bio: '',
-			intrests: [],
+			gps_switch: 'show',
 			gps: '',
-			gps_switch: '',
-			viewd: [],
-			liked: [],
 			verified: 0,
-			confirm_code: Math.random()
+			confirm_code: Math.random(),
+			intrests: '[]',
+			picture: '[]',
+			blocked: '[]',
+			friends: '[]',
+			notifications: '[]',
+			history: '[]'
 		};
 
 		// Connect and save data to mongodb
 
 		helper_db.db_read('users', { usr_email: email }, (count) => {
 			if (count.length > 0) {
-				console.log('Username exists.');
+				// console.log('\n\nUsername exists.\n\n');
 				res.redirect('/login/' + 'pass_errEmail ' + email + ' is alreday associated with an account.');
 			} else {
-				console.log('Username does not exist.');
+				// console.log('\n\nUsername does not exist.\n\n');
 				helper_db.db_create('users', usr_data, () => {
-					console.log("Documents added to database: " + dbName);
+					// console.log("Documents added to database: ");
 
 					const to = email;
 					const from = '';
 					const subject = 'Matcha Email Verification';
-					const message = `<br>Welcome to Matcha ${usr_data.usr_user}<br>
+					const message = `
+						<form action="http://localhost:3000/verify" method="post">
+							<br>Welcome to Matcha ${usr_data.usr_user}<br>
+							<input type="hidden" name="email" value="${usr_data.usr_email}">
+							<input type="hidden" name="code" value="${usr_data.confirm_code}">
 							Please click on the button below to verify your email address<br>
-							<a href="http://localhost:3000/verify?email=${usr_data.usr_email}&code=${usr_data.confirm_code}"><button>Verify</button></a>
-							`;
+							<button type="submit">Verify</button>
+						</form>`;
 
-					helper.sendMail(from, to, subject, message, () => { res.redirect('/login/' + 'pass_suc' + user + ' created successfully. Please check your emial to verity your account'); });
+					// console.log('\nseng email\n');
+					helper.sendMail(from, to, subject, message, () => {
+						res.redirect('/login/' + 'pass_suc' + user + ' created successfully. Please check your emial to verity your account');
+					});
 					//	end email
-
-
 				});
 			}
 		});
 	} else {
-		console.log('Error coint' + error_log.length);
-		console.log('error_log = ' + error_log);
+
+		// console.log('Error coint' + error_log.length);
+		// console.log('error_log = ' + error_log);
 		res.redirect('/register/' + error_log);
 	}
 });

@@ -16,9 +16,9 @@ function is_empty(str) {
 }
 
 function fn_render_profile(req, res, next, msg) {
-	console.log('\n\n\nfn_render_profile\n');
+	// console.log('\n\n\nfn_render_profile\n');
 	if (req.session.uid) {
-		console.log('req.session.uid: ' + req.session.uid);
+		// console.log('req.session.uid: ' + req.session.uid);
 
 		var usr_data = {
 			'_id': (req.session.uid)
@@ -28,7 +28,7 @@ function fn_render_profile(req, res, next, msg) {
 		(msg.search('pass_err') == 0) ? pass_er = "danger" : pass_er = '';
 		(msg.search('pass_suc') == 0) ? pass_suc = "success" : pass_suc = '';
 		msg_arr = msg.slice(8).split(",");
-		console.log('msg_arr: ' + msg_arr);
+		// console.log('msg_arr: ' + msg_arr);
 
 		helper_db.db_read('users', usr_data, res_arr => {
 			if (res_arr.length == 1) {
@@ -40,6 +40,7 @@ function fn_render_profile(req, res, next, msg) {
 				res_arr[0].oriantation == 'bisexual' ? bisexual = 'bisexual' : bisexual = '';
 				res_arr[0].gps_switch == 'show' ? show_location = 'show' : show_location = '';
 				res_arr[0].gps_switch == 'hide' ? hide_location = 'hide' : hide_location = '';
+				(res_arr[0].intrests) ? res_arr[0].intrests = JSON.parse(res_arr[0].intrests): 0;
 				res.render('profile', {
 					title: 'Profile',
 					er: pass_er,
@@ -62,7 +63,7 @@ function fn_render_profile(req, res, next, msg) {
 					bisexual,
 					rating: res_arr[0].rating,
 					bio: res_arr[0].bio,
-					intrests: JSON.parse(res_arr[0].intrests),
+					intrests: res_arr[0].intrests,
 					gps_switch: res_arr[0].gps_switch,
 					show_location,
 					hide_location,
@@ -81,7 +82,7 @@ function fn_render_profile(req, res, next, msg) {
 }
 
 router.get('/', function (req, res, next) {
-	console.log('\n\n\n\n\n\n\t\t\tWELCOME TO THE PROFILE PAGE\n');
+	// console.log('\n\n\n\n\n\n\t\t\tWELCOME TO THE PROFILE PAGE\n');
 
 	fn_render_profile(req, res, next, '');
 });
@@ -106,7 +107,7 @@ router.post('/', function (req, res, next) {
 
 	function check_usr_user(chk_usr_user) {
 		if (is_empty(chk_usr_user)) {
-			console.log('\tcheck_usr_user: Username is not valid');
+			// console.log('\tcheck_usr_user: Username is not valid');
 			redirect_msg.push('Username is not valid');
 			return (false);
 		} else {
@@ -203,7 +204,7 @@ router.post('/', function (req, res, next) {
 	}
 
 	function chk_intrests(chk_intrests) {
-		console.log('chk_intrests ', chk_intrests);
+		// console.log('chk_intrests ', chk_intrests);
 		if (chk_intrests) {
 			(chk_intrests.includes('tatoo')) ? profile_intrests.tatoo = 'tatoo' : console.log('Tatoo not foud');
 			(chk_intrests.includes('smoke')) ? profile_intrests.smoke = 'smoke' : console.log('Smoke not foud');
@@ -219,16 +220,16 @@ router.post('/', function (req, res, next) {
 
 	/* because the if statement below will stop on the fist False 
 		this is to log all errors (if any)	*/
-	console.log('\t\t username: ' + req.body.username);
-	console.log('\t\t email: ' + req.body.email);
-	console.log('\t\t fname: ' + req.body.fname);
-	console.log('\t\t lname: ' + req.body.lname);
-	console.log('\t\t age: ' + req.body.age);
-	console.log('\t\t gender: ' + req.body.gender);
-	console.log('\t\t orientation: ' + req.body.orientation);
-	console.log('\t\t bio: ' + req.body.bio);
-	console.log('\t\t gps_switch: ' + req.body.gps_switch);
-	console.log('\t\t intrests[]: ' + req.body.intrests);
+	// console.log('\t\t username: ' + req.body.username);
+	// console.log('\t\t email: ' + req.body.email);
+	// console.log('\t\t fname: ' + req.body.fname);
+	// console.log('\t\t lname: ' + req.body.lname);
+	// console.log('\t\t age: ' + req.body.age);
+	// console.log('\t\t gender: ' + req.body.gender);
+	// console.log('\t\t orientation: ' + req.body.orientation);
+	// console.log('\t\t bio: ' + req.body.bio);
+	// console.log('\t\t gps_switch: ' + req.body.gps_switch);
+	// console.log('\t\t intrests[]: ' + req.body.intrests);
 	check_usr_user(req.body.username);
 	check_usr_email(req.body.email);
 	check_usr_name(req.body.fname);
@@ -242,8 +243,8 @@ router.post('/', function (req, res, next) {
 
 	if (check_usr_user(req.body.username) && check_usr_email(req.body.email) && check_usr_name(req.body.fname) && check_usr_surname(req.body.lname) && check_age(req.body.age) && check_gender(req.body.gender) && check_oriantation(req.body.orientation) && check_bio(req.body.bio) && check_gps_switch(req.body.gps_switch)) {
 		// store data to JSON array, to store in mongo
-		console.log('\tNo errors found');
-		console.log(req.body.intrests);
+		// console.log('\tNo errors found');
+		// console.log(req.body.intrests);
 		
 		var usr_data = {
 			usr_user: profile_username,
@@ -258,7 +259,7 @@ router.post('/', function (req, res, next) {
 			intrests: profile_intrests
 		};
 
-		console.log('profile_intrests[0]:  ', profile_intrests);
+		// console.log('profile_intrests[0]:  ', profile_intrests);
 		helper_db.db_update('users', { '_id': (req.session.uid) }, {
 				'usr_user': htmlencode.htmlEncode(profile_username),
 				'usr_email': htmlencode.htmlEncode(profile_email),
@@ -281,16 +282,16 @@ router.post('/', function (req, res, next) {
 			req.session.bio = profile_bio;
 			req.session.gps_switch = profile_gps_switch;
 			req.session.intrests = profile_intrests;
-			console.log('profile_intrests[1]:  ', profile_intrests);
+			// console.log('profile_intrests[1]:  ', profile_intrests);
 
-			console.log('\t\tend of poeting finction');
+			// console.log('\t\tend of poeting finction');
 			redirect_msg_type = 'pass_suc';
 			redirect_msg.push('Your information Changed');
 			res.redirect('/profile/' + redirect_msg_type + redirect_msg);
 		});
 	} else {
-		console.log('something is wrong\n\tError Count: ' + redirect_msg.length);
-		console.log('redirect_msg = ' + redirect_msg);
+		// console.log('something is wrong\n\tError Count: ' + redirect_msg.length);
+		// console.log('redirect_msg = ' + redirect_msg);
 		redirect_msg_type = 'pass_err';
 		res.redirect('/profile/' + redirect_msg_type + redirect_msg);
 	}

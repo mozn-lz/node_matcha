@@ -10,7 +10,7 @@ var page_name = 'Send Message';
 
 /* GET view_profile listing. */
 router.get('/', function (req, res, next) {
-	console.log("************Send Message(N/A)************\n");
+	// console.log("************Send Message(N/A)************\n");
 
 	res.redirect('/messages/');
 });
@@ -26,12 +26,12 @@ router.post('/', function (req, res, next) {
 		me: true
 	};
 
-	console.log("\n\n\t************Send Message(N/A)************\n\n");
-	console.log('message ', message_details.message);
+	// console.log("\n\n\t************Send Message(N/A)************\n\n");
+	// console.log('message ', message_details.message);
 	// console.log('sessioinId    ', req.session.uid);
-	console.log('Time    ', message_details.time);
-	console.log('recipiantId ', recipiantId);
-	console.log('senderId    ', message_details.from);
+	// console.log('Time    ', message_details.time);
+	// console.log('recipiantId ', recipiantId);
+	// console.log('senderId    ', message_details.from);
 
 	if (req.session.uid) {
 
@@ -46,29 +46,51 @@ router.post('/', function (req, res, next) {
 				// helper.findUserById(recipiantId, (isfriend) => {
 				if (isfriend.friends.includes(senderId) && !helper.is_blocked(senderId)) {
 					/*	send norification to recipiant	*/
-					console.log(`\t\t\trecipiantId ${recipiantId}`);
-					// helper_db.update_plus('users', { '_id': recipiantId }, '$addToSet', 'notifications', notification, () => {
-					// });
+					// console.log(`\t\t\trecipiantId ${recipiantId}`);
+					helper_db.update_plus('users', { '_id': recipiantId }, '$addToSet', 'notifications', notification, () => { });
 
 					/*	UPDATE SENDER MESSAGES	*/
 					helper_db.find_chat([{ 'user_id': senderId }, { 'partner': recipiantId }], req.session.uid, conversation => {
-						console.log('\n\n\t\t\tconversation.id: ' + conversation.id);
-						console.log(conversation);
-						if (conversation) {
-							console.log('success');
-							console.log(conversation[0].id);
+
+						// console.log('\n\n\t\t\tconversation.id: ' + conversation[0].id);
+						// console.log(conversation[0]);
+						if (conversation[0]) {
+							// console.log('success');
+							// console.log(conversation[0].id);
 							helper_db.update_plus('chats', { id: (conversation[0].id) }, 'Ssd', 'message', { from: senderId, time: Date.now(), message: text, me: true }, () => {
 								/*	UPDATE RECIPIANT MESSAGES	*/
 								// helper_db.db_update('chats', )
 								helper_db.find_chat([{ 'user_id': recipiantId }, { 'partner': senderId }], req.session.uid, conversation => {
 									helper_db.update_plus('chats', { id: conversation[0].id }, '', 'message', { from: senderId, time: Date.now(), message: text, me: false }, () => {
-										console.log("'/view_messages/' + recipiantId ");
+										// console.log("'/view_messages/' + recipiantId ");
 										res.redirect('/view_messages/' + recipiantId);
 									});
 								});
 							});
 						} else {
-							console.log('\nno converstions\n');
+							// console.log('\nno converstions\n');
+							// console.log(JSON.stringify([{ from: senderId, time: Date.now(), message: text, me: false }]));
+							helper_db.db_create('chats', {
+								'user_id': senderId,
+								'partner': recipiantId,
+								message: JSON.stringify([{
+									from: senderId,
+									time: Date.now(),
+									message: text,
+									me: true
+								}])
+							}, () => {
+								helper_db.db_create('chats', {
+									'user_id': recipiantId,
+									'partner': senderId,
+									message: JSON.stringify([{
+										from: senderId,
+										time: Date.now(),
+										message: text,
+										me: false
+									}])
+								}, () => { res.redirect('/view_messages/' + recipiantId); });
+							});
 						}
 					});
 
@@ -78,9 +100,9 @@ router.post('/', function (req, res, next) {
 					// 	{ upsert: true }
 					// 	, (err, result) => {
 					// 		if (err) {
-					// 			console.log("Error ", err);
+					// 			// console.log("Error ", err);
 					// 		} else {
-					// 			console.log("Success part  1");
+					// 			// console.log("Success part  1");
 					// 			// console.log("result ", result);
 					// 		}
 					// 	});;
@@ -91,26 +113,26 @@ router.post('/', function (req, res, next) {
 					// 	{ upsert: true },
 					// 	(err, result) => {
 					// 		if (err) {
-					// 			console.log("Error ", err);
+					// 			// console.log("Error ", err);
 					// 		} else {
-					// 			console.log("Success part 2");
+					// 			// console.log("Success part 2");
 					// 			// console.log("result ", result);
-					// 			console.log("Redirect to '/view_messages/' + recipiantId ");
+					// 			// console.log("Redirect to '/view_messages/' + recipiantId ");
 					// 			res.redirect('/view_messages/' + req.body.dest);
 					// 		}
 					// 		// res.redirect('/index/' + message);
 					// 	}), (recipiantId) => {
-					// 		console.log("'/view_messages/' + recipiantId ");
+					// 		// console.log("'/view_messages/' + recipiantId ");
 					// 		res.redirect('/view_messages/' + recipiantId);
 					// 	};
 				} else {
 					let err_msg = 'Send ' + isfriend.usr_user + ' a friend request to chat with them.'
-					console.log(err_msg);
+					// console.log(err_msg);
 					res.redirect('/index/' + 'pass_err' + err_msg)
 				}
 			});
 		} else {
-			console.log("\tError: 'sender' or 'recipiant' are empty\n");
+			// console.log("\tError: 'sender' or 'recipiant' are empty\n");
 
 			res.redirect('/view_messages/' + recipiantId);
 		}
@@ -121,17 +143,17 @@ router.post('/', function (req, res, next) {
 });
 
 router.get('/:reqId/:message', (req, res, next) => {
-	console.log("************Send Message(ARG)************\n");
+	// console.log("************Send Message(ARG)************\n");
 
 	if (req.session.uid) {
 		let friendReqId = req.params.reqId
-		console.log("1. message: ", req.session.message, '\n');
-		console.log("1. friendId: ", friendReqId, '\n');
+		// console.log("1. message: ", req.session.message, '\n');
+		// console.log("1. friendId: ", friendReqId, '\n');
 
 		// 	// Connect and save data to mongodb
 		// 	MongoClient.connect(url, function (err, client) {
 		// 		assert.equal(null, err);
-		// 		console.log("\tConnected to server and mongo connected Successfully");
+		// 		// console.log("\tConnected to server and mongo connected Successfully");
 		// 		const db = client.db(dbName);
 		// 		const collection = db.collection('users');
 		// 		collection.updateOne({

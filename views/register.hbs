@@ -8,41 +8,59 @@
 
 	<div class="row">
 		{{#each error_list}}
-			<div class="alert alert-danger border border-danger text-center col-sm-3" role="alert">{{this}}</div>
+		<div class="alert alert-danger border border-danger text-center col-sm-3" role="alert">{{this}}</div>
 		{{/each}}
 	</div>
-</div>	
+</div>
 <form action="/register" method="post">
 	<div class="row">
 		<div class="col-md-6">
 			<div class="form-group">
 				<label for="username">Username</label>
-				<input class="form-control" type="text" name="username" id="reg_username" placeholder="Username"  >
+				<input class="form-control" type="text" name="username" id="reg_username" placeholder="Username"
+					required>
 			</div>
 			<div class="form-group">
 				<label for="email">Email</label>
-				<input class="form-control" type="text" name="email" id="reg_email" placeholder="Email"  >
+				<input class="form-control" type="text" name="email" id="reg_email" placeholder="Email" required>
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group">
 				<label for="name">Name</label>
-				<input class="form-control" type="text" name="name" id="reg_name" placeholder="Name"  >
+				<input class="form-control" type="text" name="name" id="reg_name" placeholder="Name" required>
 			</div>
 			<div class="form-group">
 				<label for="surname">Surname</label>
-				<input class="form-control" type="text" name="surname" id="reg_surname" placeholder="Surname"  >
+				<input class="form-control" type="text" name="surname" id="reg_surname" placeholder="Surname" required>
 			</div>
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="password">Password</label>
-		<input class="form-control" type="password" name="psswd" id="reg_password" placeholder="Password"  >
+		<input class="form-control" type="password" name="psswd" id="reg_password" placeholder="Password" required>
 	</div>
 	<div class="form-group">
 		<label for="confirm_password">Confirm Password</label>
-		<input class="form-control" type="password" name="psswd1" id="reg_confirm_password" placeholder="Confirm Password"
-		 required>
+		<input class="form-control" type="password" name="psswd1" id="reg_confirm_password"
+			placeholder="Confirm Password" required>
+			<p id="reg_confirm_password"></p>
 	</div>
 	<button class="btn btn-success" type="submit">Signup</button>
 </form>
+
+<script>
+	$('#reg_username').focus(() => $('#reg_username_p').html(''));
+	$('#reg_email').focus(() => $('#reg_email_p').html(''));
+	$('#reg_name').focus(() => $('#reg_name_p').html(''));
+	$('#reg_surname').focus(() => $('#reg_surname_p').html(''));
+	$('#reg_password').focus(() => $('#reg_password_p').html(''));
+	$('#reg_confirm_password').focus(() => $('#reg_confirm_password_p').html(''));
+
+	$('#reg_username').change(() => (/^[A-Za-z]\w{3,15}/.test($('#reg_username').val()) == false) ? reg_username').toggleClass('danger success') : $('#reg_username').toggleClass('success danger');
+	$('#reg_name').change(() => (/^[A-Za-z]\w{3,15}/.test($('#reg_name').val()) == false) ? reg_name').toggleClass('danger success') : $('#reg_name').toggleClass('success danger');
+	$('#reg_surname').change(() => (/^[A-Za-z]\w{3,15}/.test($('#reg_surname').val()) == false) ? reg_surname').toggleClass('danger success') : $('#reg_surname').toggleClass('success danger');
+	$('#reg_email').change(() => (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test($('#reg_email').val()) == false) ? reg_email').toggleClass('danger success') : $('#reg_email').toggleClass('success danger');
+	$('#reg_password').change(() => (/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/.test($('#reg_password').val()) == false) ? reg_password').toggleClass('danger success') : $('#reg_password').toggleClass('success danger');
+	$('#reg_confirm_password').change(() => (/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/.test($('#reg_confirm_password').val()) == false) ? reg_confirm_password').toggleClass('danger success') : $('#reg_confirm_password').toggleClass('success danger');
+</script>

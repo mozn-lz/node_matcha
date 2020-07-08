@@ -20,15 +20,17 @@ let users = [];
 
 let table = 'users';
 
-let maxUSers = 20;
+let maxUSers = 500;
 let minAge = 18;
 let maxAge = 50;
 let data = 1;
 
 helper_db.db_read('users', 1, (count) => {
-	console.log(count.length);
-	if (count.length < 20) {
+	// console.log(count.length);
+	if (count.length < maxUSers) {
+	// console.log(`looping`);
 		for (let i = 0; i < maxUSers; i++) {
+			// console.log(`looping ${i} ${maxUSers}`);
 			const genders = ['male', 'female'];
 			const oriantations = ['hetrosexual', 'homosexual', 'bisexual'];
 			const name = faker.name.firstName();
@@ -52,24 +54,29 @@ helper_db.db_read('users', 1, (count) => {
 				oriantation,
 				rating,
 				bio: '',
+				gps_switch: 'show',
 				gps: '',
 				verified: 1,
 				confirm_code: Math.random(),
-				intrests: '',
-				blocked: '',
-				friends: '',
-				notifications: '',
-				picture: '',
-				history: ''
+				intrests: '[]',
+				picture: '[]',
+				blocked: '[]',
+				friends: '[]',
+				notifications: '[]',
+				history: '[]'
 			};
 			users.push(newUser);
 		}
-		for (let i = users.length; i < maxUSers; i++) {
-			helper_db.db_create('users', users[i], () => { console.log('\t\t', maxUSers, ' users created\n') });
-			// console.log(`${i + 1}.${users[i].usr_user} ${users[i].usr_email}`);
-		}
+		setTimeout(() => {
+			// console.log(`timed out `);
+			for (let i = 0; i < maxUSers; i++) {
+				// console.log(`looping ${i} `);
+				helper_db.db_create('users', users[i], () => { console.log('\t\t', i, ' users created') });
+				// console.log(`${i + 1}.${users[i].usr_user} ${users[i].usr_email}`);
+			}
+		}, 1000);
 	} else {
-		console.log(`Users past ${maxUSers}`)
+		// console.log(`Users past ${maxUSers}`)
 	}
 });
 
@@ -106,7 +113,7 @@ router.post('/', function (req, res, next) {
 			if (find_user[0].verified == 0) {
 				res.redirect('/login/' + 'pass_errPlease check your email address to VERIFY your account');
 			} else if (find_user[0].verified == 1) {
-				console.log("\t\t_id", find_user[0]._id)
+				// console.log("\t\t_id", find_user[0]._id);
 				req.session.uid = find_user[0]._id;
 				req.session.username = find_user[0].usr_user;
 				req.session.email = find_user[0].usr_email;

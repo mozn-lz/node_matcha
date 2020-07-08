@@ -9,13 +9,16 @@ const helper_db = require('./helper_db');
 var page_name = 'home';
 
 let fn_render_index = (req, res, next, msg, matches) => {
-	console.log('req.session.uid ', req.session.uid);
+	// console.log('req.session.uid ', req.session.uid);
 	// var res_arr = matches;
 	// console.log('\n\n\n________fn_render_indexn________\n');
 	if (req.session.uid) {
-		console.log('sorting');
+		if (req.session.gender == ''){
+			msg = ('pass_errPlease complete your profile');
+		}
+		// console.log('sorting');
 		// helper_db.db_read('users', {_id: req.session.uid}, userGp => console.log(userGp));
-		var res_arr = helper.sort_locate(matches, req.session.gps);
+		// var res_arr = helper.sort_locate(matches, req.session.gps);
 		(req.session.oriantation == '') ? req.session.oriantation = 'bisexual' : 0;
 
 		var msg_arr = [];
@@ -23,18 +26,18 @@ let fn_render_index = (req, res, next, msg, matches) => {
 		(msg.search('pass_suc') == 0) ? pass_suc = "success" : pass_suc = '';
 		msg_arr = msg.slice(8).split(",");
 		// console.log('2. msg_arr: ' + msg_arr + "\n3. res_arr: " + res_arr + '\n');
-		if (msg_arr == '') {
-			if (res_arr > 0) {
-				res_arr == null;
-				res.redirect('/index/' + "pass_errThere aren't any matches");
-			} else if (res_arr == null) {
-				res_arr == null;
-				res.redirect('/index/' + 'pass_errYou broke our matching AI, give it a few days to find you a match');
-			} else {
-				res_arr == null;
-			}
-		}
-		console.log('render');
+		// if (msg_arr == '') {
+		// 	if (res_arr > 0) {
+		// 		// res_arr == null;
+		// 		res.redirect('/index/' + "pass_errThere aren't any matches");
+		// 	} else if (res_arr == null) {
+		// 		// res_arr == null;
+		// 		res.redirect('/index/' + 'pass_errYou broke our matching AI, give it a few days to find you a match');
+		// 	} else {
+		// 		res_arr == null;
+		// 	}
+		// }
+		// console.log('render');
 		res.render('index', {
 			// match_list: res_arr,
 			msg_arr,
@@ -48,12 +51,12 @@ let fn_render_index = (req, res, next, msg, matches) => {
 }
 
 router.get('/', (req, res, next) => {
-	console.log('\t\t____SAO');
+	// console.log('\t\t____SAO');
 	if (req.session.uid) {
-		console.log('\t\t____SAO');
-		helper.fn_getMatches(req, res, user_matches => {
-			fn_render_index(req, res, next, '', user_matches);
-		});
+		// console.log('\t\t____SAO');
+		// helper.fn_getMatches(req, res, user_matches => {
+			fn_render_index(req, res, next, '', 'user_matches');
+		// });
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
 	}
@@ -64,9 +67,9 @@ router.get('/:redirect_msg', function (req, res, next) {
 	if (req.session.uid) {
 		let msg  = req.params.redirect_msg;
 
-		helper.fn_getMatches(req, res, (user_matches) => {
-			fn_render_index(req, res, next, msg, user_matches);
-		});
+		// helper.fn_getMatches(req, res, (user_matches) => {
+			fn_render_index(req, res, next, msg, 'user_matches');
+		// });
 	} else {
 		res.redirect('/login/' + 'pass_errYou have to be logged in to view the ' + page_name + ' page ');
 	}

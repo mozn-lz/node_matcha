@@ -12,7 +12,7 @@ router.get('/', function (req, res) {
 
 		let time = Date.now();
 		helper_db.db_update('users', { '_id': req.session.uid }, { 'login_time': time }, () => {
-			console.log('set time to ', time, ' for user with id ', req.session.uid);
+			// console.log('set time to ', time, ' for user with id ', req.session.uid);
 		});
 		
 		helper.calc_fame(req.session.uid);	//	update fame rating
@@ -23,14 +23,15 @@ router.get('/', function (req, res) {
 			// console.log('usersArray ', usersArray)
 			// helper.findUserById(req.session.uid, (usersArray) => {
 			if (usersArray) {
-				console.log('user found');
+				// console.log('user found');
 				(usersArray.notifications) ? notifications = JSON.parse(usersArray.notifications) : notifications = null;
 				setTimeout(() => {
-					console.log(notifications);
+					notifications.gps = usersArray.gps_switch;
+					// console.log(notifications);
 					res.send({ notifications });
 				}, 1000);
 			} else {
-				console.log('user not found');
+				// console.log('user not found');
 			}
 		});
 	}
@@ -46,14 +47,15 @@ router.post('/', (req, res) => {
 		location.country = data.country;
 		location.city = data.city;
 		location.timezone = data.timezone;
-		console.log('\t\t Location* ', location);
+		// console.log('\t\t Location* ', location);
 		req.session.gps = location;
 
 		helper_db.db_update('users', { '_id': (req.session.uid) }, { 'gps': JSON.stringify(location) }, () => {
-			console.log('location updated to ' + location)
+			// console.log('location updated to ' + location)
 		});
-	} else
-		console.log('body not found');
+	} else{
+		// console.log('body not found');
+	}
 });
 
 module.exports = router;

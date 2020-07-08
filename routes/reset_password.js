@@ -5,7 +5,7 @@ var htmlencode = require('htmlencode');
 const helper = require('./helper_functions'); // Helper functions Mk
 const helper_db = require('./helper_db'); // Helper functions Mk
 
-const passwordHash = require('password-hash');
+const bcrypt = require('bcrypt');;
 
 
 /* GET reset_password listing. */
@@ -21,11 +21,11 @@ router.get('/', (req, res) => {
 	let code = req.query.code;
 
 	if (email && code) {
-		console.log(email);
-		console.log(code);
+		// console.log(email);
+		// console.log(code);
 		res.render('reset_password', { email, code });
 	} else {
-		console.log('email not found');
+		// console.log('email not found');
 		res.redirect('forgot_password' + 'pass_err' + 'Reset pssword request not found.\nPlease submit the form below to reset your password');
 	}
 });
@@ -43,14 +43,14 @@ router.post('/', function (req, res, next) {
 
 	helper_db.db_read('users', { 'usr_email': email }, user => {
 		if (user.length === 1 && user[0].confirm_code === parseFloat(code)) {
-			console.log('______user found___________________');
+			// console.log('______user found___________________');
 			if (password === confirm_password) {
 				helper_db.db_update({ 'usr_email': email }, { 'usr_psswd': passwordHash.generate(password), 'confirm_code': Math.random() }, () => {	//	password change is successfull
-					console.log('changed');
+					// console.log('changed');
 					res.redirect('/login/' + 'pass_sucPassword has succesfully ben changed');
 				});
 			} else {	// passwords do not match
-				console.log('passwords dont match');
+				// console.log('passwords dont match');
 				res.redirect(`/reset_password?email=${email}&code=${code}`);
 			}
 		} else {	//	code or email is invalid

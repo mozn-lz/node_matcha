@@ -1,16 +1,29 @@
 {{!-- <link rel='stylesheet' href='/stylesheets/profile.css' /> --}}
-
+<style>
+	#visit_history {
+		height: 400px;
+		overflow-y: scroll;
+	}
+</style>
 <div class="row">
 	<div class="col-md-6">
 		<div class="card" style="width: 25rem;">
 			<img class="card-img-top" src="{{picture}}" alt="profile picture">
 			<div class="card-body">
 				<h5 class="card-title">{{username}} &nbsp; {{age}}</h5>
+				{{fname}} &nbsp{{lname}} <br>
 				<p class="card-text text-muted">
 					{{bio}}
 				</p>
 			</div>
 			<ul class="list-group list-group-flush">
+				<li class="list-group-item">
+					<ul>
+						<li>Fame rating: {{rating}}/5 </li>
+						<li>Gender: <i>{{gender}}</i></li>
+						<li>Sexual Oriantation: <i>{{oriantation}}</i></li>
+					</ul>
+				</li>
 				<li class="list-group-item">
 					{{#if intrests.tatoo}}#Tatoo  {{/if}}
 					{{#if intrests.smoke}}#Smoke  {{/if}}
@@ -38,12 +51,11 @@
 		</div>
 	</div>
 	<div class="col-md-6">
-		<ul class="list-group">
+		<ul class="list-group" id="visit_history">
 			<li class="list-group-item">
 				<div class="row">
 					<div class="inline">
-						<div><b>John Doe</b></div>
-						<div><i>31/12/2014 </i></div>
+						<div><h6><u><b>Visit History</b></u></h6></div>
 					</div>
 				</div>
 			</li>

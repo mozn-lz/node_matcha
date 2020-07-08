@@ -1,6 +1,5 @@
-a .content :hover {
-	background-color: rgb(255, 0, 64);
-	color: white;
+.content :hover {
+	background-color: rgba(255, 0, 0, 1.0);
 	border-radius: 25px;
 }
 a {
@@ -8,9 +7,14 @@ a {
 	}
 .content {
 	/* display: inline; */
-	border-width: 1px;
 	width: 350px;
 	text-decoration: none;
+	border-width: 1px;
+	border-radius: 25px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: silver;
+	margin: 10px;
 }
 
 .chat_profile{

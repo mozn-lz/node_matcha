@@ -42,15 +42,15 @@ router.post('/', (req, res, next) => {
 	console.log('\n\t\t1\n');
 
 	if (req.session.uid) {
-		console.log('\n\t\t2\n');
-		console.log('req.body.save: ', req.body.save);
-		console.log('req.body.change: ', req.body.change);
-		console.log('req.body.delete: ', req.body.delete);
-		console.log('req.body.cancel: ', req.body.cancel);
-		console.log('req.file = ', req.file, req.file == true);
-		console.log(req.body);
+		// console.log('\n\t\t2\n');
+		// console.log('req.body.save: ', req.body.save);
+		// console.log('req.body.change: ', req.body.change);
+		// console.log('req.body.delete: ', req.body.delete);
+		// console.log('req.body.cancel: ', req.body.cancel);
+		// console.log('req.file = ', req.file, req.file == true);
+		// console.log(req.body);
 
-		console.log('\n\t\t3\n');
+		// console.log('\n\t\t3\n');
 
 
 		if (req.body.change == 'change') {
@@ -62,11 +62,11 @@ router.post('/', (req, res, next) => {
 					// res.redirect('/profile');
 				});
 			} else {
-				console.log('\t\tNo picture\n');
+				// console.log('\t\tNo picture\n');
 				res.redirect('/take_picture');
 			}
 		} else if (req.body.delete == 'delete') {
-			console.log('\n\t\t4. Deleting Picture\n');
+			// console.log('\n\t\t4. Deleting Picture\n');
 			helper_db.update_minus('users', { '_id': (req.session.uid) }, '$pull', 'picture', { pic: req.body.thumb }, () => {
 				// helper_db.db_update('users', { '_id': (req.session.uid) }, { $pull: { 'pictre': pic } }, () => {
 				res.redirect('/take_picture');
@@ -75,28 +75,27 @@ router.post('/', (req, res, next) => {
 		} else {
 			upload(req, res, (err) => {
 				if (err) {
-					console.log('uploaded_file = ', req.file, '\n')
+					// console.log('uploaded_file = ', req.file, '\n')
 					res.redirect('/take_picture');
 					// res.render('take_picture', { msg: err });
 				} else {
-					console.log(`getting user for ${req.session.uid}`);
+					// console.log(`getting user for ${req.session.uid}`);
 					helper_db.db_read('users', { '_id': req.session.uid }, user => {
 						let picNum = 0;
 						// console.log('pic: ', user[0].picture);
 						(user[0].picture) ? picNum = (JSON.parse(user[0].picture)).length : 0;
-						console.log(`\n\n\n\t\t${typeof(user[0].picture)}\n`);
+						// console.log(`\n\n\n\t\t${typeof(user[0].picture)}\n`);
 						user[0].picture = JSON.parse(user[0].picture);
-						console.log(`\n\t\t${typeof(user[0].picture)} ${user[0].picture.length
-						}\n\n\n`);
-						if ((picNum) < 5) {
+						// console.log(`\n\t\t${typeof(user[0].picture)} ${user[0].picture.length}\n\n\n`);
+						if ((picNum < 5) && req.file != undefined) {
 							helper_db.update_plus('users', { '_id': req.session.uid }, '$addToSet', 'picture', { 'pic': req.file.filename }, () => {
-								console.log('pic uploades');
-								console.log('uploaded_file = ', req.file, '\n')
+								// console.log('pic uploades');
+								// console.log('uploaded_file = ', req.file, '\n')
 								// res.render('take_picture', { msg: 'upload succssfil' });
 								res.redirect('/take_picture');
 							});
 						} else {
-							console.log('Too many pictures');
+							// console.log('Too many pictures');
 							res.redirect('/take_picture');
 						}
 						// } 

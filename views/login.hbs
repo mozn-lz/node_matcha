@@ -1,13 +1,13 @@
-	<div class="row">
-		{{#if error_list}}
-			<div class="alert alert-danger border border-danger text-center col-12" role="alert">{{error_list}}<br></div>
-		{{/if}}
-	</div>
-	<div>
-		{{#if username}}
-			<p  class="alert alert-success border border-success text-center col-12" role="alert">{{username}}</p>
-		{{/if}}
-	</div>
+<div class="row">
+	{{#if error_list}}
+	<div class="alert alert-danger border border-danger text-center col-12" role="alert">{{error_list}}<br></div>
+	{{/if}}
+</div>
+<div>
+	{{#if username}}
+	<p class="alert alert-success border border-success text-center col-12" role="alert">{{username}}</p>
+	{{/if}}
+</div>
 <form action="/login" method="post">
 	<div>
 		<label for="email">Email</label>
@@ -20,5 +20,8 @@
 	<button class="btn btn-success" type="submit">login</button>
 	<div class="d-inline left">
 		<a href="/register">register here</a>
+	</div>
+	<div class="d-inline right">
+		<a href="/forgot_password">Forgot Password</a>
 	</div>
 </form>
