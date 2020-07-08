@@ -71,8 +71,11 @@ router.get('/:reqId', (req, res, next) => {
 				}
 		
 				helper_db.db_read('users', { '_id': (friendId) }, find_user => {
+					let blk = find_user[0].blocked.includes(req.session.uid);
 					// console.log(`find_user[0].blocked ${find_user[0].blocked}\n` + 'find_user.blocked.includes(req.session.uid): ' + find_user[0].blocked.includes(req.session.uid));
-					if (!find_user[0].blocked.includes(req.session.uid)) {
+					console.log(blk);
+					
+					if (!blk) {
 						// Add to visit hostory 
 						helper_db.update_plus('users', { '_id': (req.session.uid) }, '$addToSet', 'history', { id: find_user[0]._id, name: find_user[0].usr_name, surname: find_user[0].usr_surname, date: new Date(Date.now()) }, () => {
 							// console.log('history added');
@@ -99,6 +102,8 @@ router.get('/:reqId', (req, res, next) => {
 								}
 							});
 						});
+					} else {
+						res.redirect('/index');
 					}
 				});
 			} else {

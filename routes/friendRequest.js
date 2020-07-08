@@ -39,7 +39,7 @@ router.post('/', (req, res, next) => {
 					res.redirect('/friendRequest/' + friendReqId);
 				} else if (submit === 'block') {
 					notification.type = 'block';
-					helper_db.update_plus('users', { '_id': (req.session.uid) }, '$addToSet', 'blocked', friendReqId, () => {
+					helper_db.update_plus('users', { '_id': (req.session.uid) }, '$addToSet', 'blocked', Number(friendReqId), () => {
 						// console.log('Hahahah, notifications are fucking up? <<< We are Bolckign in this mother >>>');
 						helper_db.db_read('users', { '_id': (req.session.uid) }, find_user => {
 							req.session.blocked = find_user[0].blocked;
