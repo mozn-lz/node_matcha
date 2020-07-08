@@ -6,7 +6,7 @@ router.get('/', function(req, res, next) {
 	var page = 'home';
 	req.session.uid
 	req.session.destroy();
-	res.redirect('/login/' + 'pass_sucYou have successfully signed out.')
+	res.redirect('/login/');
 });
 
 // handling Error or success messages. 

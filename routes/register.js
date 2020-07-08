@@ -54,7 +54,7 @@ router.post('/', function (req, res, next) {
 	}
 
 	function check_name(chk_name) {
-		re = /^[A-Za-z]\w{3,15}/;
+		re = /^[a-zA-Z]{3,14}\w$/;
 		// console.log('name: ' + re.test(chk_name));
 		(!re.test(chk_name)) ? error_log.push(`'${chk_name}' is invalid`) : 0;
 		return (re.test(chk_name));

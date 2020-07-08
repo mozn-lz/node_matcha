@@ -6,6 +6,10 @@
 	</div>
 </div>
 
+
+<div class="col-12 text-center">
+	<h4>Register</h4>
+</div>
 <form action="/register" method="post">
 	<div class="row">
 		<div class="col-md-6">
@@ -40,8 +44,17 @@
 			placeholder="Confirm Password" required>
 		<p id="reg_confirm_password"></p>
 	</div>
-	<button class="btn btn-success" type="submit">Signup</button>
+
+	<div class="col-12 text-center">
+		<button class="btn btn-success" type="submit">Signup</button>
+	</div>
 </form>
+
+<div class="row fixed-bottom text-center">
+	<div class="d-inline">
+		<a href="/login"><button class="btn btn-primary">Login</button></a>
+	</div>
+</div>
 
 <script>
 	let validate_name = name => { return (/^[a-zA-Z]{3,14}\w$/.test(name)) };
@@ -94,7 +107,7 @@
 		}
 	});
 	$('#reg_confirm_password').change(() => {
-		if (validate_password($('#reg_confirm_password').val()) && 
+		if (validate_password($('#reg_confirm_password').val()) &&
 			$('#reg_password').val() === $('#reg_confirm_password').val()) {
 			$('#reg_confirm_password').css('border-color', 'green');
 			return (true);
