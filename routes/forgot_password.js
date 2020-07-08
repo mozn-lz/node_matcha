@@ -18,16 +18,26 @@ router.get('/', function (req, res, next) {
 /* GET forgot_password listing. */
 router.get('/:message', function (req, res, next) {
 	//   res.send('respond with a resource');
-	res.render('forgot_password', { page: 'Forgot Password' });
+	let msg = req.params.message;
+	(msg.search('pass_err') == 0) ? pass_er = "danger" : pass_er = '';
+	(msg.search('pass_suc') == 0) ? pass_suc = "success" : pass_suc = '';
+	msg_arr = msg.slice(8).split(",");
+
+	res.render('forgot_password', { 
+		page: 'Forgot Password', 
+		msg_arr,
+		er: pass_er,
+		suc: pass_suc
+	});
 });
 
 router.post('/', function (req, res, next) {
 
-	helper_db.db_read('users', { 'usr_email': email }, (find_user) => {
+	helper_db.db_read('users', { 'usr_email': req.body.email }, (find_user) => {
 		// console.log('user length:', find_user.length)
 		// console.log('user length:', find_user)
 		// console.log(user[0].usr_user, '\n', user[0].usr_name, '\n', user[0].usr_surname)
-		if (find_user && find_user.length === 1) {
+		if (find_user && find_user.length == 1) {
 			let email = find_user[0].usr_email;	// to email
 			let username = find_user[0].usr_user;	//	to name
 			let code = find_user[0].confirm_code;	//	verification email
@@ -45,7 +55,6 @@ router.post('/', function (req, res, next) {
 				res.redirect('/forgot_password/' + 'pass_sucA password reset email was sent to ' + email);
 			});
 			//	end email
-
 		} else {
 			let message = 'pass_errUser not found';
 			// console.log(message);
