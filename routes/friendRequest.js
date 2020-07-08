@@ -41,8 +41,11 @@ router.post('/', (req, res, next) => {
 					notification.type = 'block';
 					helper_db.update_plus('users', { '_id': (req.session.uid) }, '$addToSet', 'blocked', friendReqId, () => {
 						// console.log('Hahahah, notifications are fucking up? <<< We are Bolckign in this mother >>>');
-						message = 'pass_sucUser has been blacked';
-						res.redirect('/index/' + message);
+						helper_db.db_read('users', { '_id': (req.session.uid) }, find_user => {
+							req.session.blocked = find_user[0].blocked;
+							message = 'pass_sucUser has been blacked';
+							res.redirect('/index/' + message);
+						});
 					});
 				} else if (submit === 'fake') {
 					// console.log('fake account');
@@ -87,7 +90,7 @@ router.get('/:reqId', (req, res, next) => {
 				helper_db.db_read('users', { '_id': req.session.uid }, user => {
 					user = user[0];
 					// if (user.picture)
-					(user.picture) ? user.picture = JSON.parse(user.picture): 0;
+					(user.picture) ? user.picture = JSON.parse(user.picture) : 0;
 					if (user.picture && user.picture[0]) {
 						// console.log('\n\n\n');
 						// console.log(Array.isArray(user.picture), ' ',  user.picture[0]);
