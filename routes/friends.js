@@ -44,7 +44,7 @@ var fn_getFriends = (req, res, next, msg) => {
 		helper.complete_profile(req.session.uid, complete_profile => {
 			// console.log('\n\t\t1. msg: ', msg, '\n\n');
 			if (complete_profile) {
-			
+
 				// console.log('0. Finding friends\n');
 				helper_db.db_read('users', { '_id': (req.session.uid) }, find_user => {
 					let friends = [];
@@ -66,12 +66,12 @@ var fn_getFriends = (req, res, next, msg) => {
 						fn_render_friends(req, res, next, '', friends);
 					}, 1000);
 				});
-		} else {
-			res.redirect('/index/pass_errPlease complete your profile first');
-		}
+			} else {
+				res.redirect('/index/pass_errPlease complete your profile first');
+			}
 		});
-} else {
-	res.redirect('/index/pass_errPlease complete your profile first');
+	} else {
+		res.redirect('/index/pass_errPlease complete your profile first');
 	}
 
 }
@@ -86,11 +86,13 @@ router.post('/', (req, res, next) => {
 					// console.log('removinge ', friendId, '\n');
 					//	remove 'this' notification
 
-					helper_db.update_minus('users', { '_id': friendId }, '$pull', 'friends', friendId, () => {
+					helper_db.update_minus('users', { '_id': (req.session.uid) }, '$pull', 'friends', Number(friendId), () => {
+						helper_db.update_minus('users', { '_id': Number(friendId) }, '$pull', 'friends', req.session.uid, () => {
 
-						// send norification to 'fromer friend'
-						helper_db.update_plus('users', { '_id': friendId }, '$addToSet', 'notifications', { from: req.session.uid, type: 'friend reject' }, () => {
-							res.redirect('/friends');
+							// send norification to 'fromer friend'
+							helper_db.update_plus('users', { '_id': friendId }, '$addToSet', 'notifications', { from: req.session.uid, type: 'friend reject' }, () => {
+								res.redirect('/friends');
+							});
 						});
 					});
 					// fn_redirect(location)
