@@ -57,7 +57,7 @@ function fn_getNotifications(req, res, notification, msg) {
 
 	var user_matches = [];
 	// console.log('NotificationsB ', notification);
-	notification ? notification = JSON.parse(notification): 0;
+	notification ? notification = JSON.parse(notification) : 0;
 	// console.log('\n\t\t1. msg: ', msg, '\n\n');
 	// console.log('NotificationsA ', notification);
 
@@ -69,38 +69,42 @@ function fn_getNotifications(req, res, notification, msg) {
 			let num_view = 0;
 
 			// console.log(' notification.length ', notification.length)
-			for (let i = 0; i < notification.length; i++) {
-				// if (i < notification.length) {
-				// console.log(notification.length);
-
-				// console.log(`${notification[i].from} \nnotification.length ${notification.length}`);
-				helper_db.db_read('users', { '_id': (notification[i].from) }, (doc) => {
-					notification[i].pic = doc[0].profile_pic;
-					notification[i].name = doc[0].usr_user;
-					if (notification[i].type == 'friend request') {
-						notification[i].request = 'friend request';
-						notification.num_req = num_req++;
-					} else if (notification[i].type == 'send message') {
-						notification[i].message = 'send message';
-						notification.num_req = num_msg++;
-					} else if (notification[i].type == 'view profile') {
-						notification[i].profile = 'view profile';
-						notification.num_req = num_view++;
-					} else if (notification[i].type == 'friend reject') {
-						notification[i].reject = 'friend reject';
-						notification.num_req = num_view++;
-					} else if (notification[i].type == 'like back') {
-						notification[i].like_back = 'like back';
-						notification.num_req = num_view++;
-					}
-				});
-				// } else {
-				// 	// console.log('\n\t\t3. msg: ', msg, '\n\n');
-				// 	// console.log('\n\t\tClosing database\n\n');
-				// }
-				setTimeout(() => {
-					resolve(notification);
-				}, 1000);
+			if (notification == null) {
+				fn_render_notifications(req, res, msg, notification);
+			} else {
+				for (let i = 0; i < notification.length; i++) {
+					// if (i < notification.length) {
+					// console.log(notification.length);
+	
+					// console.log(`${notification[i].from} \nnotification.length ${notification.length}`);
+					helper_db.db_read('users', { '_id': (notification[i].from) }, (doc) => {
+						notification[i].pic = doc[0].profile_pic;
+						notification[i].name = doc[0].usr_user;
+						if (notification[i].type == 'friend request') {
+							notification[i].request = 'friend request';
+							notification.num_req = num_req++;
+						} else if (notification[i].type == 'send message') {
+							notification[i].message = 'send message';
+							notification.num_req = num_msg++;
+						} else if (notification[i].type == 'view profile') {
+							notification[i].profile = 'view profile';
+							notification.num_req = num_view++;
+						} else if (notification[i].type == 'friend reject') {
+							notification[i].reject = 'friend reject';
+							notification.num_req = num_view++;
+						} else if (notification[i].type == 'like back') {
+							notification[i].like_back = 'like back';
+							notification.num_req = num_view++;
+						}
+					});
+					// } else {
+					// 	// console.log('\n\t\t3. msg: ', msg, '\n\n');
+					// 	// console.log('\n\t\tClosing database\n\n');
+					// }
+					setTimeout(() => {
+						resolve(notification);
+					}, 1000);
+				}
 			}
 		});
 
@@ -110,8 +114,8 @@ function fn_getNotifications(req, res, notification, msg) {
 				const element = notification[i];
 
 				// console.log('F:', notification[i].from, ', N:', notification[i].name, ', T:',
-					// notification[i].type, ', ', notification[i].request, ', ',
-					// notification[i].profile, ', ', notification[i].message, '\n');
+				// notification[i].type, ', ', notification[i].request, ', ',
+				// notification[i].profile, ', ', notification[i].message, '\n');
 			}
 			fn_render_notifications(req, res, msg, notification);
 		});
@@ -190,19 +194,27 @@ router.post('/', (req, res, next) => {
 				}
 
 				accept_friend = () => {
-					// accept query
-					// console.log('hxdf ', friendId);
-					helper_db.update_plus('users', { '_id': (req.session.uid) }, '$addToSet', 'friends', Number(friendId), () => {
-						helper_db.update_plus('users', { '_id': (friendId) }, '$addToSet', 'friends', Number(req.session.uid), () => {
-							let notification = {	// notification object
-								from: req.session.uid,
-								type: 'like back'
-							}
-							helper_db.update_plus('users', { '_id': (friendId) }, '$addToSet', 'notifications', notification, () => {
-								// helper_db.db_update('users', { '_id': (friendId) }, { $addToS ifications: notification } }, () => {
-								remove_notification('/view_profile/' + friendId)
+
+					helper_db.db_read('users', { '_id': req.session.uid }, user => {
+						user = user[0];
+						(user.picture) ? user.picture = JSON.parse(user.picture) : 0;
+						if (user.picture && user.picture[0]) {
+							helper_db.update_plus('users', { '_id': (req.session.uid) }, '$addToSet', 'friends', Number(friendId), () => {
+								helper_db.update_plus('users', { '_id': (friendId) }, '$addToSet', 'friends', Number(req.session.uid), () => {
+									let notification = {	// notification object
+										from: req.session.uid,
+										type: 'like back'
+									}
+									helper_db.update_plus('users', { '_id': (friendId) }, '$addToSet', 'notifications', notification, () => {
+										// helper_db.db_update('users', { '_id': (friendId) }, { $addToS ifications: notification } }, () => {
+										remove_notification('/view_profile/' + friendId)
+									});
+								});
 							});
-						});
+						} else {
+							message = 'pass_errPlease upouad a picture first';
+							res.redirect('/index/' + message);
+						}
 					});
 				}
 

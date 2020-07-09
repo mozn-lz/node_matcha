@@ -99,7 +99,7 @@ let getno = () => {
 		!window.location.href.includes('http://localhost:3000/register') &&
 		!window.location.href.includes('http://localhost:3000/forgot_password')
 	) {
-		setInterval(ajaxGet, 10000);
+		setInterval(ajaxGet, 3000);
 	}
 }
 $(document).ready(getno);
@@ -175,4 +175,6 @@ if (g_find_location) {
 		console.log('geolocation is not enabled on this browser');
 		ipLookUp();
 	}
+} else {
+	ipLookUp();
 }

@@ -26,7 +26,7 @@ let renderProfile = (res, data) => {
 		data.login_time = '-';
 		// console.log('data.login_time; ', data.login_time);
 	}
-	(data.intrests) ? JSON.parse(data.intrests) : 0;
+	// (data.intrests) ? JSON.parse(data.intrests) : 0;
 	// console.log(data.intrests);
 	data.intrests ? JSON.parse(data.intrests) : 0;
 	// console.log(`\n${typeof (data.history)}\ndata.history\n`);

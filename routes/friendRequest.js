@@ -43,7 +43,7 @@ router.post('/', (req, res, next) => {
 						// console.log('Hahahah, notifications are fucking up? <<< We are Bolckign in this mother >>>');
 						helper_db.db_read('users', { '_id': (req.session.uid) }, find_user => {
 							req.session.blocked = find_user[0].blocked;
-							message = 'pass_sucUser has been blacked';
+							message = 'pass_sucUser has been blocked';
 							res.redirect('/index/' + message);
 						});
 					});
@@ -55,10 +55,10 @@ router.post('/', (req, res, next) => {
 						const to = 'msefako@student.wethinkcode.co.za';
 						const from = '';
 						const subject = 'Fake Account';
-						const message = `<br>Hay Admin! <b>user id: ${friendReqId} </b> 
+						const emailMessage = `<br>Hay Admin! <b>user id: ${friendReqId} </b> 
 							has been reported as a fake account by user <b>${req.session.uid}</b>.`;
 
-						helper.sendMail(from, to, subject, message, () => { });
+						helper.sendMail(from, to, subject, emailMessage, () => { });
 						//	end email
 						helper_db.update_plus('users', { '_id': friendReqId }, '$addToSet', 'notifications', notification, () => {
 							// console.log('<<< shit is fake in this mother >>>');
@@ -89,29 +89,14 @@ router.get('/:reqId', (req, res, next) => {
 			if (complete_profile) {
 				helper_db.db_read('users', { '_id': req.session.uid }, user => {
 					user = user[0];
-					// if (user.picture)
 					(user.picture) ? user.picture = JSON.parse(user.picture) : 0;
 					if (user.picture && user.picture[0]) {
-						// console.log('\n\n\n');
-						// console.log(Array.isArray(user.picture), ' ',  user.picture[0]);
-						// console.log(JSON.parse(user.picture));
 						let friendReqId = req.params.reqId
-						// console.log("1. usrId: ", req.session.uid, '\n');
-						// console.log("1. friendId: ", friendReqId, '\n');
 
 						let notification = {	// notification object
 							from: req.session.uid,
 							type: 'friend request'
 						}
-						// console.log('friendReqId ', friendReqId);
-						// Connect and save data to mongodb
-
-						// console.log('friendReqId ', friendReqId);
-
-						// helper_db.update_plus('users', { '_id': friendReqId }, '$addToSet', 'request', req.session.uid, (() => {
-						// // helper_db.db_update('users', { '_id': (friendReqId) }, { $addToSet: { request: req.session.uid } }, (() => {
-						// })());
-						// console.log('Sending notification');
 						if (!helper.is_blocked(friendReqId)) {
 							helper_db.update_plus('users', { '_id': (friendReqId) }, '$addToSet', 'notifications', notification, () => {
 								// console.log('Hahahah, notifications are fucking up');
@@ -122,7 +107,6 @@ router.get('/:reqId', (req, res, next) => {
 							res.redirect('index');
 						}
 					} else {
-						// console.log(user.picture);
 						message = 'pass_errPlease upouad a picture first';
 						res.redirect('/index/' + message);
 					}
