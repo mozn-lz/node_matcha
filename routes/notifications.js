@@ -68,14 +68,16 @@ function fn_getNotifications(req, res, notification, msg) {
 			let num_msg = 0;
 			let num_view = 0;
 
-			// console.log(' notification.length ', notification.length)
-			if (notification == null) {
-				fn_render_notifications(req, res, msg, notification);
+			console.log(' notification\t ', notification)
+			console.log(' notification.length ', notification.length)
+			if (notification.length == 0) {
+				console.log(' notificat ion.length ', notification.length)
+				resolve(notification);
 			} else {
 				for (let i = 0; i < notification.length; i++) {
 					// if (i < notification.length) {
-					// console.log(notification.length);
-	
+					console.log(notification.length);
+
 					// console.log(`${notification[i].from} \nnotification.length ${notification.length}`);
 					helper_db.db_read('users', { '_id': (notification[i].from) }, (doc) => {
 						notification[i].pic = doc[0].profile_pic;
@@ -162,10 +164,6 @@ router.post('/', (req, res, next) => {
 
 						notifications = JSON.parse(notifications);
 
-						if (notify == 'view_profile') {
-							notify = 'view profile';
-							location = '/notifications/';
-						}
 
 						let new_data = { 'from': Number(friendId), 'type': notify };
 						// notifications = JSON.parse('['+ notifications +']');
@@ -219,23 +217,15 @@ router.post('/', (req, res, next) => {
 				}
 
 
-				if (req.body.type == 'send message') {
-					remove_notification('/view_messages/' + friendId)
-				} else if (req.body.type == 'friend request') {
+				if (req.body.opo == 'remove') {
+					remove_notification('/notifications/');
+				} else if (req.body.opo == 'reply') {
+					remove_notification('/view_messages/' + friendId);
+				} else if (req.body.opo == 'accept') {
 					accept_friend();
-				} else if (req.body.type == 'view_profile') {
-					remove_notification('/notifications/');
-				} else if (req.body.type == 'view profile') {
-					remove_notification('/notifications/');
-				} else if (req.body.type == 'remove') {
-					remove_notification('/notifications/');
-				} else if (req.body.type == 'like back') {
-					remove_notification('/notifications/');
-				} else if (req.body.type == 'friend reject') {
-					remove_notification('/notifications/');
+				} else if (req.body.opo == 'view') {
+					remove_notification('/view_proflie/' + friendId);
 				} else {
-					// console.log('false\n');
-					// fn_getFriends(req, res, next, '');
 					res.redirect('/notifications/');
 				}
 			} else {

@@ -36,15 +36,15 @@
 			{{#each notifications}}
 			{{#if this.request}}
 			<form action="/notifications" method="post">
-				<button type="submit" name="type" value="friend request" class="btn">x</button>
+				<button type="submit" name="opo" value="remove" class="btn">x</button>
 				<div>
 					<img src="{{this.pic}}" width="150px" height="150px" alt="">
+					<input type="hidden" name="type" value="friend request">
 					<input type="hidden" name="user" value={{this.from}}>
 					<div class="">{{this.name}}</div>
 				</div>
 				<div>
-					{{!-- <button type="submit" name="type" value="reject" class="btn btn-danger">Reject</button> --}}
-					<button type="submit" name="type" value="friend request" class="btn btn-success">Accept</button>
+					<button type="submit" name="opo" value="accept" class="btn btn-success">Accept</button>
 				</div>
 			</form>
 			{{/if}}
@@ -55,14 +55,15 @@
 			{{#each notifications}}
 			{{#if this.message}}
 			<form action="/notifications" method="post">
-				<button type="submit" name="type" value="send message" class="btn">x</button>
+				<button type="submit" name="opo" value="remove" class="btn">x</button>
 				<div>
 					<img src="{{this.pic}}" width="150px" height="150px" alt="">
+					<input type="hidden" name="type" value="send message">
 					<input type="hidden" name="user" value={{this.from}}>
 					<div class="">{{this.name}}</div>
 				</div>
 				<div>
-					<button type="submit" name="type" value="send message" class="btn btn-success">Reply</button>
+					<button type="submit" name="opo" value="reply" class="btn btn-success">Reply</button>
 				</div>
 			</form>
 			{{/if}}
@@ -73,14 +74,15 @@
 			{{#each notifications}}
 			{{#if this.profile}}
 			<form action="/notifications" method="post">
-				<button type="submit" name="type" value="view profile" class="btn">x</button>
+				<button type="submit" name="opo" value="remove" class="btn">x</button>
 				<div>
 					<img src="{{this.pic}}" width="150px" height="150px" alt="">
 					<input type="hidden" name="user" value={{this.from}}>
+					<input type="hidden" name="type" value="view profile">
 					<div class="">{{this.name}}</div>
 				</div>
 				<div>
-					<button type="submit" name="type" value="view profile" class="btn btn-success">View</button>
+					<button type="submit" name="opo" value="view" class="btn btn-success">View</button>
 				</div>
 			</form>
 			{{/if}}
@@ -91,9 +93,10 @@
 			{{#each notifications}}
 			{{#if this.reject}}
 			<form action="/notifications" method="post">
-				<button type="submit" name="type" value="unfriended" class="btn">x</button>
+				<button type="submit" name="opo" value="remove" class="btn">x</button>
 				<div>
 					<img src="{{this.pic}}" width="150px" height="150px" alt="">
+					<input type="hidden" name="type" value="unfriended">
 					<input type="hidden" name="user" value={{this.from}}>
 					<div class="">{{this.name}}</div>
 				</div>
@@ -106,9 +109,10 @@
 			{{#each notifications}}
 			{{#if this.like_back}}
 			<form action="/notifications" method="post">
-				<button type="submit" name="type" value="like back" class="btn">x</button>
+				<button type="submit" name="opo" value="remove" class="btn">x</button>
 				<div>
 					<img src="{{this.pic}}" width="150px" height="150px" alt="">
+					<input type="hidden" name="type" value="like back">
 					<input type="hidden" name="user" value={{this.from}}>
 					<div class="">{{this.name}}</div>
 				</div>
