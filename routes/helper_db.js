@@ -78,7 +78,7 @@ module.exports = {
 				throw err;
 				callback();
 			} else if (user_data) {
-				if (col == 'notifications' &&  user_data[0][col].includes(new_data)) {
+				if ((col == 'notifications' || col == 'blocked' || col == 'friends') &&  user_data[0][col].includes(new_data)) {
 					// console.log('\n\nit works\n\n');
 					callback();
 				} else {

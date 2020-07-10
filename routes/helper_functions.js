@@ -330,8 +330,8 @@ module.exports = {
 		for (let i = 0; i < tags.length; i++) {
 			for (let j = 0; j < matches.length; j++) {
 				(!matches[j].score) ? matches[j].score = 0 : 0;
+				(typeof(matches[j].intrests) == 'string') ? matches[j].intrests = JSON.parse(matches[j].intrests) : 0;
 				for (const tag in matches[j].intrests) {
-					matches[j].intrests[tag];
 					if (matches[j].intrests[tag] == (tags[i])) {
 						matches[j].score++;
 						// console.log(i, `> ${matches[j].usr_user} : ${matches[j].score}`);

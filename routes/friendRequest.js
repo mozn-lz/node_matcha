@@ -97,14 +97,14 @@ router.get('/:reqId', (req, res, next) => {
 							from: req.session.uid,
 							type: 'friend request'
 						}
-						if (!helper.is_blocked(friendReqId)) {
+						if (!helper.is_blocked(friendReqId) && user.friends.includes(friendReqId)) {
 							helper_db.update_plus('users', { '_id': (friendReqId) }, '$addToSet', 'notifications', notification, () => {
 								// console.log('Hahahah, notifications are fucking up');
 								message = 'pass_sucFriend request has been made';
 								res.redirect('/index/' + message);
 							});
 						} else {
-							res.redirect('index');
+							res.redirect('/view_profile/' + friendReqId);
 						}
 					} else {
 						message = 'pass_errPlease upouad a picture first';
