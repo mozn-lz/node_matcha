@@ -8,27 +8,26 @@ let display_user_list = data => {
 	if (data.length == 0) {
 		displayArr = '<p><br><h5>No match found</h5></p>';
 	} else {
-				for (let i = 0; i < data.length; i++) {
-					const element = data[i];
-					
-					displayArr.push(
-						'<a href="/view_profile/'+element._id+'">' +
-							'<div class="users row">' +
-								'<div class="left "><img src=' + element.profile_pic + ' alt="Profile Picture" width="150px" height="150px"></div>' +
-								'<div class="" style="width: 18rem;">' +
-									'<div class="card-body">' +
-										'<h5 class="card-title">'+element.usr_user+'</h5>' +
-										'<h6 class="card-subtitle mb-2 text-muted">'+element.usr_name+' &nbsp; '+element.usr_surname+'</h6>' +
-										'<p class="card-text">' +
-											'Bio:' + element.bio +
-										'</p>' +
-									'</div>' +
+		for (let i = 0; i < data.length; i++) {
+			const element = data[i];
+
+			displayArr.push(
+				'<a href="/view_profile/' + element._id + '">' +
+					'<div class="users row">' +
+						'<div class="left "><img src=' + element.profile_pic + ' alt="Profile Picture" width="150px" height="150px"></div>' +
+							'<div class="" style="width: 18rem;">' +
+								'<div class="card-body">' +
+									'<h5 class="card-title">' + element.usr_user + '</h5>' +
+									'<h6 class="card-subtitle mb-2 text-muted">' + element.usr_name + ' &nbsp; ' + element.usr_surname + '</h6>' +
+									'<p class="card-text">' + 'Bio:' + element.bio + '</p>' +
+									'<p> Age: ' + element.age + '</p>' + 
 								'</div>' +
-								'<div class="right ">'+element.rating+'/5</div>' +
 							'</div>' +
-						'</a>'
-					);
-				}
+						'<div class="right ">' + element.rating + '/5</div>' +
+					'</div>' +
+				'</a>'
+			);
+		}
 	}
 	$('#match-list').html(displayArr);
 }
@@ -83,25 +82,21 @@ let sort_age = () => {
 	lastOpo = 'age';
 	display_user_list(userList.reverse());
 }
-let sort_tags = (userList, tags) => {
+let sort_tags = () => {
 	let sorted = [];
-	for (let i = 0; i < tags.length; i++) {
-		// iterte through user tag array
-		for (let j = 0; j < userList.length; j++) {	// itterate through users
-			(!userList[j].score) ? userList[j].score = 0 : 0;
-			if (userList[j].intrests.includes(tags[i])) {
-				userList[j].score++;	// if user's tags includes tag increase user score
+	if (lastOpo != 'tags') {
+		for (let i = 7; i >= 0; i--) {
+			for (let j = 0; j < userList.length; j++) {
+				(typeof(userList[j].intrests) =="string") ? userList[j].intrests = JSON.parse(userList[j].intrests) : 0;
+				if (userList[j].intrests == i) {
+					sorted.push(userList[j]);
+				}
 			}
 		}
 	}
-	for (let i = 7; i >= 0; i--) {	// i = max tags
-		for (let j = 0; j < userList.length; j++) {
-			if (userList[j].score == j) {
-				sorted.push(userList[j]);	// push users inso 'sorted' by max score
-			}
-		}
-	}
-	return (sorted);
+	(sorted.length == userList.length) ? userList = sorted : 0;
+	lastOpo = 'tags';
+	display_user_list(userList.reverse());
 }
 let sort_locate = (userList, location) => {
 	let sorted = [];

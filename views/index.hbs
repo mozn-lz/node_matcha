@@ -13,7 +13,7 @@
 
 
 <div class="users_list row">
-	<div class="col-md-2 col-sm-4">
+	<div class="col-md-2 col-sm-12">
 		<form action="/search" method="post" id="advanced" class="form-group my-2 my-lg-0">
 			{{!-- <fieldset>
 				<legend>Name</legend>
@@ -89,11 +89,11 @@
 		</form>
 	</div>
 
-	<div class="col-md-10 col-sm-8">
+	<div class="col-md-10 col-sm-12">
 		<div class="inline">
 			<span class="inline"><button class="btn btn-primary" onclick="sort_fame()">Sort Fame</button></span>
 			<span class="inline"><button class="btn btn-primary" onclick="sort_age()">Sort Age</button></span>
-			{{!-- <span class="inline"><button class="btn btn-primary" onclick="sort_tags()">Sort Tags</button></span> --}}
+			<span class="inline"><button class="btn btn-primary" onclick="sort_tags()">Sort Tags</button></span>
 			{{!-- <span class="inline"><button class="btn btn-primary" onclick="sort_locateReset()">Sort
 					Location</button></span> --}}
 			<span class="inline"><a href="/index"><button class="btn btn-primary">Reset</button></a></span>
@@ -109,7 +109,7 @@
 					<div class="" style="width: 18rem;">
 						<div class="card-body">
 							<h5 class="card-title">{{this.usr_user}}</h5>
-							<h6 class="card-subtitle mb-2 text-muted">{{this.usr_name}} &nbsp; {{this.usr_surname}}</h6>
+							<h6 class="card-subtitle mb-2 text-muted">{{this.usr_name}} &nbsp; {{this.usr_surname}} &nbsp; age:{{this.age}}</h6>
 							<p class="card-text">
 								Bio: {{this.bio}}
 							</p>
