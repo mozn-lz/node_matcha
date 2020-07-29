@@ -116,11 +116,4 @@
 			return (false);
 		}
 	});
-	$('form').submit((e) => {
-		if (reg_username && reg_name && reg_surname && reg_email && reg_password && reg_confirm_password && (reg_password === reg_confirm_password)) {
-			$('form').submit()
-		} else {
-			e.preventDefault();
-		}
-	})
 </script>

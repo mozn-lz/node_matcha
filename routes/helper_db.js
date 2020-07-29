@@ -91,7 +91,7 @@ module.exports = {
 						// console.log(`user_data (${typeof(user_data)}) ${user_data}`);
 						(Array.isArray(user_data)) ? mutate_data = user_data : mutate_data.push(user_data);
 						// console.log(`mutate_data (${typeof(mutate_data)} | ${Array.isArray(mutate_data)} ) ${mutate_data}`);
-	
+
 						mutate_data.push(JSON.parse(new_data));
 						mutate_data = JSON.stringify(mutate_data);
 					} else {
@@ -128,9 +128,9 @@ module.exports = {
 			} else if (user_data) {
 				mutate_data = [];
 				user_data = user_data[0][col];
-	
+
 				// console.log(`mutate_data (${typeof (user_data)} | ${Array.isArray(JSON.parse(user_data))} ) ${user_data.length}`);
-	
+
 				if (Array.isArray(JSON.parse(user_data))) {
 					user_data = JSON.parse(user_data);
 					// console.log(`user_data (${typeof(user_data)}) ${user_data}`);
@@ -144,13 +144,13 @@ module.exports = {
 						}
 					}
 					// (Array.isArray(user_data)) ? mutate_data = user_data : mutate_data.push(user_data);
-	
+
 				} else if (JSON.stringify(user_data) === JSON.stringify(new_data)) {
 					user_data = '[]';							//	convert updated array to string
 				}
 				setTimeout(() => {
 					// console.log(`mutate_data (${typeof (user_data)} | ${Array.isArray(user_data)} ) ${user_data.length}`);
-	
+
 					mutate_data = JSON.stringify(user_data);
 					let quiry_data = [mutate_data, search];
 					let sql = 'UPDATE ' + table + ' SET ' + col + ' = ? WHERE ?';
@@ -177,7 +177,7 @@ module.exports = {
 			if (err){
 				// console.log(conn.query(f_sql, lookup));
 				throw err;
-			} 
+			}
 
 			// console.log(`find_chat (${res_arr[0].length}): ${res_arr[0].id}`);
 			cb(res_arr);
@@ -205,5 +205,3 @@ module.exports = {
 		});
 	}
 };
-
-
