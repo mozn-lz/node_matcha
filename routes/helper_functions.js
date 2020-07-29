@@ -61,7 +61,7 @@ module.exports = {
 						user_matches.push({
 								_id: doc[i]._id,
 								usr_user: doc[i].usr_user,
-								usr_email: doc[i].usr_email,
+								// usr_email: doc[i].usr_email,
 								usr_name: doc[i].usr_name,
 								usr_surname: doc[i].usr_surname,
 								profile_pic: doc[i].profile_pic,
